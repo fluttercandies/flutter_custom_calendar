@@ -2,29 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="067adf6d-3e64-4468-95c5-20dd90a656ce" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/base_day_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/base_week_bar.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/calendar_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/constants/constants.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/default_combine_day_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/default_custom_day_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/default_week_bar.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/demo_page/custom_style_page.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/demo_page/default_style_page.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/demo_page/main.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/demo_page/multi_select_style_page.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/demo_page/progress_style_page.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/flutter_calendar.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/model/date_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/month_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/month_view_pager.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/style/style.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/date_util.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/lunar_util.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/math_util.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/solar_term_util.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/week_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/flutter_custom_calendar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_custom_calendar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -38,9 +17,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/flutter_custom_calendar.dart">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
+              <folding>
+                <element signature="e#34#91#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -96,11 +82,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pubspec.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
+            <state relative-caret-position="51">
+              <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4165">
+              <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
             </state>
           </provider>
         </entry>
@@ -126,15 +121,18 @@
         <option value="$PROJECT_DIR$/lib/base_week_bar.dart" />
         <option value="$PROJECT_DIR$/lib/default_week_bar.dart" />
         <option value="$PROJECT_DIR$/CHANGELOG.md" />
+        <option value="$PROJECT_DIR$/LICENSE" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
+        <option value="$PROJECT_DIR$/lib/flutter_custom_calendar.dart" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="720" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="201" />
     <option name="y" value="23" />
-    <option name="width" value="720" />
-    <option name="height" value="806" />
+    <option name="width" value="1240" />
+    <option name="height" value="808" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -213,8 +211,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="720" y="23" width="720" height="806" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="808" extended-state="6" />
     <layout>
       <window_info id="Structure" side_tool="true" />
       <window_info id="Image Layers" />
@@ -222,13 +219,13 @@
       <window_info id="Resources Explorer" />
       <window_info id="Capture Tool" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25516224" />
-      <window_info anchor="bottom" id="Dart Analysis" visible="true" weight="0.32913166" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2546495" />
+      <window_info anchor="bottom" id="Dart Analysis" weight="0.32913166" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="TODO" />
       <window_info anchor="bottom" id="Run" />
       <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.3282123" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" side_tool="true" />
       <window_info anchor="bottom" id="Find" />
@@ -240,9 +237,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/flutter_custom_calendar.dart">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/base_day_view.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -277,6 +271,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4165">
+          <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="68" selection-start-line="24" selection-start-column="68" selection-end-line="24" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CHANGELOG.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -286,8 +294,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pubspec.yaml">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/flutter_custom_calendar.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#34#91#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/flutter_calendar.dart">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
-          <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
+          <caret line="4" column="25" selection-end-line="9" />
         </state>
       </provider>
     </entry>
