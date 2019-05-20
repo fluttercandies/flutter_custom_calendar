@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/default_custom_day_view.dart';
-import 'package:flutter_custom_calendar/default_combine_day_view.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'package:flutter_custom_calendar/month_view.dart';
+import 'package:flutter_custom_calendar/widget/month_view.dart';
 
 class MonthViewPager extends StatefulWidget {
   final OnMonthChange monthChange;

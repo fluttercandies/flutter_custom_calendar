@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/base_day_view.dart';
+import 'package:flutter_custom_calendar/widget/base_day_view.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/style/style.dart';
 

@@ -1,10 +1,11 @@
 FlutterCalendarWidget
 
 Flutter上的一个日历控件，可以定制成自己想要的样子。
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb76a959b93b3?w=828&h=1792&f=jpeg&s=92910">
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb793e4dbd2f2?w=828&h=1792&f=jpeg&s=102231">
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb79f153ab321?w=828&h=1792&f=jpeg&s=1288910">
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb7a35d41361c?w=828&h=1792&f=jpeg&s=10674210">
+
+<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb76a959b93b3?w=828&h=1792&f=jpeg&s=92910" width="300" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb793e4dbd2f2?w=828&h=1792&f=jpeg&s=102231" width="300" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb79f153ab321?w=828&h=1792&f=jpeg&s=1288910" width="300" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb7a35d41361c?w=828&h=1792&f=jpeg&s=10674210" width="300" height="620">
 
 
 ## 主要功能
@@ -18,8 +19,17 @@ Flutter上的一个日历控件，可以定制成自己想要的样子。
 * 可以给Item添加自定义的额外数据，实现各种额外的功能。比如实现进度条风格的日历
 
 ## 使用
+
+在pubspec.yaml添加依赖:
+```
+flutter_custom_calendar:
+    git:
+      url: https://github.com/LXD312569496/flutter_custom_calendar.git
+```
 引入flutter_custom_calendar,就可以使用CalendarViewWidget，配置CalendarController就可以了。
 ```
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+
 CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 ```
 * boxDecoration用来配置整体的背景
@@ -65,6 +75,29 @@ OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
 //支持自定义绘制
 DayWidgetBuilder dayWidgetBuilder; //创建日历item
 WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
+
+//构造函数
+    CalendarController(
+      {int selectMode = Constants.MODE_SINGLE_SELECT,
+      DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
+      WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
+      int minYear = 1971,
+      int maxYear = 2055,
+      int minYearMonth = 1,
+      int maxYearMonth = 12,
+      int nowYear = -1,
+      int nowMonth = -1,
+      int minSelectYear = 1971,
+      int minSelectMonth = 1,
+      int minSelectDay = 1,
+      int maxSelectYear = 2055,
+      int maxSelectMonth = 12,
+      int maxSelectDay = 30,
+      Set<DateTime> selectedDateTimeList = EMPTY_SET,
+      DateModel selectDateModel,
+      int maxMultiSelectCount = 9999,
+      Map<DateTime, Object> extraDataMap = EMPTY_MAP})
+
 ```
 
 ### 利用controller添加监听事件

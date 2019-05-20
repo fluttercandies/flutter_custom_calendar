@@ -3,6 +3,7 @@
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
+        <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../../flutter_custom_calendar/gen" />
         <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../../flutter_custom_calendar/gen" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../../flutter_custom_calendar/AndroidManifest.xml" />
@@ -20,6 +21,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/example/.android/Flutter/build/intermediates/flutter/debug/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/example/.android/Flutter/build/intermediates/library_assets/debug/packageDebugAssets/out/flutter_assets/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/example/build" />

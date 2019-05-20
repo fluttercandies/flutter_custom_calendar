@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/default_combine_day_view.dart';
-import 'package:flutter_custom_calendar/default_custom_day_view.dart';
+import 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
+import 'package:flutter_custom_calendar/widget/default_custom_day_view.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'package:flutter_custom_calendar/default_week_bar.dart';
+import 'package:flutter_custom_calendar/widget/default_week_bar.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 
 /**
