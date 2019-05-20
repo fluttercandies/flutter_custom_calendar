@@ -31,6 +31,9 @@ dependencies:
   flutter_custom_calendar:
     path: ../
 
+#  flutter_custom_calendar:
+#    git:
+#      url: https://github.com/LXD312569496/flutter_custom_calendar.git
 dev_dependencies:
   flutter_test:
     sdk: flutter
