@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/base_day_view.dart';
-import 'package:flutter_custom_calendar/base_week_bar.dart';
-import 'package:flutter_custom_calendar/calendar_view.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
-class MultiSelectStylePage extends StatefulWidget {
-  MultiSelectStylePage({Key key, this.title}) : super(key: key);
+
+class CustomStylePage extends StatefulWidget {
+  CustomStylePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MultiSelectStylePageState createState() => _MultiSelectStylePageState();
+  _CustomStylePageState createState() => _CustomStylePageState();
 }
 
-class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
+class _CustomStylePageState extends State<CustomStylePage> {
   String text;
 
   CalendarController controller;
@@ -24,18 +20,11 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
   void initState() {
     text = "${DateTime.now().year}年${DateTime.now().month}月";
 
-    controller = new CalendarController(
-        selectMode: Constants.MODE_MULTI_SELECT,
-        maxMultiSelectCount: 5,
-        minSelectYear: 2019,
-        minSelectMonth: 5,
-        minSelectDay: 20,
-        weekBarItemWidgetBuilder: () {
-          return CustomStyleWeekBarItem();
-        },
-        dayWidgetBuilder: (dateModel) {
-          return CustomStyleDayWidget(dateModel);
-        });
+    controller = new CalendarController(weekBarItemWidgetBuilder: () {
+      return CustomStyleWeekBarItem();
+    }, dayWidgetBuilder: (dateModel) {
+      return CustomStyleDayWidget(dateModel);
+    });
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -48,13 +37,6 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
       setState(() {});
-    });
-
-    controller.addOnMultiSelectOutOfSizeListener((){
-      print("超出限制个数");
-    });
-    controller.addOnMultiSelectOutOfRangeListener((){
-      print("超出范围限制");
     });
   }
 
@@ -87,7 +69,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
               calendarController: controller,
             ),
             new Text(
-                "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().toString()}"),
+                "自定义创建Item\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
           ],
         ),
       ),
@@ -126,7 +108,10 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
       ..text = TextSpan(
           text: dateModel.day.toString(),
           style: new TextStyle(
-              color: !isInRange ? Colors.grey : Colors.black, fontSize: 16))
+              color: !isInRange
+                  ? Colors.grey
+                  : isWeekend ? Colors.blue : Colors.black,
+              fontSize: 16))
       ..textDirection = TextDirection.ltr
       ..textAlign = TextAlign.center;
 
@@ -138,7 +123,10 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
       ..text = new TextSpan(
           text: dateModel.lunarString,
           style: new TextStyle(
-              color: !isInRange ? Colors.grey : Colors.grey, fontSize: 12))
+              color: !isInRange
+                  ? Colors.grey
+                  : isWeekend ? Colors.blue : Colors.grey,
+              fontSize: 12))
       ..textDirection = TextDirection.ltr
       ..textAlign = TextAlign.center;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/demo_page/custom_style_page.dart';
-import 'package:flutter_custom_calendar/demo_page/default_style_page.dart';
-import 'package:flutter_custom_calendar/demo_page/multi_select_style_page.dart';
-import 'package:flutter_custom_calendar/demo_page/progress_style_page.dart';
+import 'custom_style_page.dart';
+import 'default_style_page.dart';
+import 'multi_select_style_page.dart';
+import 'progress_style_page.dart';
 
 void main() => runApp(MyApp());
 

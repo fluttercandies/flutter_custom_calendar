@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/base_day_view.dart';
-import 'package:flutter_custom_calendar/base_week_bar.dart';
-import 'package:flutter_custom_calendar/calendar_view.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+import 'dart:math';
 
-class CustomStylePage extends StatefulWidget {
-  CustomStylePage({Key key, this.title}) : super(key: key);
+class ProgressStylePage extends StatefulWidget {
+  ProgressStylePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _CustomStylePageState createState() => _CustomStylePageState();
+  _ProgressStylePageState createState() => _ProgressStylePageState();
 }
 
-class _CustomStylePageState extends State<CustomStylePage> {
+class _ProgressStylePageState extends State<ProgressStylePage> {
   String text;
 
   CalendarController controller;
@@ -23,11 +20,26 @@ class _CustomStylePageState extends State<CustomStylePage> {
   void initState() {
     text = "${DateTime.now().year}年${DateTime.now().month}月";
 
-    controller = new CalendarController(weekBarItemWidgetBuilder: () {
-      return CustomStyleWeekBarItem();
-    }, dayWidgetBuilder: (dateModel) {
-      return CustomStyleDayWidget(dateModel);
-    });
+    DateTime now = DateTime.now();
+    DateTime temp = DateTime(now.year, now.month, now.day);
+
+    Map<DateTime, int> progressMap = {
+      temp.add(Duration(days: 1)): 0,
+      temp.add(Duration(days: 2)): 20,
+      temp.add(Duration(days: 3)): 40,
+      temp.add(Duration(days: 4)): 60,
+      temp.add(Duration(days: 5)): 80,
+      temp.add(Duration(days: 6)): 100,
+    };
+
+    controller = new CalendarController(
+        extraDataMap: progressMap,
+        weekBarItemWidgetBuilder: () {
+          return CustomStyleWeekBarItem();
+        },
+        dayWidgetBuilder: (dateModel) {
+          return ProgressStyleDayWidget(dateModel);
+        });
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -40,6 +52,13 @@ class _CustomStylePageState extends State<CustomStylePage> {
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
       setState(() {});
+    });
+
+    controller.addOnMultiSelectOutOfSizeListener(() {
+      print("超出限制个数");
+    });
+    controller.addOnMultiSelectOutOfRangeListener(() {
+      print("超出范围限制");
     });
   }
 
@@ -72,7 +91,7 @@ class _CustomStylePageState extends State<CustomStylePage> {
               calendarController: controller,
             ),
             new Text(
-                "自定义创建Item\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
           ],
         ),
       ),
@@ -98,23 +117,46 @@ class CustomStyleWeekBarItem extends BaseWeekBar {
   }
 }
 
-class CustomStyleDayWidget extends BaseCustomDayWidget {
-  CustomStyleDayWidget(DateModel dateModel) : super(dateModel);
+class ProgressStyleDayWidget extends BaseCustomDayWidget {
+  ProgressStyleDayWidget(DateModel dateModel) : super(dateModel);
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {
-    bool isWeekend = dateModel.isWeekend;
     bool isInRange = dateModel.isInRange;
+
+    //进度条
+    int progress = dateModel.extraData;
+    if (progress != null && progress != 0) {
+      double padding = 8;
+      Paint paint = Paint()
+        ..color = Colors.grey
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+
+      canvas.drawCircle(Offset(size.width / 2, size.height / 2),
+          (size.width - padding) / 2, paint);
+
+      paint.color = Colors.blue;
+
+      double startAngle = -90 * pi / 180;
+      double sweepAngle = pi / 180 * (360 * progress / 100);
+
+      canvas.drawArc(
+          Rect.fromCircle(
+              center: Offset(size.width / 2, size.height / 2),
+              radius: (size.width - padding) / 2),
+          startAngle,
+          sweepAngle,
+          false,
+          paint);
+    }
 
     //顶部的文字
     TextPainter dayTextPainter = new TextPainter()
       ..text = TextSpan(
           text: dateModel.day.toString(),
           style: new TextStyle(
-              color: !isInRange
-                  ? Colors.grey
-                  : isWeekend ? Colors.blue : Colors.black,
-              fontSize: 16))
+              color: !isInRange ? Colors.grey : Colors.black, fontSize: 16))
       ..textDirection = TextDirection.ltr
       ..textAlign = TextAlign.center;
 
@@ -126,10 +168,7 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
       ..text = new TextSpan(
           text: dateModel.lunarString,
           style: new TextStyle(
-              color: !isInRange
-                  ? Colors.grey
-                  : isWeekend ? Colors.blue : Colors.grey,
-              fontSize: 12))
+              color: !isInRange ? Colors.grey : Colors.grey, fontSize: 12))
       ..textDirection = TextDirection.ltr
       ..textAlign = TextAlign.center;
 

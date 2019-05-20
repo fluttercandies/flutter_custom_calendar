@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/base_day_view.dart';
-import 'package:flutter_custom_calendar/base_week_bar.dart';
-import 'package:flutter_custom_calendar/calendar_view.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'dart:math';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
-class ProgressStylePage extends StatefulWidget {
-  ProgressStylePage({Key key, this.title}) : super(key: key);
+class MultiSelectStylePage extends StatefulWidget {
+  MultiSelectStylePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _ProgressStylePageState createState() => _ProgressStylePageState();
+  _MultiSelectStylePageState createState() => _MultiSelectStylePageState();
 }
 
-class _ProgressStylePageState extends State<ProgressStylePage> {
+class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
   String text;
 
   CalendarController controller;
@@ -24,25 +19,17 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
   void initState() {
     text = "${DateTime.now().year}年${DateTime.now().month}月";
 
-    DateTime now = DateTime.now();
-    DateTime temp = DateTime(now.year, now.month, now.day);
-
-    Map<DateTime, int> progressMap = {
-      temp.add(Duration(days: 1)): 0,
-      temp.add(Duration(days: 2)): 20,
-      temp.add(Duration(days: 3)): 40,
-      temp.add(Duration(days: 4)): 60,
-      temp.add(Duration(days: 5)): 80,
-      temp.add(Duration(days: 6)): 100,
-    };
-
     controller = new CalendarController(
-        extraDataMap: progressMap,
+        selectMode: Constants.MODE_MULTI_SELECT,
+        maxMultiSelectCount: 5,
+        minSelectYear: 2019,
+        minSelectMonth: 5,
+        minSelectDay: 20,
         weekBarItemWidgetBuilder: () {
           return CustomStyleWeekBarItem();
         },
         dayWidgetBuilder: (dateModel) {
-          return ProgressStyleDayWidget(dateModel);
+          return CustomStyleDayWidget(dateModel);
         });
 
     controller.addMonthChangeListener(
@@ -95,7 +82,7 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
               calendarController: controller,
             ),
             new Text(
-                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+                "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().toString()}"),
           ],
         ),
       ),
@@ -121,39 +108,13 @@ class CustomStyleWeekBarItem extends BaseWeekBar {
   }
 }
 
-class ProgressStyleDayWidget extends BaseCustomDayWidget {
-  ProgressStyleDayWidget(DateModel dateModel) : super(dateModel);
+class CustomStyleDayWidget extends BaseCustomDayWidget {
+  CustomStyleDayWidget(DateModel dateModel) : super(dateModel);
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {
+    bool isWeekend = dateModel.isWeekend;
     bool isInRange = dateModel.isInRange;
-
-    //进度条
-    int progress = dateModel.extraData;
-    if (progress != null && progress != 0) {
-      double padding = 8;
-      Paint paint = Paint()
-        ..color = Colors.grey
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
-
-      canvas.drawCircle(Offset(size.width / 2, size.height / 2),
-          (size.width - padding) / 2, paint);
-
-      paint.color = Colors.blue;
-
-      double startAngle = -90 * pi / 180;
-      double sweepAngle = pi / 180 * (360 * progress / 100);
-
-      canvas.drawArc(
-          Rect.fromCircle(
-              center: Offset(size.width / 2, size.height / 2),
-              radius: (size.width - padding) / 2),
-          startAngle,
-          sweepAngle,
-          false,
-          paint);
-    }
 
     //顶部的文字
     TextPainter dayTextPainter = new TextPainter()

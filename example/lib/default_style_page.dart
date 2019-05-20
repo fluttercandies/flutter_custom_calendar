@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/calendar_view.dart';
-import 'package:flutter_custom_calendar/controller.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
 class DefaultStylePage extends StatefulWidget {
   DefaultStylePage({Key key, this.title}) : super(key: key);
