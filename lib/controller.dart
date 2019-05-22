@@ -160,7 +160,7 @@ class CalendarController {
       {bool needAnimation = false,
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
-    DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, day));
+    DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
     //计算目标索引
     int targetPage = monthList.indexOf(dateModel);
     if (targetPage == -1) {
