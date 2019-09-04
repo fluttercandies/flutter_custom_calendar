@@ -4,6 +4,10 @@ class Constants {
   static const int MODE_SINGLE_SELECT = 1;
   static const int MODE_MULTI_SELECT = 2;
 
+  //展开状态
+  static const int STATUS_EXPAND=1;//展开
+  static const int STATUS_SHRINK=2;//收缩
+
   /**
    * 一周七天
    */

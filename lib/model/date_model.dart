@@ -26,7 +26,8 @@ class DateModel {
 
   bool isInRange = false; //是否在范围内,比如可以实现在某个范围外，设置置灰的功能
   bool isSelected; //是否被选中，用来实现一些标记或者选择功能
-  bool isCanClick = true; //todo:是否可点击：设置范围外的日历不可点击，或者可以通过自定义拦截点击事件来设置true或者false
+  bool isCanClick =
+      true; //todo:是否可点击：设置范围外的日历不可点击，或者可以通过自定义拦截点击事件来设置true或者false
 
   @override
   String toString() {
@@ -59,4 +60,15 @@ class DateModel {
 
   @override
   int get hashCode => year.hashCode ^ month.hashCode ^ day.hashCode;
+
+  //是否是同一天
+  bool isSameWith(DateModel dateModel) {
+    return year == dateModel.year &&
+        month == dateModel.month &&
+        day == dateModel.day;
+  }
+
+
+
+
 }

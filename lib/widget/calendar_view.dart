@@ -3,7 +3,7 @@ import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
-
+import 'package:flutter_custom_calendar/widget/week_view_pager.dart';
 
 /**
  * 暂时默认是周一开始的
@@ -21,12 +21,27 @@ class CalendarViewWidget extends StatefulWidget {
   _CalendarViewWidgetState createState() => _CalendarViewWidgetState();
 }
 
-class _CalendarViewWidgetState extends State<CalendarViewWidget> {
+class _CalendarViewWidgetState extends State<CalendarViewWidget>
+    with SingleTickerProviderStateMixin {
   double itemHeight;
   double totalHeight;
 
+  bool expand = true;
+
+  AnimationController _animationController;
+
   @override
-  void initState() {}
+  void initState() {
+    _animationController =
+        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+
+    widget.calendarController.expandChanged.addListener(() {
+      print("_CalendarViewWidgetState:$expand");
+      setState(() {
+        expand = !expand;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,38 +57,82 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
            * 利用const，避免每次setState都会刷新到这顶部的view
            */
           widget.calendarController.weekBarItemWidgetBuilder(),
-          Container(
-            height: totalHeight,
-            child: MonthViewPager(
-              selectMode: widget.calendarController.selectMode,
-              monthChange: (int year, int month) {
-                widget.calendarController.monthChange(year, month);
-              },
-              calendarSelect: (dateModel) {
-                widget.calendarController.selectDateModel =dateModel;
-                widget.calendarController.calendarSelect(dateModel);
-              },
-              monthList: widget.calendarController.monthList,
-              pageController: widget.calendarController.pageController,
-              selectedDateList: widget.calendarController.selectedDateList,
-              selectDateModel: widget.calendarController.selectDateModel,
-              dayWidgetBuilder: widget.calendarController.dayWidgetBuilder,
-              minSelectDate: DateModel()
-                ..year = widget.calendarController.minSelectYear
-                ..month = widget.calendarController.minSelectMonth
-                ..day = widget.calendarController.minSelectDay,
-              maxSelectDate: DateModel()
-                ..year = widget.calendarController.maxSelectYear
-                ..month = widget.calendarController.maxSelectMonth
-                ..day = widget.calendarController.maxSelectDay,
-              maxMultiSelectCount:
-                  widget.calendarController.maxMultiSelectCount,
-              multiSelectOutOfRange:
-                  widget.calendarController.multiSelectOutOfRange,
-              multiSelectOutOfSize:
-                  widget.calendarController.multiSelectOutOfSize,
-              extraDataMap: widget.calendarController.extraDataMap,
-            ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            height: expand ? totalHeight : itemHeight,
+            child: expand
+                ? Container(
+                    height: totalHeight,
+                    child: MonthViewPager(
+                      selectMode: widget.calendarController.selectMode,
+                      monthChange: (int year, int month) {
+                        widget.calendarController.monthChange(year, month);
+                      },
+                      calendarSelect: (dateModel) {
+                        widget.calendarController.selectDateModel = dateModel;
+                        widget.calendarController.calendarSelect(dateModel);
+                      },
+                      monthList: widget.calendarController.monthList,
+                      pageController: widget.calendarController.pageController,
+                      selectedDateList:
+                          widget.calendarController.selectedDateList,
+                      selectDateModel:
+                          widget.calendarController.selectDateModel,
+                      dayWidgetBuilder:
+                          widget.calendarController.dayWidgetBuilder,
+                      minSelectDate: DateModel()
+                        ..year = widget.calendarController.minSelectYear
+                        ..month = widget.calendarController.minSelectMonth
+                        ..day = widget.calendarController.minSelectDay,
+                      maxSelectDate: DateModel()
+                        ..year = widget.calendarController.maxSelectYear
+                        ..month = widget.calendarController.maxSelectMonth
+                        ..day = widget.calendarController.maxSelectDay,
+                      maxMultiSelectCount:
+                          widget.calendarController.maxMultiSelectCount,
+                      multiSelectOutOfRange:
+                          widget.calendarController.multiSelectOutOfRange,
+                      multiSelectOutOfSize:
+                          widget.calendarController.multiSelectOutOfSize,
+                      extraDataMap: widget.calendarController.extraDataMap,
+                    ),
+                  )
+                : Container(
+                    height: itemHeight,
+                    child: WeekViewPager(
+                      selectMode: widget.calendarController.selectMode,
+                      monthChange: (int year, int month) {
+                        widget.calendarController.monthChange(year, month);
+                      },
+                      calendarSelect: (dateModel) {
+                        widget.calendarController.selectDateModel = dateModel;
+                        widget.calendarController.calendarSelect(dateModel);
+                      },
+                      weekList: widget.calendarController.weekList,
+                      pageController: widget.calendarController.pageController,
+                      selectedDateList:
+                          widget.calendarController.selectedDateList,
+                      selectDateModel:
+                          widget.calendarController.selectDateModel,
+                      dayWidgetBuilder:
+                          widget.calendarController.dayWidgetBuilder,
+                      minSelectDate: DateModel()
+                        ..year = widget.calendarController.minSelectYear
+                        ..month = widget.calendarController.minSelectMonth
+                        ..day = widget.calendarController.minSelectDay,
+                      maxSelectDate: DateModel()
+                        ..year = widget.calendarController.maxSelectYear
+                        ..month = widget.calendarController.maxSelectMonth
+                        ..day = widget.calendarController.maxSelectDay,
+                      maxMultiSelectCount:
+                          widget.calendarController.maxMultiSelectCount,
+                      multiSelectOutOfRange:
+                          widget.calendarController.multiSelectOutOfRange,
+                      multiSelectOutOfSize:
+                          widget.calendarController.multiSelectOutOfSize,
+                      extraDataMap: widget.calendarController.extraDataMap,
+                    ),
+                  ),
           ),
         ],
       ),

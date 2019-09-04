@@ -16,6 +16,10 @@ class CalendarController {
   //默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
   int selectMode;
 
+  //展开状态
+  bool expandStatus;
+  ValueNotifier<bool> expandChanged;
+
   //日历显示的最小年份和最大年份
   int minYear;
   int maxYear;
@@ -56,10 +60,12 @@ class CalendarController {
    * 下面的信息不是配置的
    */
   List<DateModel> monthList = new List(); //月份list
+  List<DateModel> weekList=new List();//星期list
   PageController pageController;
 
   CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
+      bool expandStatus = true,
       DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
       WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
       int minYear = 1971,
@@ -96,6 +102,8 @@ class CalendarController {
     this.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
     this.maxMultiSelectCount = maxMultiSelectCount;
     this.extraDataMap = extraDataMap;
+    this.expandStatus = expandStatus;
+    this.expandChanged=ValueNotifier(expandStatus);
 
     this.selectedDateList = Set();
     if (selectedDateTimeList != null && selectedDateTimeList.isNotEmpty) {
@@ -242,6 +250,17 @@ class CalendarController {
     }
     return selectDateModel;
   }
+
+  //切换展开状态
+  void toggleExpandStatus(){
+    expandChanged.value=!expandChanged.value;
+    print("toggleExpandStatus：${expandChanged.value}");
+  }
+
+  void addExpandChangeListener(){
+
+  }
+
 }
 
 /**

@@ -172,4 +172,30 @@ class DateUtil {
     print("$year年$month月:有${((preIndex + monthDayCount) / 7).toInt() + 1}行");
     return ((preIndex + monthDayCount) / 7).toInt() + 1;
   }
+
+  /**
+   * 获取本周的7个item
+   */
+  static List<DateModel> initCalendarForWeekView(
+      int year, int month, DateTime currentDate, int weekStart,
+      {DateModel minSelectDate,
+      DateModel maxSelectDate,
+      Map<DateTime, Object> extraDataMap}) {
+    List<DateModel> items = List();
+
+    int weekDay = currentDate.weekday;
+
+    //计算本周的第一天
+    DateTime firstDayOfWeek = currentDate.add(Duration(days: -weekDay));
+
+    for (int i = 1; i <= 7; i++) {
+      DateModel dateModel =
+          DateModel.fromDateTime(firstDayOfWeek.add(Duration(days: i)));
+      items.add(dateModel);
+    }
+
+    print("items.toString():${items.toString()}");
+
+    return items;
+  }
 }
