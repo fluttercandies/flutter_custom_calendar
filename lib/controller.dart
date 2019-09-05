@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_calendar/CalendarProvider.dart';
+import 'package:flutter_custom_calendar/configuration.dart';
+import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
 import 'package:flutter_custom_calendar/widget/default_custom_day_view.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/widget/default_week_bar.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:provider/provider.dart';
 
 /**
  * 利用controller来控制视图
@@ -13,55 +17,19 @@ class CalendarController {
   static const Set<DateTime> EMPTY_SET = {};
   static const Map<DateTime, Object> EMPTY_MAP = {};
 
-  //默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
-  int selectMode;
+  CalendarConfiguration calendarConfiguration;
 
-  //展开状态
-  bool expandStatus;
-  ValueNotifier<bool> expandChanged;
-
-  //日历显示的最小年份和最大年份
-  int minYear;
-  int maxYear;
-
-  //日历显示的最小年份的月份，最大年份的月份
-  int minYearMonth;
-  int maxYearMonth;
-
-  //日历显示的当前的年份和月份
-  int nowYear;
-  int nowMonth;
-
-  //可操作的范围设置,比如点击选择
-  int minSelectYear;
-  int minSelectMonth;
-  int minSelectDay;
-
-  int maxSelectYear;
-  int maxSelectMonth;
-  int maxSelectDay; //注意：不能超过对应月份的总天数
-
-  Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
-  DateModel selectDateModel; //当前选择项,用于单选
-  int maxMultiSelectCount; //多选，最多选多少个
-  Map<DateTime, Object> extraDataMap = new Map(); //自定义额外的数据
-
-  //各种事件回调
-  OnMonthChange monthChange; //月份切换事件
-  OnCalendarSelect calendarSelect; //点击选择事件
-  OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
-  OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
-
-  //支持自定义绘制
-  DayWidgetBuilder dayWidgetBuilder; //创建日历item
-  WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
+  CalendarProvider calendarProvider = CalendarProvider();
 
   /**
    * 下面的信息不是配置的
    */
   List<DateModel> monthList = new List(); //月份list
-  List<DateModel> weekList=new List();//星期list
-  PageController pageController;
+  List<DateModel> weekList = new List(); //星期list
+  PageController pageController; //月份的controller
+  PageController weekController; //星期的controller
+
+  ValueNotifier<bool> expandChanged; //扩展模式发生变化
 
   CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
@@ -84,32 +52,31 @@ class CalendarController {
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
       Map<DateTime, Object> extraDataMap = EMPTY_MAP}) {
-    this.selectMode = selectMode;
-    this.minYear = minYear;
-    this.maxYear = maxYear;
-    this.minYearMonth = minYearMonth;
-    this.maxYearMonth = maxYearMonth;
-    this.nowYear = nowYear;
-    this.nowMonth = nowMonth;
-    this.minSelectYear = minSelectYear;
-    this.minSelectMonth = minSelectMonth;
-    this.minSelectDay = minSelectDay;
-    this.maxSelectYear = maxSelectYear;
-    this.maxSelectMonth = maxSelectMonth;
-    this.maxSelectDay = maxSelectDay;
-    this.selectDateModel = selectDateModel;
-    this.dayWidgetBuilder = dayWidgetBuilder;
-    this.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
-    this.maxMultiSelectCount = maxMultiSelectCount;
-    this.extraDataMap = extraDataMap;
-    this.expandStatus = expandStatus;
-    this.expandChanged=ValueNotifier(expandStatus);
+    this.expandChanged = ValueNotifier(expandStatus);
 
-    this.selectedDateList = Set();
+    calendarConfiguration = CalendarConfiguration(
+        selectMode: selectMode,
+        minYear: minYear,
+        maxYear: maxYear,
+        maxYearMonth: maxYearMonth,
+        nowYear: nowYear,
+        nowMonth: nowMonth,
+        minSelectYear: minSelectYear,
+        minSelectMonth: minSelectMonth,
+        minYearMonth: minYearMonth,
+        minSelectDay: minSelectDay,
+        maxSelectYear: maxSelectYear,
+        maxSelectMonth: maxSelectMonth,
+        maxSelectDay: maxSelectDay);
+
+    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
+    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
+
     if (selectedDateTimeList != null && selectedDateTimeList.isNotEmpty) {
-      this.selectedDateList.addAll(selectedDateTimeList.map((dateTime) {
-            return DateModel.fromDateTime(dateTime);
-          }).toSet());
+      calendarConfiguration.defaultSelectedDateList
+          .addAll(selectedDateTimeList.map((dateTime) {
+        return DateModel.fromDateTime(dateTime);
+      }).toSet());
     }
 
     //初始化pageController,initialPage默认是当前时间对于的页面
@@ -141,26 +108,56 @@ class CalendarController {
       }
     }
     this.pageController = new PageController(initialPage: initialPage);
+
+    //计算一共多少周
+    //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
+    int initialWeekPage;
+    int nowWeekIndex = 0;
+    weekList.clear();
+    int sumDays = 0; //总天数
+
+    DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
+    //计算第一个星期的第一天的日期
+    DateTime firstWeekDate =
+        firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
+    print("第一个星期的第一天的日期firstWeekDate:$firstWeekDate");
+    DateTime lastDay = DateTime(maxYear, maxYearMonth,
+        DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
+    print("最后一天：$lastDay");
+    for (DateTime dateTime = firstWeekDate;
+        dateTime.isBefore(lastDay);
+        dateTime = dateTime.add(Duration(days: 7))) {
+      DateModel dateModel = DateModel.fromDateTime(dateTime);
+      weekList.add(dateModel);
+    }
+    this.weekController = new PageController();
+
+    calendarConfiguration.monthList = monthList;
+    calendarConfiguration.weekList = weekList;
+    calendarConfiguration.pageController = pageController;
+    calendarConfiguration.weekController = weekController;
+    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
+    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
   }
 
   //月份切换监听
   void addMonthChangeListener(OnMonthChange listener) {
-    this.monthChange = listener;
+    this.calendarConfiguration.monthChange = listener;
   }
 
   //点击选择监听
   void addOnCalendarSelectListener(OnCalendarSelect listener) {
-    this.calendarSelect = listener;
+    this.calendarConfiguration.calendarSelect = listener;
   }
 
   //多选超出指定范围
   void addOnMultiSelectOutOfRangeListener(OnMultiSelectOutOfRange listener) {
-    this.multiSelectOutOfRange = listener;
+    this.calendarConfiguration.multiSelectOutOfRange = listener;
   }
 
   //多选超出限制个数
   void addOnMultiSelectOutOfSizeListener(OnMultiSelectOutOfSize listener) {
-    this.multiSelectOutOfSize = listener;
+    this.calendarConfiguration.multiSelectOutOfSize = listener;
   }
 
   //跳转到指定日期
@@ -237,30 +234,21 @@ class CalendarController {
 
   //获取被选中的日期,多选
   Set<DateModel> getMultiSelectCalendar() {
-    if (selectedDateList.isEmpty) {
-      return null;
-    }
-    return selectedDateList;
+    return calendarProvider.selectedDateList;
   }
 
   //获取被选中的日期，单选
   DateModel getSingleSelectCalendar() {
-    if (selectDateModel == null) {
-      return null;
-    }
-    return selectDateModel;
+    return calendarProvider.selectDateModel;
   }
 
   //切换展开状态
-  void toggleExpandStatus(){
-    expandChanged.value=!expandChanged.value;
+  void toggleExpandStatus() {
+    expandChanged.value = !expandChanged.value;
     print("toggleExpandStatus：${expandChanged.value}");
   }
 
-  void addExpandChangeListener(){
-
-  }
-
+  void addExpandChangeListener() {}
 }
 
 /**

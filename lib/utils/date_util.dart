@@ -15,6 +15,16 @@ class DateUtil {
   }
 
   /**
+   * 获取某年的天数
+   */
+  static int getYearDaysCount(int year) {
+    if (isLeapYear(year)) {
+      return 366;
+    }
+    return 365;
+  }
+
+  /**
    * 获取某月的天数
    *
    * @param year  年
