@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/CalendarProvider.dart';
+import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 class CalendarController {
   static const Set<DateTime> EMPTY_SET = {};
   static const Map<DateTime, Object> EMPTY_MAP = {};
+  static const Duration DEFAULT_DURATION = const Duration(milliseconds: 500);
 
   CalendarConfiguration calendarConfiguration;
 
@@ -26,10 +27,8 @@ class CalendarController {
    */
   List<DateModel> monthList = new List(); //月份list
   List<DateModel> weekList = new List(); //星期list
-  PageController pageController; //月份的controller
+  PageController monthController; //月份的controller
   PageController weekController; //星期的controller
-
-  ValueNotifier<bool> expandChanged; //扩展模式发生变化
 
   CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
@@ -52,7 +51,7 @@ class CalendarController {
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
       Map<DateTime, Object> extraDataMap = EMPTY_MAP}) {
-    this.expandChanged = ValueNotifier(expandStatus);
+//    this.expandChanged = ValueNotifier(expandStatus);
 
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
@@ -67,6 +66,7 @@ class CalendarController {
         minSelectDay: minSelectDay,
         maxSelectYear: maxSelectYear,
         maxSelectMonth: maxSelectMonth,
+        defaultExpandStatus: expandStatus,
         maxSelectDay: maxSelectDay);
 
     calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
@@ -107,7 +107,7 @@ class CalendarController {
         nowMonthIndex++;
       }
     }
-    this.pageController = new PageController(initialPage: initialPage);
+    this.monthController = new PageController(initialPage: initialPage);
 
     //计算一共多少周
     //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
@@ -125,16 +125,17 @@ class CalendarController {
         DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
     print("最后一天：$lastDay");
     for (DateTime dateTime = firstWeekDate;
-        dateTime.isBefore(lastDay);
+        !dateTime.isAfter(lastDay);
         dateTime = dateTime.add(Duration(days: 7))) {
       DateModel dateModel = DateModel.fromDateTime(dateTime);
       weekList.add(dateModel);
     }
     this.weekController = new PageController();
+    print("weekList:$weekList");
 
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
-    calendarConfiguration.pageController = pageController;
+    calendarConfiguration.pageController = monthController;
     calendarConfiguration.weekController = weekController;
     calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
     calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
@@ -160,6 +161,74 @@ class CalendarController {
     this.calendarConfiguration.multiSelectOutOfSize = listener;
   }
 
+  //切换展开状态
+  void toggleExpandStatus() {
+    calendarProvider.expandStatus.value = !calendarProvider.expandStatus.value;
+    print("toggleExpandStatus：${calendarProvider.expandStatus.value}");
+  }
+
+  //监听展开变化
+  void addExpandChangeListener(ValueChanged<bool> expandChange) {
+    calendarProvider.expandStatus.addListener(() {
+      expandChange(calendarProvider.expandStatus.value);
+    });
+  }
+
+  /**
+   * 月份或者星期的上一页
+   */
+  Future<bool> previousPage() async {
+    if (calendarProvider.expandStatus.value == true) {
+      //月视图
+      int currentIndex = monthController.page.toInt();
+      if (currentIndex == 0) {
+        return false;
+      } else {
+        monthController.previousPage(
+            duration: DEFAULT_DURATION, curve: Curves.ease);
+        return true;
+      }
+    } else {
+      //周视图
+      int currentIndex = weekController.page.toInt();
+      if (currentIndex == 0) {
+        return false;
+      } else {
+        weekController.previousPage(
+            duration: DEFAULT_DURATION, curve: Curves.ease);
+        return true;
+      }
+    }
+  }
+
+  /**
+   * 月份或者星期的下一页
+   * true：成功
+   * false:是最后一页
+   */
+  Future<bool> nextPage() async {
+    if (calendarProvider.expandStatus.value == true) {
+      //月视图
+      int currentIndex = monthController.page.toInt();
+      if (monthList.length - 1 == currentIndex) {
+        return false;
+      } else {
+        monthController.nextPage(
+            duration: DEFAULT_DURATION, curve: Curves.ease);
+        return true;
+      }
+    } else {
+      //周视图
+      int currentIndex = weekController.page.toInt();
+      if (weekList.length - 1 == currentIndex) {
+        return false;
+      } else {
+        weekController.nextPage(duration: DEFAULT_DURATION, curve: Curves.ease);
+        return true;
+      }
+    }
+  }
+
   //跳转到指定日期
   void moveToCalendar(int year, int month, int day,
       {bool needAnimation = false,
@@ -171,11 +240,14 @@ class CalendarController {
     if (targetPage == -1) {
       return;
     }
+    if (monthController.hasClients == false) {
+      return;
+    }
     if (needAnimation) {
-      pageController.animateToPage(targetPage,
+      monthController.animateToPage(targetPage,
           duration: duration, curve: curve);
     } else {
-      pageController.jumpToPage(targetPage);
+      monthController.jumpToPage(targetPage);
     }
   }
 
@@ -185,7 +257,7 @@ class CalendarController {
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
     DateTime targetDateTime =
-        monthList[pageController.page.toInt() + 12].getDateTime();
+        monthList[monthController.page.toInt() + 12].getDateTime();
     moveToCalendar(
         targetDateTime.year, targetDateTime.month, targetDateTime.day,
         needAnimation: needAnimation, duration: duration, curve: curve);
@@ -197,7 +269,7 @@ class CalendarController {
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
     DateTime targetDateTime =
-        monthList[pageController.page.toInt() - 12].getDateTime();
+        monthList[monthController.page.toInt() - 12].getDateTime();
     moveToCalendar(
         targetDateTime.year, targetDateTime.month, targetDateTime.day,
         needAnimation: needAnimation, duration: duration, curve: curve);
@@ -208,8 +280,24 @@ class CalendarController {
       {bool needAnimation = false,
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
+    //    如果当前显示的是周视图的话，需要计算出第一个月的index后，调用weekController
+    if (calendarProvider.expandStatus.value == false) {
+      int currentMonth = weekList[weekController.page.toInt()].month;
+      for (int i = weekController.page.toInt(); i < weekList.length; i++) {
+        if (weekList[i].month != currentMonth) {
+          weekController.jumpToPage(i);
+          break;
+        }
+      }
+      return;
+    }
+
+    if ((monthController.page.toInt() + 1) >= monthList.length) {
+      print("moveToNextMonth：当前是最后一个月份");
+      return;
+    }
     DateTime targetDateTime =
-        monthList[pageController.page.toInt() + 1].getDateTime();
+        monthList[monthController.page.toInt() + 1].getDateTime();
     moveToCalendar(
         targetDateTime.year, targetDateTime.month, targetDateTime.day,
         needAnimation: needAnimation, duration: duration, curve: curve);
@@ -220,8 +308,27 @@ class CalendarController {
       {bool needAnimation = false,
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
+    //    如果当前显示的是周视图的话，需要计算出第一个月的index后，调用weekController
+    if (calendarProvider.expandStatus.value == false) {
+      int currentMonth = weekList[weekController.page.toInt()].month;
+      for (int i = weekController.page.toInt(); i >= 0; i--) {
+        if (weekList[i].month != currentMonth &&
+            weekList[i].isAfter(DateModel.fromDateTime(DateTime(
+                calendarConfiguration.minYear,
+                calendarConfiguration.minYearMonth)))) {
+          weekController.jumpToPage(i);
+          break;
+        }
+      }
+      return;
+    }
+
+    if ((monthController.page.toInt()) == 0) {
+      print("moveToPreviousMonth：当前是第一个月份");
+      return;
+    }
     DateTime targetDateTime =
-        monthList[pageController.page.toInt() - 1].getDateTime();
+        monthList[monthController.page.toInt() - 1].getDateTime();
     moveToCalendar(
         targetDateTime.year, targetDateTime.month, targetDateTime.day,
         needAnimation: needAnimation, duration: duration, curve: curve);
@@ -229,7 +336,7 @@ class CalendarController {
 
   // 获取当前的月份
   DateModel getCurrentMonth() {
-    return monthList[pageController.page.toInt()];
+    return monthList[monthController.page.toInt()];
   }
 
   //获取被选中的日期,多选
@@ -241,14 +348,6 @@ class CalendarController {
   DateModel getSingleSelectCalendar() {
     return calendarProvider.selectDateModel;
   }
-
-  //切换展开状态
-  void toggleExpandStatus() {
-    expandChanged.value = !expandChanged.value;
-    print("toggleExpandStatus：${expandChanged.value}");
-  }
-
-  void addExpandChangeListener() {}
 }
 
 /**

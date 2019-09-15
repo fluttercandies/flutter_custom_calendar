@@ -1,88 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_calendar/calendar_provider.dart';
+import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/widget/week_view.dart';
+import 'package:provider/provider.dart';
 
 class WeekViewPager extends StatefulWidget {
-  final OnMonthChange monthChange;
-
-  final OnCalendarSelect calendarSelect;
-  final DayWidgetBuilder dayWidgetBuilder;
-  OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
-  OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
-
-  Set<DateModel> selectedDateList; //被选中的日期,用于多选
-  DateModel selectDateModel; //当前选择项,用于单选
-
-  final List<DateModel> weekList;
-  PageController pageController;
-
-  DateModel minSelectDate;
-  DateModel maxSelectDate;
-
-  int selectMode;
-  int maxMultiSelectCount;
-
-  Map<DateTime, Object> extraDataMap; //自定义额外的数据
-
-  WeekViewPager(
-      {this.monthChange,
-      this.calendarSelect,
-      this.weekList,
-      this.pageController,
-      this.selectedDateList,
-      this.selectDateModel,
-      this.dayWidgetBuilder,
-      this.minSelectDate,
-      this.maxSelectDate,
-      this.selectMode,
-      this.maxMultiSelectCount,
-      this.multiSelectOutOfRange,
-      this.multiSelectOutOfSize,
-      this.extraDataMap});
+  WeekViewPager();
 
   @override
   _WeekViewPagerState createState() => _WeekViewPagerState();
 }
 
 class _WeekViewPagerState extends State<WeekViewPager> {
-
-  int lastMonth;//上一个月份
+  int lastMonth; //保存上一个月份，不然不知道月份发生了变化
+  CalendarProvider calendarProvider;
 
   @override
   void initState() {
-//      lastMonth=
+    print("WeekViewPager initState");
+
+    calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
+
+    lastMonth = calendarProvider.lastClickDateModel.month;
+    //计算当前周视图的index
+    DateModel dateModel = calendarProvider.lastClickDateModel;
+    List<DateModel> weekList = calendarProvider.calendarConfiguration.weekList;
+    int index = 0;
+
+    for (int i = 0; i < weekList.length; i++) {
+      DateModel firstDayOfWeek = weekList[i];
+      DateModel lastDayOfWeek = DateModel.fromDateTime(
+          firstDayOfWeek.getDateTime().add(Duration(days: 7)));
+
+      if ((dateModel.isSameWith(weekList[i]) ||
+              dateModel.isAfter(weekList[i])) &&
+          dateModel.isBefore(lastDayOfWeek)) {
+        index = i;
+        break;
+      }
+    }
+//    print("weekList:$weekList");
+//    print("当前周:index:$index");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      calendarProvider.calendarConfiguration.weekController.jumpToPage(index);
+    });
+  }
+
+  @override
+  void dispose() {
+    print("WeekViewPager dispose");
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    //    获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
+    CalendarProvider calendarProvider =
+        Provider.of<CalendarProvider>(context, listen: false);
+    CalendarConfiguration configuration =
+        calendarProvider.calendarConfiguration;
+
     return Container(
       child: PageView.builder(
         onPageChanged: (position) {
-          //月份的变化
-          DateModel dateModel = widget.weekList[position];
-          widget.monthChange(dateModel.year, dateModel.month);
+//          周视图的变化
+          DateModel firstDayOfWeek = configuration.weekList[position];
+          int currentMonth = firstDayOfWeek.month;
+          if (lastMonth != currentMonth) {
+            configuration.monthChange(
+                firstDayOfWeek.year, firstDayOfWeek.month);
+          }
+//          DateModel dateModel = configuration.weekList[position];
+//          configuration.monthChange(dateModel.year, dateModel.month);
         },
-        controller: widget.pageController,
+        controller: configuration.weekController,
         itemBuilder: (context, index) {
-          DateModel dateModel = widget.weekList[index];
+          DateModel dateModel = configuration.weekList[index];
           return new WeekView(
-            selectMode: widget.selectMode,
             year: dateModel.year,
             month: dateModel.month,
-            selectDateModel: widget.selectDateModel,
-            selectedDateList: widget.selectedDateList,
-            onCalendarSelectListener: widget.calendarSelect,
-            dayWidgetBuilder: widget.dayWidgetBuilder,
-            minSelectDate: widget.minSelectDate,
-            maxSelectDate: widget.maxSelectDate,
-            maxMultiSelectCount: widget.maxMultiSelectCount,
-            multiSelectOutOfRange: widget.multiSelectOutOfRange,
-            multiSelectOutOfSize: widget.multiSelectOutOfSize,
-            extraDataMap: widget.extraDataMap,
+            firstDayOfWeek: dateModel,
+            minSelectDate: DateModel.fromDateTime(DateTime(
+                configuration.minSelectYear,
+                configuration.minSelectMonth,
+                configuration.minSelectDay)),
+            maxSelectDate: DateModel.fromDateTime(DateTime(
+                configuration.maxSelectYear,
+                configuration.maxSelectMonth,
+                configuration.maxSelectDay)),
+            extraDataMap: configuration.extraDataMap,
           );
         },
-        itemCount: widget.weekList.length,
+        itemCount: configuration.weekList.length,
       ),
     );
   }

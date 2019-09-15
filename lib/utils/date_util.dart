@@ -191,6 +191,7 @@ class DateUtil {
       {DateModel minSelectDate,
       DateModel maxSelectDate,
       Map<DateTime, Object> extraDataMap}) {
+    print("initCalendarForWeekView");
     List<DateModel> items = List();
 
     int weekDay = currentDate.weekday;
@@ -201,11 +202,24 @@ class DateUtil {
     for (int i = 1; i <= 7; i++) {
       DateModel dateModel =
           DateModel.fromDateTime(firstDayOfWeek.add(Duration(days: i)));
+
+      //判断是否在范围内
+      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) &&
+          dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+        dateModel.isInRange = true;
+      } else {
+        dateModel.isInRange = false;
+      }
+      //将自定义额外的数据，存储到相应的model中
+      if (extraDataMap != null && extraDataMap.isNotEmpty) {
+        DateTime dateTime = dateModel.getDateTime();
+        if (extraDataMap.containsKey(dateTime)) {
+          dateModel.extraData = extraDataMap[dateTime];
+        }
+      }
+
       items.add(dateModel);
     }
-
-    print("items.toString():${items.toString()}");
-
     return items;
   }
 }

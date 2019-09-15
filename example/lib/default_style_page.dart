@@ -1,3 +1,4 @@
+import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
@@ -19,7 +20,8 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
   void initState() {
     text = "${DateTime.now().year}年${DateTime.now().month}月";
 
-    controller = new CalendarController();
+    controller = new CalendarController(
+        minYear: 2019, minYearMonth: 8, maxYear: 2019, maxYearMonth: 9);
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -50,13 +52,15 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
                 new IconButton(
                     icon: Icon(Icons.navigate_before),
                     onPressed: () {
-                      controller.moveToPreviousMonth();
+//                      controller.moveToPreviousMonth();
+                      controller.previousPage();
                     }),
                 new Text(text),
                 new IconButton(
                     icon: Icon(Icons.navigate_next),
                     onPressed: () {
-                      controller.moveToNextMonth();
+//                      controller.moveToNextMonth();
+                      controller.nextPage();
                     }),
               ],
             ),
@@ -69,7 +73,9 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          controller.toggleExpandStatus();
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

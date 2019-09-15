@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/CalendarProvider.dart';
+import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
 import 'package:provider/provider.dart';
 
@@ -13,14 +14,50 @@ class MonthViewPager extends StatefulWidget {
 }
 
 class _MonthViewPagerState extends State<MonthViewPager> {
+  CalendarProvider calendarProvider;
+
   @override
-  void initState() {}
+  void initState() {
+    calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
+
+    //计算当前月视图的index
+    DateModel dateModel = calendarProvider.lastClickDateModel;
+    List<DateModel> monthList =
+        calendarProvider.calendarConfiguration.monthList;
+    int index = 0;
+    for (int i = 0; i < monthList.length; i++) {
+      DateModel firstDayOfMonth = monthList[i];
+      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth
+          .getDateTime()
+          .add(Duration(
+              days: DateUtil.getMonthDaysCount(
+                  firstDayOfMonth.year, firstDayOfMonth.month))));
+//      print("firstDayOfMonth:$firstDayOfMonth");
+//      print("lastDayOfMonth:$lastDayOfMonth");
+
+      if ((dateModel.isAfter(firstDayOfMonth) ||
+              dateModel.isSameWith(firstDayOfMonth)) &&
+          dateModel.isBefore(lastDayOfMonth)) {
+        index = i;
+        break;
+      }
+    }
+//    print("monthList:$monthList");
+//    print("当前月:index:$index");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      calendarProvider.calendarConfiguration.pageController.jumpToPage(index);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 //    获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
-    CalendarProvider calendarProvider =
-        Provider.of<CalendarProvider>(context, listen: false);
+    calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
 
@@ -35,13 +72,8 @@ class _MonthViewPagerState extends State<MonthViewPager> {
         itemBuilder: (context, index) {
           DateModel dateModel = configuration.monthList[index];
           return new MonthView(
-//            selectMode: configuration.selectMode,
             year: dateModel.year,
             month: dateModel.month,
-//            selectDateModel: calendarProvider.selectDateModel,
-//            selectedDateList: calendarProvider.selectedDateList,
-//            onCalendarSelectListener: configuration.calendarSelect,
-//            dayWidgetBuilder: configuration.dayWidgetBuilder,
             minSelectDate: DateModel.fromDateTime(DateTime(
                 configuration.minSelectYear,
                 configuration.minSelectMonth,
@@ -50,10 +82,7 @@ class _MonthViewPagerState extends State<MonthViewPager> {
                 configuration.maxSelectYear,
                 configuration.maxSelectMonth,
                 configuration.maxSelectDay)),
-//            maxMultiSelectCount: configuration.maxMultiSelectCount,
-//            multiSelectOutOfRange: configuration.multiSelectOutOfRange,
-//            multiSelectOutOfSize: configuration.multiSelectOutOfSize,
-//            extraDataMap: configuration.extraDataMap,
+            extraDataMap: configuration.extraDataMap,
           );
         },
         itemCount: configuration.monthList.length,

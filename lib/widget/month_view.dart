@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/CalendarProvider.dart';
+import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
@@ -10,32 +10,22 @@ import 'package:provider/provider.dart';
  * 月视图，显示整个月的日子
  */
 class MonthView extends StatefulWidget {
-//  OnCalendarSelect onCalendarSelectListener;
+  final int year;
+  final int month;
+  final int day;
 
-//  Set<DateModel> selectedDateList; //被选中的日期
-//
-//  DateModel selectDateModel; //当前选择项,用于单选
-//
-//  DayWidgetBuilder dayWidgetBuilder;
-//
-//  OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
-//  OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
+  final DateModel minSelectDate;
+  final DateModel maxSelectDate;
 
-  int year;
-  int month;
-  int day;
+  final Map<DateTime, Object> extraDataMap; //自定义额外的数据
 
-  DateModel minSelectDate;
-  DateModel maxSelectDate;
-
-  Map<DateTime, Object> extraDataMap; //自定义额外的数据
-
-  MonthView({
+  const MonthView({
     @required this.year,
     @required this.month,
     this.day,
     this.minSelectDate,
     this.maxSelectDate,
+    this.extraDataMap,
   });
 
   @override
@@ -82,7 +72,7 @@ class _MonthViewState extends State<MonthView> {
       CalendarConfiguration configuration =
           calendarProvider.calendarConfiguration;
       print(
-          "Consumer:calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
+          "MonthView Consumer:calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
       return new GridView.builder(
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -108,6 +98,8 @@ class _MonthViewState extends State<MonthView> {
             return GestureDetector(
               onTap: () {
                 print("GestureDetector onTap：$dateModel");
+                print("!dateModel.isInRange:${!dateModel.isInRange}");
+
                 //范围外不可点击
                 if (!dateModel.isInRange) {
                   //多选回调
@@ -116,6 +108,8 @@ class _MonthViewState extends State<MonthView> {
                   }
                   return;
                 }
+
+                calendarProvider.lastClickDateModel = dateModel;
 
                 if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
                   //多选，判断是否超过限制，超过范围

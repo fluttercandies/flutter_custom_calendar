@@ -68,7 +68,13 @@ class DateModel {
         day == dateModel.day;
   }
 
+  //是否在某天之后
+  bool isAfter(DateModel dateModel) {
+    return this.getDateTime().isAfter(dateModel.getDateTime());
+  }
 
-
-
+  //是否在某天之前
+  bool isBefore(DateModel dateModel) {
+    return this.getDateTime().isBefore(dateModel.getDateTime());
+  }
 }
