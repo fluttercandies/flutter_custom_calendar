@@ -2143,8 +2143,6 @@ class SolarTermUtil {
     List<String> solarTerms = new List(24);
     List<String> preOffset = getSolarTermsPreOffset(year - 1);
     List<String> nextOffset = getSolarTermsNextOffset(year - 1);
-//    print("getSolarTerms:" + preOffset.toString());
-//    print("getSolarTerms:" + nextOffset.toString());
     System.arraycopy(preOffset, 0, solarTerms, 0, preOffset.length);
     System.arraycopy(nextOffset, 0, solarTerms, 22, nextOffset.length);
 

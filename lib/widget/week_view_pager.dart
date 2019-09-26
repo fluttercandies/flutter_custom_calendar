@@ -72,6 +72,8 @@ class _WeekViewPagerState extends State<WeekViewPager> {
             configuration.monthChange(
                 firstDayOfWeek.year, firstDayOfWeek.month);
           }
+          calendarProvider.lastClickDateModel =
+              configuration.weekList[position];
 //          DateModel dateModel = configuration.weekList[position];
 //          configuration.monthChange(dateModel.year, dateModel.month);
         },

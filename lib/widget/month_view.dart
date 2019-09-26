@@ -3,6 +3,7 @@ import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:provider/provider.dart';
 
@@ -59,11 +60,7 @@ class _MonthViewState extends State<MonthView> {
     itemHeight = MediaQuery.of(context).size.width / 7;
     totalHeight = itemHeight * lineCount + mainSpacing * (lineCount - 1);
 
-    return GestureDetector(
-        onVerticalDragStart: (DragStartDetails detail) {
-          print("onHorizontalDragStart:$detail");
-        },
-        child: Container(height: totalHeight, child: getView()));
+    return Container(height: totalHeight, child: getView());
   }
 
   Widget getView() {
@@ -71,8 +68,10 @@ class _MonthViewState extends State<MonthView> {
         builder: (context, calendarProvider, child) {
       CalendarConfiguration configuration =
           calendarProvider.calendarConfiguration;
-      print(
-          "MonthView Consumer:calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
+      LogUtil.log(
+          TAG: this.runtimeType,
+          message:
+              "build calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
       return new GridView.builder(
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -97,8 +96,9 @@ class _MonthViewState extends State<MonthView> {
 
             return GestureDetector(
               onTap: () {
-                print("GestureDetector onTap：$dateModel");
-                print("!dateModel.isInRange:${!dateModel.isInRange}");
+                LogUtil.log(
+                    TAG: this.runtimeType,
+                    message: "GestureDetector onTap: $dateModel}");
 
                 //范围外不可点击
                 if (!dateModel.isInRange) {

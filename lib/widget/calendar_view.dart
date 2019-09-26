@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
 import 'package:flutter_custom_calendar/widget/week_view_pager.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,7 @@ class CalendarContainerState extends State<CalendarContainer>
 
   @override
   Widget build(BuildContext context) {
-    print("CalendarContainerState build");
+    LogUtil.log(TAG: this.runtimeType, message: "CalendarContainerState build");
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
     itemHeight = MediaQuery.of(context).size.width / 7;
     totalHeight = itemHeight * 6 + 10 * (6 - 1);

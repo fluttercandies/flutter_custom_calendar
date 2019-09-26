@@ -38,17 +38,23 @@ class CalendarConfiguration {
   Map<DateTime, Object> extraDataMap = new Map(); //自定义额外的数据
 
   /**
-   * UI绘制相关的配置
+   * UI绘制方面的绘制
+   */
+  double verticalSpacing ;//日历item之间的竖直方向间距，默认10
+
+
+  //支持自定义绘制
+  DayWidgetBuilder dayWidgetBuilder; //创建日历item
+  WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
+
+  /**
+   * 监听变化
    */
   //各种事件回调
   OnMonthChange monthChange; //月份切换事件
   OnCalendarSelect calendarSelect; //点击选择事件
   OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
   OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
-
-  //支持自定义绘制
-  DayWidgetBuilder dayWidgetBuilder; //创建日历item
-  WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
 
   /**
    * 下面的信息不是配置的，是根据配置信息进行计算出来的
@@ -79,6 +85,7 @@ class CalendarConfiguration {
       this.weekList,
       this.pageController,
       this.weekController,
+        this.verticalSpacing,
       bool defaultExpandStatus = true}) {
     this.defaultExpandStatus = defaultExpandStatus;
   }

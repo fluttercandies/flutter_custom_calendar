@@ -16,6 +16,8 @@ class MonthViewPager extends StatefulWidget {
 class _MonthViewPagerState extends State<MonthViewPager> {
   CalendarProvider calendarProvider;
 
+  var totalHeight;
+
   @override
   void initState() {
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
@@ -32,8 +34,6 @@ class _MonthViewPagerState extends State<MonthViewPager> {
           .add(Duration(
               days: DateUtil.getMonthDaysCount(
                   firstDayOfMonth.year, firstDayOfMonth.month))));
-//      print("firstDayOfMonth:$firstDayOfMonth");
-//      print("lastDayOfMonth:$lastDayOfMonth");
 
       if ((dateModel.isAfter(firstDayOfMonth) ||
               dateModel.isSameWith(firstDayOfMonth)) &&
@@ -42,8 +42,6 @@ class _MonthViewPagerState extends State<MonthViewPager> {
         break;
       }
     }
-//    print("monthList:$monthList");
-//    print("当前月:index:$index");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       calendarProvider.calendarConfiguration.pageController.jumpToPage(index);
     });
@@ -61,32 +59,46 @@ class _MonthViewPagerState extends State<MonthViewPager> {
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
 
-    return Container(
-      child: PageView.builder(
-        onPageChanged: (position) {
-          //月份的变化
-          DateModel dateModel = configuration.monthList[position];
-          configuration.monthChange(dateModel.year, dateModel.month);
-        },
-        controller: configuration.pageController,
-        itemBuilder: (context, index) {
-          DateModel dateModel = configuration.monthList[index];
-          return new MonthView(
-            year: dateModel.year,
-            month: dateModel.month,
-            minSelectDate: DateModel.fromDateTime(DateTime(
-                configuration.minSelectYear,
-                configuration.minSelectMonth,
-                configuration.minSelectDay)),
-            maxSelectDate: DateModel.fromDateTime(DateTime(
-                configuration.maxSelectYear,
-                configuration.maxSelectMonth,
-                configuration.maxSelectDay)),
-            extraDataMap: configuration.extraDataMap,
-          );
-        },
-        itemCount: configuration.monthList.length,
-      ),
+    return PageView.builder(
+      onPageChanged: (position) {
+        //月份的变化
+        DateModel dateModel = configuration.monthList[position];
+        configuration.monthChange(dateModel.year, dateModel.month);
+        //
+        calendarProvider.lastClickDateModel = configuration.monthList[position];
+        //计算下高度，使PageView自适应高度
+
+//        double itemHeight = MediaQuery.of(context).size.width / 7;
+//
+//        int lineCount =
+//            DateUtil.getMonthViewLineCount(dateModel.year, dateModel.month);
+//        double newHeight = itemHeight * lineCount +
+//            configuration.verticalSpacing * (lineCount - 1);
+//       if(totalHeight!=newHeight){
+//         totalHeight=newHeight;
+//         setState(() {
+//
+//         });
+//       }
+      },
+      controller: configuration.pageController,
+      itemBuilder: (context, index) {
+        DateModel dateModel = configuration.monthList[index];
+        return new MonthView(
+          year: dateModel.year,
+          month: dateModel.month,
+          minSelectDate: DateModel.fromDateTime(DateTime(
+              configuration.minSelectYear,
+              configuration.minSelectMonth,
+              configuration.minSelectDay)),
+          maxSelectDate: DateModel.fromDateTime(DateTime(
+              configuration.maxSelectYear,
+              configuration.maxSelectMonth,
+              configuration.maxSelectDay)),
+          extraDataMap: configuration.extraDataMap,
+        );
+      },
+      itemCount: configuration.monthList.length,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
 /**
  * 引入provider的状态管理，保存一些临时信息
@@ -16,7 +17,9 @@ class CalendarProvider extends ChangeNotifier {
 
   set selectDateModel(DateModel value) {
     _selectDateModel = value;
-    print("notifyListeners:$value");
+    LogUtil.log(
+        TAG: this.runtimeType,
+        message: "selectDateModel change:${selectDateModel}");
     notifyListeners();
   }
 
@@ -29,7 +32,7 @@ class CalendarProvider extends ChangeNotifier {
       {Set<DateModel> selectedDateList,
       DateModel selectDateModel,
       CalendarConfiguration calendarConfiguration}) {
-    print("CalendarProvider init");
+    LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
     if (selectedDateList != null) {
       this.selectedDateList.addAll(selectedDateList);
     }
@@ -43,7 +46,7 @@ class CalendarProvider extends ChangeNotifier {
 
   //退出的时候，清除数据
   void clearData() {
-    print("CalendarProvider clearData");
+    LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider clearData");
     selectedDateList.clear();
     selectDateModel = null;
   }

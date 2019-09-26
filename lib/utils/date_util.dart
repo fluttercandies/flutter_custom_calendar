@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
 /**
  * 工具类
@@ -119,7 +120,10 @@ class DateUtil {
     //获取该月的天数
     int monthDayCount = getMonthDaysCount(year, month);
 
-    print("$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
+    LogUtil.log(
+        TAG: "DateUtil",
+        message:
+            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
 
     List<DateModel> result = new List();
 
@@ -179,7 +183,10 @@ class DateUtil {
     int preIndex = firstDayOfMonth.weekday - 1;
 //    int lastIndex = lastDayOfMonth.weekday;
 
-    print("$year年$month月:有${((preIndex + monthDayCount) / 7).toInt() + 1}行");
+    LogUtil.log(
+        TAG: "DateUtil",
+        message:
+            "getMonthViewLineCount:$year年$month月:有${((preIndex + monthDayCount) / 7).toInt() + 1}行");
     return ((preIndex + monthDayCount) / 7).toInt() + 1;
   }
 
@@ -191,7 +198,7 @@ class DateUtil {
       {DateModel minSelectDate,
       DateModel maxSelectDate,
       Map<DateTime, Object> extraDataMap}) {
-    print("initCalendarForWeekView");
+    LogUtil.log(TAG: "DateUtil", message: "initCalendarForWeekView");
     List<DateModel> items = List();
 
     int weekDay = currentDate.weekday;

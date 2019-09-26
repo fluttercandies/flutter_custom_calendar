@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
 import 'package:flutter_custom_calendar/widget/default_custom_day_view.dart';
@@ -50,9 +53,9 @@ class CalendarController {
       Set<DateTime> selectedDateTimeList = EMPTY_SET,
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
+      double verticalSpacing = 10,
       Map<DateTime, Object> extraDataMap = EMPTY_MAP}) {
-//    this.expandChanged = ValueNotifier(expandStatus);
-
+    LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
         minYear: minYear,
@@ -67,7 +70,8 @@ class CalendarController {
         maxSelectYear: maxSelectYear,
         maxSelectMonth: maxSelectMonth,
         defaultExpandStatus: expandStatus,
-        maxSelectDay: maxSelectDay);
+        maxSelectDay: maxSelectDay,
+        verticalSpacing: verticalSpacing);
 
     calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
     calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
@@ -108,22 +112,33 @@ class CalendarController {
       }
     }
     this.monthController = new PageController(initialPage: initialPage);
+    LogUtil.log(
+        TAG: this.runtimeType,
+        message: "start:${DateModel.fromDateTime(DateTime(
+          minYear,
+          minYearMonth,
+        ))},end:${DateModel.fromDateTime(DateTime(
+          maxYear,
+          maxYearMonth,
+        ))}");
+    LogUtil.log(
+        TAG: this.runtimeType,
+        message:
+            "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
 
     //计算一共多少周
     //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
-    int initialWeekPage;
+    int initialWeekPage = 0;
     int nowWeekIndex = 0;
     weekList.clear();
-    int sumDays = 0; //总天数
 
     DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
     //计算第一个星期的第一天的日期
     DateTime firstWeekDate =
         firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
-    print("第一个星期的第一天的日期firstWeekDate:$firstWeekDate");
+
     DateTime lastDay = DateTime(maxYear, maxYearMonth,
         DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
-    print("最后一天：$lastDay");
     for (DateTime dateTime = firstWeekDate;
         !dateTime.isAfter(lastDay);
         dateTime = dateTime.add(Duration(days: 7))) {
@@ -131,7 +146,10 @@ class CalendarController {
       weekList.add(dateModel);
     }
     this.weekController = new PageController();
-    print("weekList:$weekList");
+    LogUtil.log(
+        TAG: this.runtimeType,
+        message:
+            "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为${initialWeekPage}");
 
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
@@ -164,7 +182,9 @@ class CalendarController {
   //切换展开状态
   void toggleExpandStatus() {
     calendarProvider.expandStatus.value = !calendarProvider.expandStatus.value;
-    print("toggleExpandStatus：${calendarProvider.expandStatus.value}");
+    LogUtil.log(
+        TAG: this.runtimeType,
+        message: "toggleExpandStatus：${calendarProvider.expandStatus.value}");
   }
 
   //监听展开变化
@@ -234,20 +254,43 @@ class CalendarController {
       {bool needAnimation = false,
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
-    DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
-    //计算目标索引
-    int targetPage = monthList.indexOf(dateModel);
-    if (targetPage == -1) {
-      return;
-    }
-    if (monthController.hasClients == false) {
-      return;
-    }
-    if (needAnimation) {
-      monthController.animateToPage(targetPage,
-          duration: duration, curve: curve);
+    if (calendarProvider.expandStatus.value == true) {
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
+      //计算目标索引
+      int targetPage = monthList.indexOf(dateModel);
+      if (targetPage == -1) {
+        return;
+      }
+      if (monthController.hasClients == false) {
+        return;
+      }
+      if (needAnimation) {
+        monthController.animateToPage(targetPage,
+            duration: duration, curve: curve);
+      } else {
+        monthController.jumpToPage(targetPage);
+      }
     } else {
-      monthController.jumpToPage(targetPage);
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
+      //计算目标索引
+      int targetPage = 0;
+      for (int i = 0; i < weekList.length - 1; i++) {
+        DateModel first = weekList[i];
+        DateModel next = weekList[i + 1];
+        if (!first.isAfter(dateModel) && next.isAfter(dateModel)) {
+          targetPage = i;
+          return;
+        }
+      }
+      if (weekController.hasClients == false) {
+        return;
+      }
+      if (needAnimation) {
+        weekController.animateToPage(targetPage,
+            duration: duration, curve: curve);
+      } else {
+        weekController.jumpToPage(targetPage);
+      }
     }
   }
 
@@ -293,7 +336,7 @@ class CalendarController {
     }
 
     if ((monthController.page.toInt() + 1) >= monthList.length) {
-      print("moveToNextMonth：当前是最后一个月份");
+      LogUtil.log(TAG: this.runtimeType, message: "moveToNextMonth：当前是最后一个月份");
       return;
     }
     DateTime targetDateTime =
@@ -324,7 +367,8 @@ class CalendarController {
     }
 
     if ((monthController.page.toInt()) == 0) {
-      print("moveToPreviousMonth：当前是第一个月份");
+      LogUtil.log(
+          TAG: this.runtimeType, message: "moveToPreviousMonth：当前是第一个月份");
       return;
     }
     DateTime targetDateTime =
