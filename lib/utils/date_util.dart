@@ -65,8 +65,8 @@ class DateUtil {
    * 是否是今天
    */
   static bool isCurrentDay(int year, int month, int day) {
-    return new DateTime(year, month, day).difference(DateTime.now()).inDays ==
-        0;
+    DateTime now = DateTime.now();
+    return now.year == year && now.month == month && now.day == day;
   }
 
   /**
@@ -113,7 +113,7 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateTime, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap}) {
     weekStart = DateTime.monday;
     //获取月视图其实偏移量
     int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month));
@@ -136,19 +136,22 @@ class DateUtil {
       DateTime temp;
       DateModel dateModel;
       if (i < mPreDiff - 1) {
+        //这个上一月的几天
         temp = firstDayOfMonth.subtract(Duration(days: mPreDiff - i - 1));
 
         dateModel = DateModel.fromDateTime(temp);
-        //这个上一月的几天
+        dateModel.isCurrentMonth = false;
       } else if (i >= monthDayCount + (mPreDiff - 1)) {
+        //这是下一月的几天
         temp = lastDayOfMonth
             .add(Duration(days: i - mPreDiff - monthDayCount + 2));
         dateModel = DateModel.fromDateTime(temp);
-        //这是下一月的几天
+        dateModel.isCurrentMonth = false;
       } else {
         //这个月的
         temp = new DateTime(year, month, i - mPreDiff + 2);
         dateModel = DateModel.fromDateTime(temp);
+        dateModel.isCurrentMonth = true;
       }
 
       //判断是否在范围内
@@ -160,9 +163,8 @@ class DateUtil {
       }
       //将自定义额外的数据，存储到相应的model中
       if (extraDataMap != null && extraDataMap.isNotEmpty) {
-        DateTime dateTime = dateModel.getDateTime();
-        if (extraDataMap.containsKey(dateTime)) {
-          dateModel.extraData = extraDataMap[dateTime];
+        if (extraDataMap.containsKey(dateModel)) {
+          dateModel.extraData = extraDataMap[dateModel];
         }
       }
 
@@ -197,7 +199,7 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateTime, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap}) {
     LogUtil.log(TAG: "DateUtil", message: "initCalendarForWeekView");
     List<DateModel> items = List();
 
@@ -217,11 +219,16 @@ class DateUtil {
       } else {
         dateModel.isInRange = false;
       }
+      if (month == dateModel.month) {
+        dateModel.isCurrentMonth = true;
+      } else {
+        dateModel.isCurrentMonth = false;
+      }
+
       //将自定义额外的数据，存储到相应的model中
       if (extraDataMap != null && extraDataMap.isNotEmpty) {
-        DateTime dateTime = dateModel.getDateTime();
-        if (extraDataMap.containsKey(dateTime)) {
-          dateModel.extraData = extraDataMap[dateTime];
+        if (extraDataMap.containsKey(dateModel)) {
+          dateModel.extraData = extraDataMap[dateModel];
         }
       }
 

@@ -81,8 +81,8 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
             CalendarViewWidget(
               calendarController: controller,
             ),
-            new Text(
-                "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().toString()}"),
+//            new Text(
+//                "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().toString()}"),
           ],
         ),
       ),

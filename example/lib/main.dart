@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'custom_sign_page.dart';
 import 'custom_style_page.dart';
 import 'default_style_page.dart';
 import 'multi_select_style_page.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
           "/progress": (context) => ProgressStylePage(
                 title: "进度条风格+单选",
               ),
+          "/custom_sign": (context) => CustomSignPage(
+                title: "自定义额外数据，实现标记功能",
+              )
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -63,6 +67,12 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, "/progress");
               },
               child: new Text("进度条风格+单选"),
+            ),
+            new RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/custom_sign");
+              },
+              child: new Text("自定义额外数据，实现标记功能"),
             ),
           ],
         ),

@@ -766,16 +766,16 @@ class LunarUtil {
     dateModel.isLeapYear = DateUtil.isLeapYear(year);
     dateModel.isCurrentDay = DateUtil.isCurrentDay(year, month, day);
 
-    List<int> lunar = LunarUtil.solarToLunar(year, month, day);
+    List<int> lunar = LunarUtil.solarToLunar(2020, 2, day);
 
     dateModel.lunarYear = (lunar[0]);
     dateModel.lunarMonth = (lunar[1]);
     dateModel.lunarDay = (lunar[2]);
 
-    if (lunar[3] == 1) {
-      //如果是闰月
-      dateModel.leapMonth = lunar[1];
-    }
+//    if (lunar[3] == 1) {
+//      //如果是闰月
+//      dateModel.leapMonth = lunar[1];
+//    }
     //24节气
     String solarTerm = getSolarTerm(year, month, day);
     dateModel.solarTerm=solarTerm;

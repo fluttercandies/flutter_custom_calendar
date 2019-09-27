@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
+import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
 import 'package:flutter_custom_calendar/widget/default_custom_day_view.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/widget/default_week_bar.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:provider/provider.dart';
 
 /**
  * 利用controller来控制视图
@@ -18,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class CalendarController {
   static const Set<DateTime> EMPTY_SET = {};
-  static const Map<DateTime, Object> EMPTY_MAP = {};
+  static const Map<DateModel, Object> EMPTY_MAP = {};
   static const Duration DEFAULT_DURATION = const Duration(milliseconds: 500);
 
   CalendarConfiguration calendarConfiguration;
@@ -54,7 +51,8 @@ class CalendarController {
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
       double verticalSpacing = 10,
-      Map<DateTime, Object> extraDataMap = EMPTY_MAP}) {
+      bool enableExpand = true,
+      Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
@@ -70,7 +68,9 @@ class CalendarController {
         maxSelectYear: maxSelectYear,
         maxSelectMonth: maxSelectMonth,
         defaultExpandStatus: expandStatus,
+        extraDataMap: extraDataMap,
         maxSelectDay: maxSelectDay,
+        enableExpand: enableExpand,
         verticalSpacing: verticalSpacing);
 
     calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;

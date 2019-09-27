@@ -9,8 +9,8 @@ class CalendarConfiguration {
   //默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
   int selectMode;
 
-  //展开状态
-  bool defaultExpandStatus;
+  bool defaultExpandStatus; //展开状态,true代表是月视图，false代表是周视图
+  bool enableExpand; //是否可以展开
 
   //日历显示的最小年份和最大年份
   int minYear;
@@ -35,13 +35,13 @@ class CalendarConfiguration {
 
   Set<DateModel> defaultSelectedDateList = new Set(); //默认被选中的日期
   int maxMultiSelectCount; //多选，最多选多少个
-  Map<DateTime, Object> extraDataMap = new Map(); //自定义额外的数据
+  Map<DateModel, Object> extraDataMap = new Map(); //自定义额外的数据
 
   /**
    * UI绘制方面的绘制
    */
-  double verticalSpacing ;//日历item之间的竖直方向间距，默认10
-
+  double verticalSpacing; //日历item之间的竖直方向间距，默认10
+  BoxDecoration boxDecoration; //整体的背景设置
 
   //支持自定义绘制
   DayWidgetBuilder dayWidgetBuilder; //创建日历item
@@ -85,8 +85,9 @@ class CalendarConfiguration {
       this.weekList,
       this.pageController,
       this.weekController,
-        this.verticalSpacing,
-      bool defaultExpandStatus = true}) {
+      this.verticalSpacing,
+      this.enableExpand,
+      bool defaultExpandStatus}) {
     this.defaultExpandStatus = defaultExpandStatus;
   }
 

@@ -23,13 +23,13 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
     DateTime now = DateTime.now();
     DateTime temp = DateTime(now.year, now.month, now.day);
 
-    Map<DateTime, int> progressMap = {
-      temp.add(Duration(days: 1)): 0,
-      temp.add(Duration(days: 2)): 20,
-      temp.add(Duration(days: 3)): 40,
-      temp.add(Duration(days: 4)): 60,
-      temp.add(Duration(days: 5)): 80,
-      temp.add(Duration(days: 6)): 100,
+    Map<DateModel, int> progressMap = {
+      DateModel.fromDateTime(temp.add(Duration(days: 1))): 0,
+      DateModel.fromDateTime(temp.add(Duration(days: 2))): 20,
+      DateModel.fromDateTime(temp.add(Duration(days: 3))): 40,
+      DateModel.fromDateTime(temp.add(Duration(days: 4))): 60,
+      DateModel.fromDateTime(temp.add(Duration(days: 5))): 80,
+      DateModel.fromDateTime(temp.add(Duration(days: 6))): 100,
     };
 
     controller = new CalendarController(
@@ -90,8 +90,8 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
             CalendarViewWidget(
               calendarController: controller,
             ),
-            new Text(
-                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+//            new Text(
+//                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
           ],
         ),
       ),

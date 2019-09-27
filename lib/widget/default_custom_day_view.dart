@@ -72,8 +72,11 @@ class DefaultCustomDayWidget extends BaseCustomDayWidget {
 void defaultDrawNormal(DateModel dateModel, Canvas canvas, Size size) {
   //顶部的文字
   TextPainter dayTextPainter = new TextPainter()
-    ..text =
-        TextSpan(text: dateModel.day.toString(), style: currentMonthTextStyle)
+    ..text = TextSpan(
+        text: dateModel.day.toString(),
+        style: dateModel.isCurrentDay
+            ? currentDayTextStyle
+            : currentMonthTextStyle)
     ..textDirection = TextDirection.ltr
     ..textAlign = TextAlign.center;
 

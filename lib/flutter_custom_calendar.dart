@@ -9,3 +9,4 @@ export 'package:flutter_custom_calendar/model/date_model.dart';
 export 'package:flutter_custom_calendar/widget/default_combine_day_view.dart';
 export 'package:flutter_custom_calendar/widget/default_custom_day_view.dart';
 export 'package:flutter_custom_calendar/widget/default_week_bar.dart';
+export 'package:flutter_custom_calendar/configuration.dart';

@@ -17,10 +17,11 @@ class DateModel {
   String gregorianFestival; //公历节日
   String traditionFestival; //传统农历节日
 
+  bool isCurrentMonth;//是否是当前月份
   bool isCurrentDay; //是否是今天
   bool isLeapYear; //是否是闰年
   bool isWeekend; //是否是周末
-  int leapMonth; //是否是闰月
+//  int leapMonth; //是否是闰月
 
   Object extraData; //自定义的额外数据
 

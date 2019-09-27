@@ -18,7 +18,7 @@ class MonthView extends StatefulWidget {
   final DateModel minSelectDate;
   final DateModel maxSelectDate;
 
-  final Map<DateTime, Object> extraDataMap; //自定义额外的数据
+  final Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   const MonthView({
     @required this.year,

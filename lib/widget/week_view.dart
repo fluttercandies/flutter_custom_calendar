@@ -11,14 +11,14 @@ import 'package:provider/provider.dart';
  * 周视图，只显示本周的日子
  */
 class WeekView extends StatefulWidget {
- final int year;
- final  int month;
- final  DateModel firstDayOfWeek;
+  final int year;
+  final int month;
+  final DateModel firstDayOfWeek;
 
- final  DateModel minSelectDate;
- final  DateModel maxSelectDate;
+  final DateModel minSelectDate;
+  final DateModel maxSelectDate;
 
- final  Map<DateTime, Object> extraDataMap; //自定义额外的数据
+  final Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   const WeekView(
       {@required this.year,
@@ -39,7 +39,7 @@ class _WeekViewState extends State<WeekView> {
   void initState() {
     super.initState();
     items = DateUtil.initCalendarForWeekView(
-        2019, 9, widget.firstDayOfWeek.getDateTime(), 0,
+        widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
         minSelectDate: widget.minSelectDate,
         maxSelectDate: widget.maxSelectDate,
         extraDataMap: widget.extraDataMap);
@@ -101,11 +101,11 @@ class _WeekViewState extends State<WeekView> {
                   calendarProvider.selectDateModel = dateModel;
                   configuration.calendarSelect(dateModel);
 //                  setState(() {
-                    if (calendarProvider.selectedDateList.contains(dateModel)) {
-                      calendarProvider.selectedDateList.remove(dateModel);
-                    } else {
-                      calendarProvider.selectedDateList.add(dateModel);
-                    }
+                  if (calendarProvider.selectedDateList.contains(dateModel)) {
+                    calendarProvider.selectedDateList.remove(dateModel);
+                  } else {
+                    calendarProvider.selectedDateList.add(dateModel);
+                  }
 //                  });
                 } else {
                   calendarProvider.selectDateModel = dateModel;
