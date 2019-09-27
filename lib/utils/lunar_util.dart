@@ -762,44 +762,44 @@ class LunarUtil {
     int month = dateModel.month;
     int day = dateModel.day;
 
-    dateModel.isWeekend = DateUtil.isWeekend(new DateTime(year, month, day));
-    dateModel.isLeapYear = DateUtil.isLeapYear(year);
-    dateModel.isCurrentDay = DateUtil.isCurrentDay(year, month, day);
+//    dateModel.isWeekend = DateUtil.isWeekend(new DateTime(year, month, day));
+//    dateModel.isLeapYear = DateUtil.isLeapYear(year);
+//    dateModel.isCurrentDay = DateUtil.isCurrentDay(year, month, day);
 
     List<int> lunar = LunarUtil.solarToLunar(2020, 2, day);
 
-    dateModel.lunarYear = (lunar[0]);
-    dateModel.lunarMonth = (lunar[1]);
-    dateModel.lunarDay = (lunar[2]);
+//    dateModel.lunarYear = (lunar[0]);
+//    dateModel.lunarMonth = (lunar[1]);
+//    dateModel.lunarDay = (lunar[2]);
 
 //    if (lunar[3] == 1) {
 //      //如果是闰月
 //      dateModel.leapMonth = lunar[1];
 //    }
     //24节气
-    String solarTerm = getSolarTerm(year, month, day);
-    dateModel.solarTerm=solarTerm;
-    //公历节日
-    String gregorian = gregorianFestival(month, day);
-    dateModel.gregorianFestival=gregorian;
-    //传统农历节日
-    String festival = getTraditionFestival(lunar[0], lunar[1], lunar[2]);
-    dateModel.traditionFestival=festival;
+//    String solarTerm = getSolarTerm(year, month, day);
+//    dateModel.solarTerm=solarTerm;
+//    //公历节日
+//    String gregorian = gregorianFestival(month, day);
+//    dateModel.gregorianFestival=gregorian;
+//    //传统农历节日
+//    String festival = getTraditionFestival(lunar[0], lunar[1], lunar[2]);
+//    dateModel.traditionFestival=festival;
     //农历格式的日期
     String lunarText = numToChinese(lunar[1], lunar[2], lunar[3]);
 
-    if (gregorian.isEmpty) {
-      gregorian = getSpecialFestival(year, month, day);
-    }
-    if (solarTerm.isNotEmpty) {
-      dateModel.lunarString = solarTerm;
-    } else if (gregorian.isNotEmpty) {
-      dateModel.lunarString = gregorian;
-    } else if (festival.isNotEmpty) {
-      dateModel.lunarString = festival;
-    } else {
-      dateModel.lunarString = lunarText;
-    }
+//    if (gregorian.isEmpty) {
+//      gregorian = getSpecialFestival(year, month, day);
+//    }
+//    if (solarTerm.isNotEmpty) {
+//      dateModel.lunarString = solarTerm;
+//    } else if (gregorian.isNotEmpty) {
+//      dateModel.lunarString = gregorian;
+//    } else if (festival.isNotEmpty) {
+//      dateModel.lunarString = festival;
+//    } else {
+//      dateModel.lunarString = lunarText;
+//    }
   }
 
   /**

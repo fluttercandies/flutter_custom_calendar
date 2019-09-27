@@ -1,7 +1,11 @@
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+import 'package:provider/provider.dart';
 
+/**
+ * 默认风格+单选
+ */
 class DefaultStylePage extends StatefulWidget {
   DefaultStylePage({Key key, this.title}) : super(key: key);
 
@@ -12,29 +16,32 @@ class DefaultStylePage extends StatefulWidget {
 }
 
 class _DefaultStylePageState extends State<DefaultStylePage> {
-  String text;
+  ValueNotifier<String> text;
+  ValueNotifier<String> selectText;
 
   CalendarController controller;
 
   @override
   void initState() {
-    text = "${DateTime.now().year}年${DateTime.now().month}月";
-
     controller = new CalendarController(
         minYear: 2019, minYearMonth: 8, maxYear: 2019, maxYearMonth: 9);
 
     controller.addMonthChangeListener(
       (year, month) {
-        setState(() {
-          text = "$year年$month月";
-        });
+        text.value = "$year年$month月";
       },
     );
 
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
-      setState(() {});
+      selectText.value =
+          "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}";
     });
+
+    text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
+
+    selectText = new ValueNotifier(
+        "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
   }
 
   @override
@@ -55,7 +62,11 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
 //                      controller.moveToPreviousMonth();
                       controller.previousPage();
                     }),
-                new Text(text),
+                ValueListenableBuilder(
+                    valueListenable: text,
+                    builder: (context, value, child) {
+                      return new Text(text.value);
+                    }),
                 new IconButton(
                     icon: Icon(Icons.navigate_next),
                     onPressed: () {
@@ -67,8 +78,11 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
             CalendarViewWidget(
               calendarController: controller,
             ),
-            new Text(
-                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+            ValueListenableBuilder(
+                valueListenable: selectText,
+                builder: (context, value, child) {
+                  return new Text(selectText.value);
+                }),
           ],
         ),
       ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'dart:math';
 
+/**
+ * 进度条风格+单选
+ */
 class ProgressStylePage extends StatefulWidget {
   ProgressStylePage({Key key, this.title}) : super(key: key);
 
@@ -12,18 +15,23 @@ class ProgressStylePage extends StatefulWidget {
 }
 
 class _ProgressStylePageState extends State<ProgressStylePage> {
-  String text;
+  ValueNotifier<String> text;
+  ValueNotifier<String> selectText;
 
   CalendarController controller;
 
   @override
   void initState() {
-    text = "${DateTime.now().year}年${DateTime.now().month}月";
-
     DateTime now = DateTime.now();
     DateTime temp = DateTime(now.year, now.month, now.day);
 
     Map<DateModel, int> progressMap = {
+      DateModel.fromDateTime(temp.add(Duration(days: -1))): 0,
+      DateModel.fromDateTime(temp.add(Duration(days: -2))): 20,
+      DateModel.fromDateTime(temp.add(Duration(days: -3))): 40,
+      DateModel.fromDateTime(temp.add(Duration(days: -4))): 60,
+      DateModel.fromDateTime(temp.add(Duration(days: -5))): 80,
+      DateModel.fromDateTime(temp.add(Duration(days: -6))): 100,
       DateModel.fromDateTime(temp.add(Duration(days: 1))): 0,
       DateModel.fromDateTime(temp.add(Duration(days: 2))): 20,
       DateModel.fromDateTime(temp.add(Duration(days: 3))): 40,
@@ -43,23 +51,20 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
 
     controller.addMonthChangeListener(
       (year, month) {
-        setState(() {
-          text = "$year年$month月";
-        });
+        text.value = "$year年$month月";
       },
     );
 
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
-      setState(() {});
+      selectText.value =
+          "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}";
     });
 
-    controller.addOnMultiSelectOutOfSizeListener(() {
-      print("超出限制个数");
-    });
-    controller.addOnMultiSelectOutOfRangeListener(() {
-      print("超出范围限制");
-    });
+    text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
+
+    selectText = new ValueNotifier(
+        "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
   }
 
   @override
@@ -79,7 +84,11 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
                     onPressed: () {
                       controller.moveToPreviousMonth();
                     }),
-                new Text(text),
+                ValueListenableBuilder(
+                    valueListenable: text,
+                    builder: (context, value, child) {
+                      return new Text(text.value);
+                    }),
                 new IconButton(
                     icon: Icon(Icons.navigate_next),
                     onPressed: () {
@@ -90,8 +99,11 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
             CalendarViewWidget(
               calendarController: controller,
             ),
-//            new Text(
-//                "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+            ValueListenableBuilder(
+                valueListenable: selectText,
+                builder: (context, value, child) {
+                  return new Text(selectText.value);
+                }),
           ],
         ),
       ),

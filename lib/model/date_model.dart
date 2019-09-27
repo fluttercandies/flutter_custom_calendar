@@ -1,3 +1,4 @@
+import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/utils/lunar_util.dart';
 
 /**
@@ -8,20 +9,38 @@ class DateModel {
   int month;
   int day = 1;
 
-  int lunarYear;
-  int lunarMonth;
-  int lunarDay;
+  List<int> lunar = List(3);
 
-  String lunarString; //农历字符串
-  String solarTerm; //24节气
-  String gregorianFestival; //公历节日
-  String traditionFestival; //传统农历节日
+  //农历字符串
+  String get lunarString {
+    if (solarTerm.isNotEmpty) {
+      return solarTerm;
+    } else if (gregorianFestival.isNotEmpty) {
+      return gregorianFestival;
+    } else if (traditionFestival.isNotEmpty) {
+      return traditionFestival;
+    } else {
+      return LunarUtil.numToChinese(lunar[1], lunar[2], lunar[3]);
+    }
+  }
 
-  bool isCurrentMonth;//是否是当前月份
-  bool isCurrentDay; //是否是今天
-  bool isLeapYear; //是否是闰年
-  bool isWeekend; //是否是周末
-//  int leapMonth; //是否是闰月
+  //24节气
+  String get solarTerm => LunarUtil.getSolarTerm(year, month, day);
+
+  //公历节日
+  String get gregorianFestival {
+    String result = LunarUtil.gregorianFestival(month, day);
+    if (result?.isNotEmpty == true) {
+      return result;
+    }
+    return LunarUtil.getSpecialFestival(year, month, day);
+  }
+
+//传统农历节日
+  String get traditionFestival =>
+      LunarUtil.getTraditionFestival(year, month, day);
+
+  bool isCurrentMonth; //是否是当前月份
 
   Object extraData; //自定义的额外数据
 
@@ -29,6 +48,20 @@ class DateModel {
   bool isSelected; //是否被选中，用来实现一些标记或者选择功能
   bool isCanClick =
       true; //todo:是否可点击：设置范围外的日历不可点击，或者可以通过自定义拦截点击事件来设置true或者false
+  //是否是周末
+  bool get isWeekend => DateUtil.isWeekend(getDateTime());
+
+  //是否是闰年
+  bool get isLeapYear => DateUtil.isLeapYear(year);
+
+  //是否是今天
+  bool get isCurrentDay => DateUtil.isCurrentDay(year, month, day);
+
+  int get lunarYear => lunar[0];
+
+  int get lunarMonth => lunar[1];
+
+  int get lunarDay => lunar[2];
 
   @override
   String toString() {
@@ -46,7 +79,12 @@ class DateModel {
       ..year = dateTime.year
       ..month = dateTime.month
       ..day = dateTime.day;
-    LunarUtil.setupLunarCalendar(dateModel);
+    List<int> lunar =
+        LunarUtil.solarToLunar(dateModel.year, dateModel.month, dateModel.day);
+    dateModel.lunar = lunar;
+
+//    将数据的初始化放到各个get方法里面进行操作，类似懒加载,不然很浪费
+//    LunarUtil.setupLunarCalendar(dateModel);
     return dateModel;
   }
 

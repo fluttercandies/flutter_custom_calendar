@@ -16,7 +16,8 @@ class CustomSignPage extends StatefulWidget {
 }
 
 class _CustomSignPageState extends State<CustomSignPage> {
-  String text;
+  ValueNotifier<String> text;
+  ValueNotifier<String> selectText;
 
   CalendarController controller;
 
@@ -42,8 +43,6 @@ class _CustomSignPageState extends State<CustomSignPage> {
 
   @override
   void initState() {
-    text = "${DateTime.now().year}年${DateTime.now().month}月";
-
     controller = new CalendarController(
         weekBarItemWidgetBuilder: () {
           return CustomStyleWeekBarItem();
@@ -55,16 +54,20 @@ class _CustomSignPageState extends State<CustomSignPage> {
 
     controller.addMonthChangeListener(
       (year, month) {
-        setState(() {
-          text = "$year年$month月";
-        });
+        text.value = "$year年$month月";
       },
     );
 
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
-      setState(() {});
+      selectText.value =
+          "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}";
     });
+
+    text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
+
+    selectText = new ValueNotifier(
+        "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
   }
 
   @override
@@ -84,7 +87,11 @@ class _CustomSignPageState extends State<CustomSignPage> {
                     onPressed: () {
                       controller.moveToPreviousMonth();
                     }),
-                new Text(text),
+                ValueListenableBuilder(
+                    valueListenable: text,
+                    builder: (context, value, child) {
+                      return new Text(text.value);
+                    }),
                 new IconButton(
                     icon: Icon(Icons.navigate_next),
                     onPressed: () {
@@ -95,8 +102,11 @@ class _CustomSignPageState extends State<CustomSignPage> {
             CalendarViewWidget(
               calendarController: controller,
             ),
-            new Text(
-                "自定义创建Item\n选中的时间:\n${controller.getSingleSelectCalendar().toString()}"),
+            ValueListenableBuilder(
+                valueListenable: selectText,
+                builder: (context, value, child) {
+                  return new Text(selectText.value);
+                }),
           ],
         ),
       ),
@@ -210,13 +220,13 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
           ),
           dateModel.extraData != null
               ? Positioned(
-            child: Text(
-              "${dateModel.extraData}",
-              style: TextStyle(fontSize: 10, color: RandomColor.next()),
-            ),
-            right: 0,
-            top: 0,
-          )
+                  child: Text(
+                    "${dateModel.extraData}",
+                    style: TextStyle(fontSize: 10, color: RandomColor.next()),
+                  ),
+                  right: 0,
+                  top: 0,
+                )
               : Container()
         ],
       ),

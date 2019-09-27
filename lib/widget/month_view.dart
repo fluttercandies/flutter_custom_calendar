@@ -57,6 +57,7 @@ class _MonthViewState extends State<MonthView> {
 
   @override
   Widget build(BuildContext context) {
+    LogUtil.log(TAG: this.runtimeType, message: "_MonthViewState build");
     itemHeight = MediaQuery.of(context).size.width / 7;
     totalHeight = itemHeight * lineCount + mainSpacing * (lineCount - 1);
 
@@ -68,10 +69,7 @@ class _MonthViewState extends State<MonthView> {
         builder: (context, calendarProvider, child) {
       CalendarConfiguration configuration =
           calendarProvider.calendarConfiguration;
-      LogUtil.log(
-          TAG: this.runtimeType,
-          message:
-              "build calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
+
       return new GridView.builder(
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -95,6 +93,8 @@ class _MonthViewState extends State<MonthView> {
             }
 
             return GestureDetector(
+              //点击整个item都会触发事件
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 LogUtil.log(
                     TAG: this.runtimeType,
@@ -119,16 +119,15 @@ class _MonthViewState extends State<MonthView> {
                     return;
                   }
 
+                  configuration.calendarSelect(dateModel);
+                  if (calendarProvider.selectedDateList.contains(dateModel)) {
+                    calendarProvider.selectedDateList.remove(dateModel);
+                  } else {
+                    calendarProvider.selectedDateList.add(dateModel);
+                  }
+
                   //多选也可以弄这些单选的代码
                   calendarProvider.selectDateModel = dateModel;
-                  configuration.calendarSelect(dateModel);
-                  setState(() {
-                    if (calendarProvider.selectedDateList.contains(dateModel)) {
-                      calendarProvider.selectedDateList.remove(dateModel);
-                    } else {
-                      calendarProvider.selectedDateList.add(dateModel);
-                    }
-                  });
                 } else {
                   calendarProvider.selectDateModel = dateModel;
                   configuration.calendarSelect(dateModel);
