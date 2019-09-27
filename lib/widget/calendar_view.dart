@@ -70,11 +70,15 @@ class CalendarContainerState extends State<CalendarContainer>
   void initState() {
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     expand = calendarProvider.expandStatus.value;
-    calendarProvider.expandStatus.addListener(() {
-      setState(() {
-        expand = !expand;
+
+    //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
+    if (calendarProvider.calendarConfiguration.enableExpand == true) {
+      calendarProvider.expandStatus.addListener(() {
+        setState(() {
+          expand = !expand;
+        });
       });
-    });
+    }
   }
 
   @override

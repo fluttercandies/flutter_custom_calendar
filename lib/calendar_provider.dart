@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
+import 'package:flutter_custom_calendar/widget/month_view.dart';
 
 /**
  * 引入provider的状态管理，保存一些临时信息
@@ -12,6 +13,7 @@ class CalendarProvider extends ChangeNotifier {
   Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
   DateModel _selectDateModel; //当前选中的日期，用于单选
   DateModel lastClickDateModel; //保存最后点击的一个日期，用于周视图与月视图之间的切换和同步
+  MultiSelectItemContainerState lastClickItemState;
 
   DateModel get selectDateModel => _selectDateModel;
 

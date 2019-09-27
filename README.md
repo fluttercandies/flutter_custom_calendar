@@ -14,6 +14,27 @@ Flutter上的一个日历控件，可以定制成自己想要的样子。
 * 跳转到指定日期，默认支持动画切换
 * 自定义日历Item，支持组合widget的方式和利用canvas绘制的方式
 * 自定义顶部的WeekBar
+* 根据实际场景，可以给Item添加自定义的额外数据，实现各种额外的功能。比如实现进度条风格的日历，实现日历的各种标记
+* 支持周视图的展示
+* 支持月份视图和星期视图的展示与切换联动
+
+## 近期修改
+### [1.0.0] - 2019/9/22
+* 重构日历的代码
+* 创建configuration类，将配置的信息放到这里
+* 引入provider状态管理,避免深层嵌套传递信息 
+* 实现周视图，并实现周视图和月视图之间的联动
+* DateModel增加isCurrentMonth，用于绘制月视图可以屏蔽一些非当前月份的日子，前面几天或者后面几天的isCurrentMonth是为false的。
+
+### [0.0.1] - 2019/5/19.
+
+* 支持公历，农历，节气，传统节日，常用节假日
+* 日期范围设置，默认支持的最大日期范围为1971.01-2055.12
+* 禁用日期范围设置，比如想实现某范围的日期内可以点击，范围外的日期置灰
+* 支持单选、多选模式，提供多选超过限制个数的回调和多选超过指定范围的回调。
+* 跳转到指定日期，默认支持动画切换
+* 自定义日历Item，支持组合widget的方式和利用canvas绘制的方式
+* 自定义顶部的WeekBar
 * 可以给Item添加自定义的额外数据，实现各种额外的功能。比如实现进度条风格的日历
 
 ## 使用
@@ -30,50 +51,19 @@ import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
 CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 ```
+
 * boxDecoration用来配置整体的背景
 * 利用CalendarController来配置一些数据，并且可以通过CalendarController进行一些操作或者事件监听，比如滚动到下一个月，获取当前被选中的Item等等。
 
 下面是CalendarController中一些支持自定义配置的属性。不配置的话，会有对应的默认值。
+配置都是在controller里面进行配置的（。。考虑到之前版本，所以才这样搞）。
+
+个人觉得，配置的含义主要包括了3个方面的配置。
+* 一个是显示日历所需要的相关数据，
+* 一个是显示日历的自定义UI的相关配置，
+* 一个是对日历的监听事件进行配置。
+
 ```
-//默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
-int selectMode;
-
-//日历显示的最小年份和最大年份
-int minYear;
-int maxYear;
-
-//日历显示的最小年份的月份，最大年份的月份
-int minYearMonth;
-int maxYearMonth;
-
-//日历显示的当前的年份和月份
-int nowYear;
-int nowMonth;
-
-//可操作的范围设置,比如点击选择
-int minSelectYear;
-int minSelectMonth;
-int minSelectDay;
-
-int maxSelectYear;
-int maxSelectMonth;
-int maxSelectDay; //注意：不能超过对应月份的总天数
-
-Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
-DateModel selectDateModel; //当前选择项,用于单选
-int maxMultiSelectCount; //多选，最多选多少个
-Map<DateTime, Object> extraDataMap = new Map(); //自定义额外的数据
-
-//各种事件回调
-OnMonthChange monthChange; //月份切换事件
-OnCalendarSelect calendarSelect; //点击选择事件
-OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
-OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
-
-//支持自定义绘制
-DayWidgetBuilder dayWidgetBuilder; //创建日历item
-WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
-
 //构造函数
     CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
@@ -98,56 +88,71 @@ WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
 
 ```
 
-### 利用controller添加监听事件
-比如月份切换事件、点击选择事件。
-```
-//月份切换监听
-void addMonthChangeListener(OnMonthChange listener) {
-  this.monthChange = listener;
-}
-//点击选择监听
-void addOnCalendarSelectListener(OnCalendarSelect listener) {
-  this.calendarSelect = listener;
-}
-//多选超出指定范围
-void addOnMultiSelectOutOfRangeListener(OnMultiSelectOutOfRange listener) {
-  this.multiSelectOutOfRange = listener;
-}
-//多选超出限制个数
-void addOnMultiSelectOutOfSizeListener(OnMultiSelectOutOfSize listener) {
-  this.multiSelectOutOfSize = listener;
-}
-```
+数据方面的配置
+
+属性 | 含义 | 默认值 
+:-: | :-: | :-: 
+selectMode | 选择模式,表示单选或者多选 | 默认是单选MODE_SINGLE_SELECT
+minYear | 日历显示的最小年份| 1971 
+maxYear | 日历显示的最大年份| 2055 
+minYearMonth | 日历显示的最小年份的月份| 1 
+maxYearMonth | 日历显示的最大年份的月份| 12 
+nowYear | 日历显示的当前的年份| -1 
+nowMonth | 日历显示的当前的月份| -1 
+minSelectYear | 可以选择的最小年份| 1971 
+minSelectMonth | 可以选择的最小年份的月份| 1 
+minSelectDay | 可以选择的最小月份的日子| 1 
+maxSelectYear | 可以选择的最大年份| 2055 
+maxSelectMonth | 可以选择的最大年份的月份| 12 
+maxSelectDay | 可以选择的最大月份的日子| 30，注意：不能超过对应月份的总天数 
+selectedDateList | 被选中的日期,用于多选| 默认为空Set, Set<DateModel> selectedDateList = new Set()
+selectDateModel | 当前选择项,用于单选| 默认为空 
+maxMultiSelectCount | 多选，最多选多少个| hhh 
+extraDataMap | 自定义额外的数据| 默认为空Map，Map<DateTime, Object> extraDataMap = new Map()
+
+
+UI绘制相关的配置
+
+属性 | 含义 | 默认值 
+:-: | :-: | :-: 
+weekBarItemWidgetBuilder | 创建顶部的weekbar | 默认样式
+dayWidgetBuilder | 创建日历item | 默认样式
+
+
+事件监听的配置
+
+方法 | 含义 | 默认值 
+:-: | :-: | :-: 
+void addMonthChangeListener(OnMonthChange listener) | 月份切换事件 | 默认为空
+void addOnCalendarSelectListener(OnCalendarSelect listener) | 点击选择事件 | 默认为空
+void addOnMultiSelectOutOfRangeListener(OnMultiSelectOutOfRange listener) | 多选超出指定范围 | 默认为空
+void addOnMultiSelectOutOfSizeListener(OnMultiSelectOutOfSize listener) | 多选超出限制个数 | 默认为空
+void addExpandChangeListener(ValueChanged<bool> expandChange)|监听日历的展开收缩状态|
 
 ###  利用controller来控制日历的切换，支持配置动画
 
-```
-//跳转到指定日期
-void moveToCalendar(int year, int month, int day,
-    {bool needAnimation = false,
-    Duration duration = const Duration(milliseconds: 500),
-    Curve curve = Curves.ease});
-//切换到下一年
-void moveToNextYear();
-//切换到上一年
-void moveToPreviousYear();
-//切换到下一个月份,
-void moveToNextMonth();
-//切换到上一个月份
-void moveToPreviousMonth();
-```
+方法 | 含义 | 默认值 
+:-: | :-: | :-: 
+Future<bool> previousPage()|滑动到上一个页面，会自动根据当前的展开状态，滑动到上一个月或者上一个星期。如果已经在第一个页面，没有上一个页面，就会返回false，其他情况返回true| 
+Future<bool> nextPage()|滑动到下一个页面，会自动根据当前的展开状态，滑动到下一个月或者下一个星期。如果已经在最后一个页面，没有下一个页面，就会返回false，其他情况返回true|
+void moveToCalendar(int year, int month, int day, {bool needAnimation = false,Duration duration = const Duration(milliseconds: 500),Curve curve = Curves.ease}) | 到指定日期 | 默认为空
+void moveToNextYear()|切换到下一年|
+void moveToPreviousYear()|切换到上一年|    
+void moveToNextMonth()|切换到下一个月份|
+void moveToPreviousMonth()|切换到上一个月份|
+void toggleExpandStatus()|切换展开状态|
+
 
 ### 利用controller来获取日历的一些数据信息
-```
-// 获取当前的月份
-DateTime getCurrentMonth();
-//获取被选中的日期,多选
-Set<DateModel> getMultiSelectCalendar();
-//获取被选中的日期，单选
-DateModel getSingleSelectCalendar();
-```
 
-### 自定义UI
+方法 | 含义 | 默认值 
+:-: | :-: | :-: 
+DateTime getCurrentMonth()|获取当前的月份|
+Set<DateModel> getMultiSelectCalendar()|获取被选中的日期,多选|
+DateModel getSingleSelectCalendar()|获取被选中的日期，单选|
+
+
+### 如何自定义UI
 
 包括自定义WeekBar、自定义日历Item，默认使用的都是DefaultXXXWidget。
 
@@ -197,7 +202,10 @@ class DefaultCombineDayWidget extends BaseCombineDayWidget {
   }
 }
 ```
+
+
 * 继承BaseCustomDayWidget，重写drawNormal和drawSelected的两个方法就可以了，利用canvas自己绘制Item。
+
 ```
 class DefaultCustomDayWidget extends BaseCustomDayWidget {
   DefaultCustomDayWidget(DateModel dateModel) : super(dateModel);
@@ -213,64 +221,88 @@ class DefaultCustomDayWidget extends BaseCustomDayWidget {
   }
 }
 ```
-### DateModel实体类
-日历所用的日期的实体类DateModel，有下面这些属性。
-```
-/**
- * 日期的实体类
- */
-class DateModel {
-  int year;
-  int month;
-  int day = 1;
-  int lunarYear;
-  int lunarMonth;
-  int lunarDay;
-  String lunarString; //农历字符串
-  String solarTerm; //24节气
-  String gregorianFestival; //公历节日
-  String traditionFestival; //传统农历节日
-  bool isCurrentDay; //是否是今天
-  bool isLeapYear; //是否是闰年
-  bool isWeekend; //是否是周末
-  int leapMonth; //是否是闰月
-  Object extraData; //自定义的额外数据
-  bool isInRange = false; //是否在范围内,比如可以实现在某个范围外，设置置灰的功能
-  bool isSelected; //是否被选中，用来实现一些标记或者选择功能
-  @override
-  String toString() {
-    return 'DateModel{year: $year, month: $month, day: $day}';
-  } //如果是闰月，则返回闰月
 
-  //转化成DateTime格式
-  DateTime getDateTime() {
-    return new DateTime(year, month, day);
-  }
-  //根据DateTime创建对应的model，并初始化农历和传统节日等信息
-  static DateModel fromDateTime(DateTime dateTime) {
-    DateModel dateModel = new DateModel()
-      ..year = dateTime.year
-      ..month = dateTime.month
-      ..day = dateTime.day;
-    LunarUtil.setupLunarCalendar(dateModel);
-    return dateModel;
-  }
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DateModel &&
-          runtimeType == other.runtimeType &&
-          year == other.year &&
-          month == other.month &&
-          day == other.day;
-  @override
-  int get hashCode => year.hashCode ^ month.hashCode ^ day.hashCode;
-}
+### 根据实际场景，自定义额外的数据extraData
+
+#### 自定义每个item的进度条数据
+
 ```
+    //外部处理每个dateModel所对应的进度
+    Map<DateModel, int> progressMap = {
+      DateModel.fromDateTime(temp.add(Duration(days: 1))): 0,
+      DateModel.fromDateTime(temp.add(Duration(days: 2))): 20,
+      DateModel.fromDateTime(temp.add(Duration(days: 3))): 40,
+      DateModel.fromDateTime(temp.add(Duration(days: 4))): 60,
+      DateModel.fromDateTime(temp.add(Duration(days: 5))): 80,
+      DateModel.fromDateTime(temp.add(Duration(days: 6))): 100,
+    };
+    //创建CalendarController对象的时候，将extraDataMap赋值就行了
+    new CalendarController(
+        extraDataMap: progressMap)
+    //绘制DayWidget的时候，可以直接从dateModel的extraData对象中拿到想要的数据
+    int progress = dateModel.extraData;
+```
+
+#### 自定义各种标记
+```
+ //外部处理每个dateModel所对应的标记
+ Map<DateModel, String> customExtraData = {
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -1))): "假",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -2))): "游",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -3))): "事",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -4))): "班",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -5))): "假",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: -6))): "游",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 2))): "游",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 3))): "事",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 4))): "班",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 5))): "假",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 6))): "游",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 7))): "事",
+    DateModel.fromDateTime(DateTime.now().add(Duration(days: 8))): "班",
+  };
+    //创建CalendarController对象的时候，将extraDataMap赋值就行了
+    new CalendarController(
+        extraDataMap: customExtraData)
+    //绘制DayWidget的时候，可以直接从dateModel的extraData对象中拿到想要的数据
+   String data = dateModel.extraData;
+
+```
+
+
+
+### DateModel实体类
+日历所用的日期的实体类DateModel，有下面这些属性。可以在自定义绘制DayWidget的时候，根据相应的属性，进行判断后，绘制相应的UI。
+
+属性|含义|类型|默认值
+:-: | :-: | :-: |:-:
+year|年份|int|
+month|月份|int|
+day|日期|int|默认为1
+lunarYear|农历年份|int|
+lunarMonth|农历月份|int|
+lunarDay|农历日期|int|
+lunarString|农历字符串|String|
+solarTerm|24节气|String|
+gregorianFestival|gregorianFestival|String|
+traditionFestival|传统农历节日|String|
+isCurrentDay|是否是今天|bool|
+isLeapYear|是否是闰年|bool|
+isWeekend|是否是周末|bool|
+isInRange|是否在范围内,比如可以实现在某个范围外，设置置灰的功能|bool|false
+isSelected|是否被选中，用来实现一些标记或者选择功能|bool|false
+extraData|自定义的额外数据|Object
+
+
+方法|含义|
+:-: | :-: |
+DateTime getDateTime()|将DateModel转化成DateTime
+DateModel fromDateTime(DateTime dateTime)|根据DateTime创建对应的model，并初始化农历和传统节日等信息
+bool operator ==(Object other)|重写==方法，可以判断两个dateModel是否是同一天
+
+
 
 ## TODO LIST
 * 优化代码实现
-* 支持屏蔽指定的某些天
 * 继续写几个不同风格的Demo
-* 支持周视图
-* 支持动画切换周视图和月视图
+* 支持手势操作
