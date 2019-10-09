@@ -83,36 +83,6 @@ class CalendarController {
       }).toSet());
     }
 
-    //初始化pageController,initialPage默认是当前时间对于的页面
-    int initialPage = 0;
-    int nowMonthIndex = 0;
-    monthList.clear();
-    for (int i = minYear; i <= maxYear; i++) {
-      for (int j = 1; j <= 12; j++) {
-        if (i == minYear && j < minYearMonth) {
-          continue;
-        }
-        if (i == maxYear && j > maxYearMonth) {
-          continue;
-        }
-        DateModel dateModel = new DateModel();
-        dateModel.year = i;
-        dateModel.month = j;
-
-        //如果没有配置当前时间，设置成当前的时间
-        if (nowYear == -1 || nowMonth == -1) {
-          nowYear = DateTime.now().year;
-          nowMonth = DateTime.now().month;
-        }
-        if (i == nowYear && j == nowMonth) {
-          initialPage = nowMonthIndex;
-        }
-        monthList.add(dateModel);
-        nowMonthIndex++;
-      }
-    }
-    this.monthController =
-        new PageController(initialPage: initialPage, keepPage: true);
     LogUtil.log(
         TAG: this.runtimeType,
         message: "start:${DateModel.fromDateTime(DateTime(
@@ -122,35 +92,86 @@ class CalendarController {
           maxYear,
           maxYearMonth,
         ))}");
-    LogUtil.log(
-        TAG: this.runtimeType,
-        message:
-            "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
 
-    //计算一共多少周
-    //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
-    int initialWeekPage = 0;
-    int nowWeekIndex = 0;
-    weekList.clear();
+    if (showMode == Constants.MODE_SHOW_ONLY_MONTH ||
+        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+      //初始化pageController,initialPage默认是当前时间对于的页面
+      int initialPage = 0;
+      int nowMonthIndex = 0;
+      monthList.clear();
+      for (int i = minYear; i <= maxYear; i++) {
+        for (int j = 1; j <= 12; j++) {
+          if (i == minYear && j < minYearMonth) {
+            continue;
+          }
+          if (i == maxYear && j > maxYearMonth) {
+            continue;
+          }
+          DateModel dateModel = new DateModel();
+          dateModel.year = i;
+          dateModel.month = j;
 
-    DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
-    //计算第一个星期的第一天的日期
-    DateTime firstWeekDate =
-        firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
+          //如果没有配置当前时间，设置成当前的时间
+          if (nowYear == -1 || nowMonth == -1) {
+            nowYear = DateTime.now().year;
+            nowMonth = DateTime.now().month;
+          }
+          if (i == nowYear && j == nowMonth) {
+            initialPage = nowMonthIndex;
+          }
+          monthList.add(dateModel);
+          nowMonthIndex++;
+        }
+      }
+      this.monthController =
+          new PageController(initialPage: initialPage, keepPage: true);
 
-    DateTime lastDay = DateTime(maxYear, maxYearMonth,
-        DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
-    for (DateTime dateTime = firstWeekDate;
-        !dateTime.isAfter(lastDay);
-        dateTime = dateTime.add(Duration(days: 7))) {
-      DateModel dateModel = DateModel.fromDateTime(dateTime);
-      weekList.add(dateModel);
+      LogUtil.log(
+          TAG: this.runtimeType,
+          message:
+              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
     }
-    this.weekController = new PageController();
-    LogUtil.log(
-        TAG: this.runtimeType,
-        message:
-            "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为${initialWeekPage}");
+
+    if (showMode == Constants.MODE_SHOW_ONLY_WEEK ||
+        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+      //计算一共多少周
+      //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
+      int initialWeekPage = 0;
+      int nowWeekIndex = 0;
+      weekList.clear();
+      //如果没有配置当前时间，设置成当前的时间
+      if (nowYear == -1 || nowMonth == -1) {
+        nowYear = DateTime.now().year;
+        nowMonth = DateTime.now().month;
+      }
+      DateTime nowTime = new DateTime(nowYear, nowMonth, 15);
+      DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
+      //计算第一个星期的第一天的日期
+      DateTime firstWeekDate =
+          firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
+
+      DateTime lastDay = DateTime(maxYear, maxYearMonth,
+          DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
+      int temp = -1;
+      for (DateTime dateTime = firstWeekDate;
+          !dateTime.isAfter(lastDay);
+          dateTime = dateTime.add(Duration(days: 7))) {
+        DateModel dateModel = DateModel.fromDateTime(dateTime);
+        weekList.add(dateModel);
+        print("nowTime.isBefore(dateTime)");
+        print("$nowTime,,,,$dateTime");
+
+        if (nowTime.isAfter(dateTime)) {
+          temp++;
+        }
+      }
+      initialWeekPage = temp;
+      LogUtil.log(
+          TAG: this.runtimeType,
+          message:
+              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为${initialWeekPage}");
+      this.weekController = new PageController(initialPage: initialWeekPage);
+    }
 
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
@@ -442,12 +463,11 @@ class CalendarController {
   }
 
   //清除数据
-  void clearData(){
+  void clearData() {
     monthList.clear();
     weekList.clear();
     calendarProvider.clearData();
   }
-
 }
 
 /**

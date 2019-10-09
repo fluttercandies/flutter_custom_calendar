@@ -43,13 +43,13 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
     controller.addOnCalendarSelectListener((dateModel) {
       //刷新选择的时间
       selectText.value =
-          "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}";
+          "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().join("\n")}";
     });
 
     text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
 
     selectText = new ValueNotifier(
-        "单选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
+        "多选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
   }
 
   @override

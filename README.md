@@ -19,7 +19,7 @@ Flutter上的一个日历控件，可以定制成自己想要的样子。
 * 支持月份视图和星期视图的展示与切换联动
 
 ## 近期修改
-### [1.0.0] - 2019/9/22
+### [1.0.0] - 2019/10/10
 * 重构日历的代码,进行性能优化
 * 创建configuration类，将配置的信息放到这里
 * 引入provider状态管理,避免深层嵌套传递信息 
@@ -123,6 +123,9 @@ extraDataMap | 自定义额外的数据| 默认为空Map，Map<DateTime, Object>
 :-: | :-: | :-: 
 weekBarItemWidgetBuilder | 创建顶部的weekbar | 默认样式
 dayWidgetBuilder | 创建日历item | 默认样式
+verticalSpacing|日历item之间的竖直方向间距|默认10
+boxDecoration |整体的背景设置|
+itemSize| 每个item的边长|默认是屏幕宽度/7|
 
 
 ### 事件监听的配置

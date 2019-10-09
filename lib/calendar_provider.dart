@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
+import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
@@ -78,7 +79,7 @@ class CalendarProvider extends ChangeNotifier {
     return index + 1;
   }
 
-  ValueNotifier<bool> expandStatus = ValueNotifier(true); //当前展开状态
+  ValueNotifier<bool> expandStatus; //当前展开状态
 
   //配置类也放这里吧，这样的话，所有子树，都可以拿到配置的信息
   CalendarConfiguration calendarConfiguration;
@@ -98,12 +99,17 @@ class CalendarProvider extends ChangeNotifier {
         ? selectDateModel
         : DateModel.fromDateTime(DateTime.now())
       ..day = 15;
+    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_WEEK) {
+      expandStatus = ValueNotifier(false);
+    } else {
+      expandStatus = ValueNotifier(true);
+    }
   }
 
   //退出的时候，清除数据
   void clearData() {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider clearData");
-    CacheData.instance.clearData();
+    CacheData.getInstance().clearData();
     selectedDateList.clear();
     selectDateModel = null;
     calendarConfiguration = null;

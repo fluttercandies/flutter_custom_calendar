@@ -1,3 +1,4 @@
+import 'package:example/only_week_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'custom_sign_page.dart';
@@ -6,7 +7,7 @@ import 'default_style_page.dart';
 import 'multi_select_style_page.dart';
 import 'progress_style_page.dart';
 
-void main(){
+void main() {
 //  debugProfileBuildsEnabled=true;
 //  debugProfilePaintsEnabled=true;
   runApp(MyApp());
@@ -33,7 +34,10 @@ class MyApp extends StatelessWidget {
               ),
           "/custom_sign": (context) => CustomSignPage(
                 title: "自定义额外数据，实现标记功能",
-              )
+              ),
+          "/only_week_view": (context) => OnlyWeekPage(
+                title: "仅显示周视图",
+              ),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -79,6 +83,12 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, "/custom_sign");
               },
               child: new Text("自定义额外数据，实现标记功能"),
+            ),
+            new RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/only_week_view");
+              },
+              child: new Text("仅显示周视图"),
             ),
           ],
         ),

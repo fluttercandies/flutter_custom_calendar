@@ -54,13 +54,15 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
           //外部可以自定义背景设置
           decoration: widget.boxDecoration,
           //使用const，保证外界的setState不会刷新日历这个widget
-          child: const CalendarContainer()),
+          child: CalendarContainer(widget.calendarController)),
     );
   }
 }
 
 class CalendarContainer extends StatefulWidget {
-  const CalendarContainer();
+  final CalendarController calendarController;
+
+  const CalendarContainer(this.calendarController);
 
   @override
   CalendarContainerState createState() => CalendarContainerState();
@@ -121,6 +123,28 @@ class CalendarContainerState extends State<CalendarContainer>
         });
       });
     }
+
+    widget.calendarController.addMonthChangeListener((year, month) {
+      if (widget.calendarController.calendarProvider.calendarConfiguration
+              .showMode !=
+          Constants.MODE_SHOW_ONLY_WEEK) {
+        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
+        int lineCount = DateUtil.getMonthViewLineCount(year, month);
+        double newHeight = itemHeight * lineCount +
+            calendarProvider.calendarConfiguration.verticalSpacing *
+                (lineCount - 1);
+        if (totalHeight.toInt() != newHeight.toInt()) {
+          LogUtil.log(
+              TAG: this.runtimeType,
+              message: "totalHeight:$totalHeight,newHeight:$newHeight");
+
+          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
+          setState(() {
+            totalHeight = newHeight;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -134,40 +158,10 @@ class CalendarContainerState extends State<CalendarContainer>
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
     itemHeight = calendarProvider.calendarConfiguration.itemSize ??
         MediaQuery.of(context).size.width / 7;
-    totalHeight = itemHeight * 6 + 10 * (6 - 1);
-//    return Container(
-//      child: new Column(
-//        children: <Widget>[
-//          /**
-//           * 利用const，避免每次setState都会刷新到这顶部的view
-//           */
-//          calendarProvider.calendarConfiguration.weekBarItemWidgetBuilder(),
-//          AnimatedContainer(
-//            duration: Duration(milliseconds: 200),
-//            width: itemHeight * 7,
-//            height: expand ? totalHeight : itemHeight,
-//            child: expand
-//                ? Container(
-//                    height: totalHeight,
-//                    child: MonthViewPager(),
-//                  )
-//                : Container(
-//                    height: itemHeight,
-//                    child: WeekViewPager(),
-//                  ),
-//          ),
-//        ],
-//      ),
-//    );
-
-//    return Container(
-//      child: AnimatedCrossFade(
-//          firstChild: Container(height: totalHeight, child: MonthViewPager()),
-//          secondChild: Container(height: itemHeight, child: WeekViewPager()),
-//          crossFadeState: state,
-//          duration: Duration(milliseconds: 500)),
-//    );
-
+    if (totalHeight == null) {
+      totalHeight = itemHeight * 6 +
+          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
+    }
     return Container(
       width: itemHeight * 7,
       child: new Column(
@@ -182,7 +176,6 @@ class CalendarContainerState extends State<CalendarContainer>
               duration: Duration(milliseconds: 500),
               height: expand ? totalHeight : itemHeight,
               child: IndexedStack(
-//                overflow: Overflow.visible,
                 index: index,
                 children: widgets,
               )),

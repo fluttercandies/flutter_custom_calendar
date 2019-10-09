@@ -194,12 +194,12 @@ class ItemContainerState extends State<ItemContainer> {
             return;
           }
 
-          configuration.calendarSelect(dateModel);
           if (calendarProvider.selectedDateList.contains(dateModel)) {
             calendarProvider.selectedDateList.remove(dateModel);
           } else {
             calendarProvider.selectedDateList.add(dateModel);
           }
+          configuration.calendarSelect(dateModel);
 
           //多选也可以弄这些单选的代码
           calendarProvider.selectDateModel = dateModel;
