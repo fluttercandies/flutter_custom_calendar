@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_calendar/cache_data.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
@@ -97,19 +98,14 @@ class CalendarProvider extends ChangeNotifier {
         ? selectDateModel
         : DateModel.fromDateTime(DateTime.now())
       ..day = 15;
-
-//    expandStatus.addListener(() {
-//      print("1111");
-//      if (expandStatus.value == false) {
-//        calendarConfiguration.weekController.jumpToPage(weekPageIndex);
-//      }
-//    });
   }
 
   //退出的时候，清除数据
   void clearData() {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider clearData");
+    CacheData.instance.clearData();
     selectedDateList.clear();
     selectDateModel = null;
+    calendarConfiguration = null;
   }
 }

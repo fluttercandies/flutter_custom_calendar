@@ -139,6 +139,9 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
 
   @override
   Widget getNormalWidget(DateModel dateModel) {
+    if (!dateModel.isCurrentMonth) {
+      return Container();
+    }
     return Container(
       margin: EdgeInsets.all(8),
       child: new Stack(
@@ -186,6 +189,9 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
 
   @override
   Widget getSelectedWidget(DateModel dateModel) {
+    if (!dateModel.isCurrentMonth) {
+      return Container();
+    }
     return Container(
       margin: EdgeInsets.all(8),
       foregroundDecoration:

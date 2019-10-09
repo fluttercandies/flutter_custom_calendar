@@ -4,9 +4,11 @@ class Constants {
   static const int MODE_SINGLE_SELECT = 1;
   static const int MODE_MULTI_SELECT = 2;
 
-  //展开状态
-  static const int STATUS_EXPAND=1;//展开
-  static const int STATUS_SHRINK=2;//收缩
+  //展示模式
+  static const int MODE_SHOW_ONLY_MONTH=1;//仅支持月视图
+  static const int MODE_SHOW_ONLY_WEEK=2;//仅支持星期视图
+  static const int MODE_SHOW_WEEK_AND_MONTH=3;//支持月和星期视图切换
+
 
   /**
    * 一周七天

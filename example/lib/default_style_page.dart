@@ -1,7 +1,5 @@
-import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
-import 'package:provider/provider.dart';
 
 /**
  * 默认风格+单选
@@ -28,7 +26,8 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
         minYear: now.year,
         minYearMonth: now.month - 2,
         maxYear: now.year,
-        maxYearMonth: now.month + 1);
+        maxYearMonth: now.month + 1,
+        showMode: Constants.MODE_SHOW_WEEK_AND_MONTH);
 
     controller.addMonthChangeListener(
       (year, month) {

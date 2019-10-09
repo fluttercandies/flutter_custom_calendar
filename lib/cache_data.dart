@@ -20,6 +20,14 @@ class CacheData {
     }
     return _instance;
   }
+
+
+  void clearData(){
+    monthListCache.clear();
+    weekListCache.clear();
+  }
+
+
 }
 
 

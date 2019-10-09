@@ -68,6 +68,7 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
       //构造函数
       CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
+       int showMode = Constants.MODE_SHOW_ONLY_MONTH,
       bool expandStatus = true,
       DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
       WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
@@ -96,7 +97,8 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 
 属性 | 含义 | 默认值 
 :-: | :-: | :-: 
-selectMode | 选择模式,表示单选或者多选 | 默认是单选MODE_SINGLE_SELECT
+selectMode | 选择模式,表示单选或者多选 | 默认是单选<br>static const int MODE_SINGLE_SELECT = 1;<br>static const int MODE_MULTI_SELECT = 2;
+showMode|展示模式| 默认是只展示月视图<br>static const int MODE_SHOW_ONLY_MONTH=1;//仅支持月视图<br>static const int MODE_SHOW_ONLY_WEEK=2;//仅支持星期视图<br>static const int MODE_SHOW_WEEK_AND_MONTH=3;//支持月和星期视图切换
 minYear | 日历显示的最小年份| 1971 
 maxYear | 日历显示的最大年份| 2055 
 minYearMonth | 日历显示的最小年份的月份| 1 

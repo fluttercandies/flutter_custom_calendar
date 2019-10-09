@@ -12,9 +12,6 @@ class CalendarConfiguration {
   //仅展示月视图，仅展示周视图，支持月视图和周视图切换
   int showMode;
 
-  bool defaultExpandStatus; //展开状态,true代表是月视图，false代表是周视图
-  bool enableExpand; //是否可以展开,true只展示月视图，false仅展示周视图，
-
   //日历显示的最小年份和最大年份
   int minYear;
   int maxYear;
@@ -90,14 +87,10 @@ class CalendarConfiguration {
       this.monthController,
       this.weekController,
       this.verticalSpacing,
-      this.itemSize,
-      this.enableExpand,
-      bool defaultExpandStatus}) {
-    this.defaultExpandStatus = defaultExpandStatus;
-  }
+      this.itemSize,this.showMode});
 
   @override
   String toString() {
-    return 'CalendarConfiguration{selectMode: $selectMode, expandStatus: $defaultExpandStatus, minYear: $minYear, maxYear: $maxYear, minYearMonth: $minYearMonth, maxYearMonth: $maxYearMonth, nowYear: $nowYear, nowMonth: $nowMonth, minSelectYear: $minSelectYear, minSelectMonth: $minSelectMonth, minSelectDay: $minSelectDay, maxSelectYear: $maxSelectYear, maxSelectMonth: $maxSelectMonth, maxSelectDay: $maxSelectDay, defaultSelectedDateList: $defaultSelectedDateList, maxMultiSelectCount: $maxMultiSelectCount, extraDataMap: $extraDataMap, monthList: $monthList, weekList: $weekList, monthController: $monthController, weekController: $weekController}';
+    return 'CalendarConfiguration{selectMode: $selectMode, minYear: $minYear, maxYear: $maxYear, minYearMonth: $minYearMonth, maxYearMonth: $maxYearMonth, nowYear: $nowYear, nowMonth: $nowMonth, minSelectYear: $minSelectYear, minSelectMonth: $minSelectMonth, minSelectDay: $minSelectDay, maxSelectYear: $maxSelectYear, maxSelectMonth: $maxSelectMonth, maxSelectDay: $maxSelectDay, defaultSelectedDateList: $defaultSelectedDateList, maxMultiSelectCount: $maxMultiSelectCount, extraDataMap: $extraDataMap, monthList: $monthList, weekList: $weekList, monthController: $monthController, weekController: $weekController}';
   }
 }

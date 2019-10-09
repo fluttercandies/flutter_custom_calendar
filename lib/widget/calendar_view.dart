@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
+import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
@@ -40,6 +41,12 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
   }
 
   @override
+  void dispose() {
+    widget.calendarController.clearData();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CalendarProvider>.value(
       value: widget.calendarController.calendarProvider,
@@ -70,7 +77,7 @@ class CalendarContainerState extends State<CalendarContainer>
 
   var state = CrossFadeState.showFirst;
 
-  List<Widget> widgets;
+  List<Widget> widgets = [];
 
   int index = 0;
 
@@ -79,13 +86,21 @@ class CalendarContainerState extends State<CalendarContainer>
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     expand = calendarProvider.expandStatus.value;
 
-    widgets = [
-      const MonthViewPager(),
-      const WeekViewPager(),
-    ];
+    if (calendarProvider.calendarConfiguration.showMode ==
+        Constants.MODE_SHOW_ONLY_WEEK) {
+      widgets.add(const WeekViewPager());
+    } else if (calendarProvider.calendarConfiguration.showMode ==
+        Constants.MODE_SHOW_WEEK_AND_MONTH) {
+      widgets.add(const MonthViewPager());
+      widgets.add(const WeekViewPager());
+    } else {
+      //默认是只显示月视图
+      widgets.add(const MonthViewPager());
+    }
 
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
-    if (calendarProvider.calendarConfiguration.enableExpand == true) {
+    if (calendarProvider.calendarConfiguration.showMode ==
+        Constants.MODE_SHOW_WEEK_AND_MONTH) {
       calendarProvider.expandStatus.addListener(() {
         setState(() {
           expand = calendarProvider.expandStatus.value;

@@ -32,7 +32,7 @@ class CalendarController {
 
   CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
-      bool expandStatus = true,
+      int showMode = Constants.MODE_SHOW_ONLY_MONTH,
       DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
       WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
       int minYear = 1971,
@@ -51,11 +51,12 @@ class CalendarController {
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
       double verticalSpacing = 10,
-      bool enableExpand = true,
+      double itemSize,
       Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
+        showMode: showMode,
         minYear: minYear,
         maxYear: maxYear,
         maxYearMonth: maxYearMonth,
@@ -67,11 +68,10 @@ class CalendarController {
         minSelectDay: minSelectDay,
         maxSelectYear: maxSelectYear,
         maxSelectMonth: maxSelectMonth,
-        defaultExpandStatus: expandStatus,
         extraDataMap: extraDataMap,
         maxSelectDay: maxSelectDay,
-        enableExpand: enableExpand,
-        verticalSpacing: verticalSpacing);
+        verticalSpacing: verticalSpacing,
+        itemSize: itemSize);
 
     calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
     calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
@@ -440,6 +440,14 @@ class CalendarController {
   DateModel getSingleSelectCalendar() {
     return calendarProvider.selectDateModel;
   }
+
+  //清除数据
+  void clearData(){
+    monthList.clear();
+    weekList.clear();
+    calendarProvider.clearData();
+  }
+
 }
 
 /**

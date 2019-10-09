@@ -50,8 +50,6 @@ class _MonthViewPagerState extends State<MonthViewPager> {
 //    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 //      calendarProvider.calendarConfiguration.monthController.jumpToPage(index);
 //    });
-
-
   }
 
   @override
@@ -69,15 +67,22 @@ class _MonthViewPagerState extends State<MonthViewPager> {
 
     return PageView.builder(
       onPageChanged: (position) {
+        if (calendarProvider.expandStatus.value == false) {
+          return;
+        }
         //月份的变化
         DateModel dateModel = configuration.monthList[position];
         configuration.monthChange(dateModel.year, dateModel.month);
         //用来保存临时变量，用于月视图切换到周视图的时候，默认是显示中间的一周
-        DateModel temp = new DateModel();
-        temp.year = configuration.monthList[position].year;
-        temp.month = configuration.monthList[position].month;
-        temp.day = configuration.monthList[position].day + 14;
-        calendarProvider.lastClickDateModel = temp;
+        if (calendarProvider.lastClickDateModel != null ||
+            calendarProvider.lastClickDateModel.month != dateModel.month) {
+          DateModel temp = new DateModel();
+          temp.year = configuration.monthList[position].year;
+          temp.month = configuration.monthList[position].month;
+          temp.day = configuration.monthList[position].day + 14;
+          calendarProvider.lastClickDateModel = temp;
+        }
+
         //计算下高度，使PageView自适应高度
 
 //        double itemHeight = MediaQuery.of(context).size.width / 7;
