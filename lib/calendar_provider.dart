@@ -13,11 +13,22 @@ import 'package:flutter_custom_calendar/widget/month_view.dart';
  * 目前的情况：只需要获取状态，不需要监听rebuild
  */
 class CalendarProvider extends ChangeNotifier {
+  double _totalHeight; //当前月视图的整体高度
   Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
   DateModel _selectDateModel; //当前选中的日期，用于单选
   ItemContainerState lastClickItemState;
-
   DateModel _lastClickDateModel;
+
+  double get totalHeight => _totalHeight;
+
+  set totalHeight(double value) {
+    _totalHeight = value;
+  }
+
+  changeTotalHeight(double value) {
+    _totalHeight = value;
+    notifyListeners();
+  }
 
   DateModel get lastClickDateModel =>
       _lastClickDateModel; //保存最后点击的一个日期，用于周视图与月视图之间的切换和同步

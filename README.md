@@ -315,3 +315,4 @@ bool operator ==(Object other)|重写==方法，可以判断两个dateModel是�
 * 优化代码实现
 * 继续写几个不同风格的Demo
 * 支持手势操作
+* 实现高度自适应

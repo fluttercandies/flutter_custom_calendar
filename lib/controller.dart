@@ -158,8 +158,8 @@ class CalendarController {
           dateTime = dateTime.add(Duration(days: 7))) {
         DateModel dateModel = DateModel.fromDateTime(dateTime);
         weekList.add(dateModel);
-        print("nowTime.isBefore(dateTime)");
-        print("$nowTime,,,,$dateTime");
+//        print("nowTime.isBefore(dateTime)");
+//        print("$nowTime,,,,$dateTime");
 
         if (nowTime.isAfter(dateTime)) {
           temp++;
@@ -230,7 +230,7 @@ class CalendarController {
         calendarProvider.calendarConfiguration.monthController
             .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
         calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex].year, monthList[currentIndex].month);
+            monthList[currentIndex-1].year, monthList[currentIndex-1].month);
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
@@ -268,7 +268,7 @@ class CalendarController {
         calendarProvider.calendarConfiguration.monthController
             .nextPage(duration: DEFAULT_DURATION, curve: Curves.ease);
         calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex].year, monthList[currentIndex].month);
+            monthList[currentIndex+1].year, monthList[currentIndex+1].month);
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;

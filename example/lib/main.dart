@@ -10,6 +10,7 @@ import 'progress_style_page.dart';
 void main() {
 //  debugProfileBuildsEnabled=true;
 //  debugProfilePaintsEnabled=true;
+//  debugPrintRebuildDirtyWidgets=true;
   runApp(MyApp());
 }
 

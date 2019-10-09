@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
+import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
@@ -16,10 +17,6 @@ class MonthViewPager extends StatefulWidget {
 
 class _MonthViewPagerState extends State<MonthViewPager> {
   CalendarProvider calendarProvider;
-
-  var totalHeight;
-
-//  PageController newPageController;
 
   @override
   void initState() {
@@ -84,19 +81,22 @@ class _MonthViewPagerState extends State<MonthViewPager> {
         }
 
         //计算下高度，使PageView自适应高度
-
-//        double itemHeight = MediaQuery.of(context).size.width / 7;
-//
-//        int lineCount =
-//            DateUtil.getMonthViewLineCount(dateModel.year, dateModel.month);
-//        double newHeight = itemHeight * lineCount +
-//            configuration.verticalSpacing * (lineCount - 1);
-//       if(totalHeight!=newHeight){
-//         totalHeight=newHeight;
-//         setState(() {
-//
-//         });
-//       }
+        if (calendarProvider.calendarConfiguration.showMode !=
+            Constants.MODE_SHOW_ONLY_WEEK) {
+          //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
+          int lineCount =
+              DateUtil.getMonthViewLineCount(dateModel.year, dateModel.month);
+          double newHeight = (calendarProvider.calendarConfiguration.itemSize ??
+                      MediaQuery.of(context).size.width / 7) *
+                  lineCount +
+              calendarProvider.calendarConfiguration.verticalSpacing *
+                  (lineCount - 1);
+          if (calendarProvider.totalHeight.toInt() != newHeight.toInt()) {
+            LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
+            calendarProvider.totalHeight = newHeight;
+//          calendarProvider.changeTotalHeight(newHeight);
+          }
+        }
       },
       controller: configuration.monthController,
       itemBuilder: (context, index) {

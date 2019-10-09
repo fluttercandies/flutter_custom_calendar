@@ -124,27 +124,36 @@ class CalendarContainerState extends State<CalendarContainer>
       });
     }
 
-    widget.calendarController.addMonthChangeListener((year, month) {
-      if (widget.calendarController.calendarProvider.calendarConfiguration
-              .showMode !=
-          Constants.MODE_SHOW_ONLY_WEEK) {
-        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-        int lineCount = DateUtil.getMonthViewLineCount(year, month);
-        double newHeight = itemHeight * lineCount +
-            calendarProvider.calendarConfiguration.verticalSpacing *
-                (lineCount - 1);
-        if (totalHeight.toInt() != newHeight.toInt()) {
-          LogUtil.log(
-              TAG: this.runtimeType,
-              message: "totalHeight:$totalHeight,newHeight:$newHeight");
+//    widget.calendarController.addMonthChangeListener((year, month) {
+//      if (widget.calendarController.calendarProvider.calendarConfiguration
+//              .showMode !=
+//          Constants.MODE_SHOW_ONLY_WEEK) {
+//        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
+//        int lineCount = DateUtil.getMonthViewLineCount(year, month);
+//        double newHeight = itemHeight * lineCount +
+//            calendarProvider.calendarConfiguration.verticalSpacing *
+//                (lineCount - 1);
+//        if (totalHeight.toInt() != newHeight.toInt()) {
+//          LogUtil.log(
+//              TAG: this.runtimeType,
+//              message: "totalHeight:$totalHeight,newHeight:$newHeight");
+//
+//          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
+//          setState(() {
+//            totalHeight = newHeight;
+//          });
+//        }
+//      }
+//    });
 
-          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
-          setState(() {
-            totalHeight = newHeight;
-          });
-        }
-      }
-    });
+    //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
+    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width /
+            7;
+    if (calendarProvider.totalHeight == null) {
+      calendarProvider.totalHeight = itemHeight * 6 +
+          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
+    }
   }
 
   @override
