@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'custom_sign_page.dart';
 import 'custom_style_page.dart';
 import 'default_style_page.dart';
 import 'multi_select_style_page.dart';
 import 'progress_style_page.dart';
 
-void main() => runApp(MyApp());
+void main(){
+//  debugProfileBuildsEnabled=true;
+//  debugProfilePaintsEnabled=true;
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+//        checkerboardOffscreenLayers: true, // 使用了saveLayer的图形会显示为棋盘格式并随着页面刷新而闪烁
         routes: <String, WidgetBuilder>{
           "/default": (context) => DefaultStylePage(
                 title: "默认风格+单选",

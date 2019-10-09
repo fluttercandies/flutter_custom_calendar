@@ -20,7 +20,7 @@ Flutter上的一个日历控件，可以定制成自己想要的样子。
 
 ## 近期修改
 ### [1.0.0] - 2019/9/22
-* 重构日历的代码
+* 重构日历的代码,进行性能优化
 * 创建configuration类，将配置的信息放到这里
 * 引入provider状态管理,避免深层嵌套传递信息 
 * 实现周视图，并实现周视图和月视图之间的联动
@@ -55,8 +55,9 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 * boxDecoration用来配置整体的背景
 * 利用CalendarController来配置一些数据，并且可以通过CalendarController进行一些操作或者事件监听，比如滚动到下一个月，获取当前被选中的Item等等。
 
+## 配置CalendarController
+
 下面是CalendarController中一些支持自定义配置的属性。不配置的话，会有对应的默认值。
-配置都是在controller里面进行配置的（。。考虑到之前版本，所以才这样搞）。
 
 个人觉得，配置的含义主要包括了3个方面的配置。
 * 一个是显示日历所需要的相关数据，
@@ -64,9 +65,10 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 * 一个是对日历的监听事件进行配置。
 
 ```
-//构造函数
-    CalendarController(
+      //构造函数
+      CalendarController(
       {int selectMode = Constants.MODE_SINGLE_SELECT,
+      bool expandStatus = true,
       DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
       WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
       int minYear = 1971,
@@ -84,11 +86,13 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
       Set<DateTime> selectedDateTimeList = EMPTY_SET,
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
-      Map<DateTime, Object> extraDataMap = EMPTY_MAP})
+      double verticalSpacing = 10,
+      bool enableExpand = true,
+      Map<DateModel, Object> extraDataMap = EMPTY_MAP})
 
 ```
 
-数据方面的配置
+### 数据方面的配置
 
 属性 | 含义 | 默认值 
 :-: | :-: | :-: 
@@ -111,7 +115,7 @@ maxMultiSelectCount | 多选，最多选多少个| hhh
 extraDataMap | 自定义额外的数据| 默认为空Map，Map<DateTime, Object> extraDataMap = new Map()
 
 
-UI绘制相关的配置
+### UI绘制相关的配置
 
 属性 | 含义 | 默认值 
 :-: | :-: | :-: 
@@ -119,23 +123,23 @@ weekBarItemWidgetBuilder | 创建顶部的weekbar | 默认样式
 dayWidgetBuilder | 创建日历item | 默认样式
 
 
-事件监听的配置
+### 事件监听的配置
 
 方法 | 含义 | 默认值 
 :-: | :-: | :-: 
-void addMonthChangeListener(OnMonthChange listener) | 月份切换事件 | 默认为空
-void addOnCalendarSelectListener(OnCalendarSelect listener) | 点击选择事件 | 默认为空
-void addOnMultiSelectOutOfRangeListener(OnMultiSelectOutOfRange listener) | 多选超出指定范围 | 默认为空
-void addOnMultiSelectOutOfSizeListener(OnMultiSelectOutOfSize listener) | 多选超出限制个数 | 默认为空
+void addMonthChangeListener(OnMonthChange listener) | 月份切换事件 | 
+void addOnCalendarSelectListener(OnCalendarSelect listener) | 点击选择事件 | 
+void addOnMultiSelectOutOfRangeListener(OnMultiSelectOutOfRange listener) | 多选超出指定范围 | 
+void addOnMultiSelectOutOfSizeListener(OnMultiSelectOutOfSize listener) | 多选超出限制个数 | 
 void addExpandChangeListener(ValueChanged<bool> expandChange)|监听日历的展开收缩状态|
 
-###  利用controller来控制日历的切换，支持配置动画
+##  利用controller来控制日历的切换，支持配置动画
 
 方法 | 含义 | 默认值 
 :-: | :-: | :-: 
 Future<bool> previousPage()|滑动到上一个页面，会自动根据当前的展开状态，滑动到上一个月或者上一个星期。如果已经在第一个页面，没有上一个页面，就会返回false，其他情况返回true| 
 Future<bool> nextPage()|滑动到下一个页面，会自动根据当前的展开状态，滑动到下一个月或者下一个星期。如果已经在最后一个页面，没有下一个页面，就会返回false，其他情况返回true|
-void moveToCalendar(int year, int month, int day, {bool needAnimation = false,Duration duration = const Duration(milliseconds: 500),Curve curve = Curves.ease}) | 到指定日期 | 默认为空
+void moveToCalendar(int year, int month, int day, {bool needAnimation = false,Duration duration = const Duration(milliseconds: 500),Curve curve = Curves.ease}) | 到指定日期 | 
 void moveToNextYear()|切换到下一年|
 void moveToPreviousYear()|切换到上一年|    
 void moveToNextMonth()|切换到下一个月份|
@@ -143,7 +147,7 @@ void moveToPreviousMonth()|切换到上一个月份|
 void toggleExpandStatus()|切换展开状态|
 
 
-### 利用controller来获取日历的一些数据信息
+## 利用controller来获取日历的一些数据信息
 
 方法 | 含义 | 默认值 
 :-: | :-: | :-: 
@@ -152,7 +156,7 @@ Set<DateModel> getMultiSelectCalendar()|获取被选中的日期,多选|
 DateModel getSingleSelectCalendar()|获取被选中的日期，单选|
 
 
-### 如何自定义UI
+## 如何自定义UI
 
 包括自定义WeekBar、自定义日历Item，默认使用的都是DefaultXXXWidget。
 
@@ -271,7 +275,7 @@ class DefaultCustomDayWidget extends BaseCustomDayWidget {
 
 
 
-### DateModel实体类
+## DateModel实体类
 日历所用的日期的实体类DateModel，有下面这些属性。可以在自定义绘制DayWidget的时候，根据相应的属性，进行判断后，绘制相应的UI。
 
 属性|含义|类型|默认值
@@ -286,12 +290,12 @@ lunarString|农历字符串|String|
 solarTerm|24节气|String|
 gregorianFestival|gregorianFestival|String|
 traditionFestival|传统农历节日|String|
-isCurrentDay|是否是今天|bool|
-isLeapYear|是否是闰年|bool|
-isWeekend|是否是周末|bool|
+isCurrentDay|是否是今天|bool|false
+isLeapYear|是否是闰年|bool|false
+isWeekend|是否是周末|bool|false
 isInRange|是否在范围内,比如可以实现在某个范围外，设置置灰的功能|bool|false
 isSelected|是否被选中，用来实现一些标记或者选择功能|bool|false
-extraData|自定义的额外数据|Object
+extraData|自定义的额外数据|Object|默认为空
 
 
 方法|含义|

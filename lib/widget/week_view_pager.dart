@@ -3,11 +3,12 @@ import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/widget/week_view.dart';
 import 'package:provider/provider.dart';
 
 class WeekViewPager extends StatefulWidget {
-  WeekViewPager();
+  const WeekViewPager({Key key}) : super(key: key);
 
   @override
   _WeekViewPagerState createState() => _WeekViewPagerState();
@@ -17,45 +18,27 @@ class _WeekViewPagerState extends State<WeekViewPager> {
   int lastMonth; //保存上一个月份，不然不知道月份发生了变化
   CalendarProvider calendarProvider;
 
+//  PageController newPageController;
+
   @override
   void initState() {
-    print("WeekViewPager initState");
+    LogUtil.log(TAG: this.runtimeType, message: "WeekViewPager initState");
 
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
 
     lastMonth = calendarProvider.lastClickDateModel.month;
-    //计算当前周视图的index
-    DateModel dateModel = calendarProvider.lastClickDateModel;
-    List<DateModel> weekList = calendarProvider.calendarConfiguration.weekList;
-    int index = 0;
-
-    for (int i = 0; i < weekList.length; i++) {
-      DateModel firstDayOfWeek = weekList[i];
-      DateModel lastDayOfWeek = DateModel.fromDateTime(
-          firstDayOfWeek.getDateTime().add(Duration(days: 7)));
-
-      if ((dateModel.isSameWith(weekList[i]) ||
-              dateModel.isAfter(weekList[i])) &&
-          dateModel.isBefore(lastDayOfWeek)) {
-        index = i;
-        break;
-      }
-    }
-//    print("weekList:$weekList");
-//    print("当前周:index:$index");
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      calendarProvider.calendarConfiguration.weekController.jumpToPage(index);
-    });
   }
 
   @override
   void dispose() {
-    print("WeekViewPager dispose");
+    LogUtil.log(TAG: this.runtimeType, message: "WeekViewPager dispose");
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    LogUtil.log(TAG: this.runtimeType, message: "WeekViewPager build");
+
     //    获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
     CalendarProvider calendarProvider =
         Provider.of<CalendarProvider>(context, listen: false);
@@ -63,6 +46,7 @@ class _WeekViewPagerState extends State<WeekViewPager> {
         calendarProvider.calendarConfiguration;
 
     return Container(
+      height: configuration.itemSize ?? MediaQuery.of(context).size.width / 7,
       child: PageView.builder(
         onPageChanged: (position) {
 //          周视图的变化
@@ -71,28 +55,19 @@ class _WeekViewPagerState extends State<WeekViewPager> {
           if (lastMonth != currentMonth) {
             configuration.monthChange(
                 firstDayOfWeek.year, firstDayOfWeek.month);
+            lastMonth = currentMonth;
           }
-          calendarProvider.lastClickDateModel =
-              configuration.weekList[position];
-//          DateModel dateModel = configuration.weekList[position];
-//          configuration.monthChange(dateModel.year, dateModel.month);
+//          calendarProvider.lastClickDateModel = configuration.weekList[position]
+//            ..day += 4;
         },
-        controller: configuration.weekController,
+        controller: calendarProvider.calendarConfiguration.weekController,
         itemBuilder: (context, index) {
           DateModel dateModel = configuration.weekList[index];
           return new WeekView(
             year: dateModel.year,
             month: dateModel.month,
             firstDayOfWeek: dateModel,
-            minSelectDate: DateModel.fromDateTime(DateTime(
-                configuration.minSelectYear,
-                configuration.minSelectMonth,
-                configuration.minSelectDay)),
-            maxSelectDate: DateModel.fromDateTime(DateTime(
-                configuration.maxSelectYear,
-                configuration.maxSelectMonth,
-                configuration.maxSelectDay)),
-            extraDataMap: configuration.extraDataMap,
+            configuration: calendarProvider.calendarConfiguration,
           );
         },
         itemCount: configuration.weekList.length,

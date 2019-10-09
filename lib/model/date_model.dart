@@ -11,6 +11,13 @@ class DateModel {
 
   List<int> lunar = List(3);
 
+//  List<int> get lunar {
+//    if (lunar?.isNotEmpty == false) {
+//      return lunar;
+//    }
+////    return LunarUtil.solarToLunar(year, month, day);
+//  }
+
   //农历字符串
   String get lunarString {
     if (solarTerm.isNotEmpty) {

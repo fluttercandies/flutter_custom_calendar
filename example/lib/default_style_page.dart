@@ -23,8 +23,12 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
 
   @override
   void initState() {
+    DateTime now = DateTime.now();
     controller = new CalendarController(
-        minYear: 2019, minYearMonth: 8, maxYear: 2019, maxYearMonth: 9);
+        minYear: now.year,
+        minYearMonth: now.month - 2,
+        maxYear: now.year,
+        maxYearMonth: now.month + 1);
 
     controller.addMonthChangeListener(
       (year, month) {

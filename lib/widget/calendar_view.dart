@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
+import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
 import 'package:flutter_custom_calendar/widget/week_view_pager.dart';
 import 'package:provider/provider.dart';
@@ -66,16 +68,41 @@ class CalendarContainerState extends State<CalendarContainer>
 
   CalendarProvider calendarProvider;
 
+  var state = CrossFadeState.showFirst;
+
+  List<Widget> widgets;
+
+  int index = 0;
+
   @override
   void initState() {
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     expand = calendarProvider.expandStatus.value;
 
+    widgets = [
+      const MonthViewPager(),
+      const WeekViewPager(),
+    ];
+
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
     if (calendarProvider.calendarConfiguration.enableExpand == true) {
       calendarProvider.expandStatus.addListener(() {
         setState(() {
-          expand = !expand;
+          expand = calendarProvider.expandStatus.value;
+          state = (state == CrossFadeState.showSecond
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond);
+          if (expand) {
+            index = 0;
+            //周视图切换到月视图
+            calendarProvider.calendarConfiguration.weekController
+                .jumpToPage(calendarProvider.monthPageIndex);
+          } else {
+            index = 1;
+            //月视图切换到周视图
+            calendarProvider.calendarConfiguration.weekController
+                .jumpToPage(calendarProvider.weekPageIndex);
+          }
         });
       });
     }
@@ -90,28 +117,60 @@ class CalendarContainerState extends State<CalendarContainer>
   Widget build(BuildContext context) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarContainerState build");
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-    itemHeight = MediaQuery.of(context).size.width / 7;
+    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
+        MediaQuery.of(context).size.width / 7;
     totalHeight = itemHeight * 6 + 10 * (6 - 1);
+//    return Container(
+//      child: new Column(
+//        children: <Widget>[
+//          /**
+//           * 利用const，避免每次setState都会刷新到这顶部的view
+//           */
+//          calendarProvider.calendarConfiguration.weekBarItemWidgetBuilder(),
+//          AnimatedContainer(
+//            duration: Duration(milliseconds: 200),
+//            width: itemHeight * 7,
+//            height: expand ? totalHeight : itemHeight,
+//            child: expand
+//                ? Container(
+//                    height: totalHeight,
+//                    child: MonthViewPager(),
+//                  )
+//                : Container(
+//                    height: itemHeight,
+//                    child: WeekViewPager(),
+//                  ),
+//          ),
+//        ],
+//      ),
+//    );
+
+//    return Container(
+//      child: AnimatedCrossFade(
+//          firstChild: Container(height: totalHeight, child: MonthViewPager()),
+//          secondChild: Container(height: itemHeight, child: WeekViewPager()),
+//          crossFadeState: state,
+//          duration: Duration(milliseconds: 500)),
+//    );
+
     return Container(
+      width: itemHeight * 7,
       child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           /**
            * 利用const，避免每次setState都会刷新到这顶部的view
            */
           calendarProvider.calendarConfiguration.weekBarItemWidgetBuilder(),
           AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            height: expand ? totalHeight : itemHeight,
-            child: expand
-                ? Container(
-                    height: totalHeight,
-                    child: MonthViewPager(),
-                  )
-                : Container(
-                    height: itemHeight,
-                    child: WeekViewPager(),
-                  ),
-          ),
+              duration: Duration(milliseconds: 500),
+              height: expand ? totalHeight : itemHeight,
+              child: IndexedStack(
+//                overflow: Overflow.visible,
+                index: index,
+                children: widgets,
+              )),
         ],
       ),
     );

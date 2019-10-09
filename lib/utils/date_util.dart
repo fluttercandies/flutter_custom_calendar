@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter_custom_calendar/model/date_model.dart';
@@ -114,6 +115,7 @@ class DateUtil {
       {DateModel minSelectDate,
       DateModel maxSelectDate,
       Map<DateModel, Object> extraDataMap}) {
+    print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
     //获取月视图其实偏移量
     int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month));
@@ -124,6 +126,7 @@ class DateUtil {
         TAG: "DateUtil",
         message:
             "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
+
 
     List<DateModel> result = new List();
 
@@ -162,7 +165,7 @@ class DateUtil {
         dateModel.isInRange = false;
       }
       //将自定义额外的数据，存储到相应的model中
-      if (extraDataMap != null && extraDataMap.isNotEmpty) {
+      if (extraDataMap?.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
         }
@@ -170,6 +173,8 @@ class DateUtil {
 
       result.add(dateModel);
     }
+
+    print('initCalendarForMonthView end');
 
     return result;
   }
@@ -200,7 +205,6 @@ class DateUtil {
       {DateModel minSelectDate,
       DateModel maxSelectDate,
       Map<DateModel, Object> extraDataMap}) {
-    LogUtil.log(TAG: "DateUtil", message: "initCalendarForWeekView");
     List<DateModel> items = List();
 
     int weekDay = currentDate.weekday;
@@ -226,7 +230,7 @@ class DateUtil {
       }
 
       //将自定义额外的数据，存储到相应的model中
-      if (extraDataMap != null && extraDataMap.isNotEmpty) {
+      if (extraDataMap?.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
         }

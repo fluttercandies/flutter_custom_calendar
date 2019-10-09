@@ -8,7 +8,7 @@ import 'package:flutter_custom_calendar/style/style.dart';
  */
 
 class DefaultCustomDayWidget extends BaseCustomDayWidget {
-  DefaultCustomDayWidget(DateModel dateModel) : super(dateModel);
+  const DefaultCustomDayWidget(DateModel dateModel) : super(dateModel);
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {

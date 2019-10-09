@@ -9,8 +9,11 @@ class CalendarConfiguration {
   //默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
   int selectMode;
 
+  //仅展示月视图，仅展示周视图，支持月视图和周视图切换
+  int showMode;
+
   bool defaultExpandStatus; //展开状态,true代表是月视图，false代表是周视图
-  bool enableExpand; //是否可以展开
+  bool enableExpand; //是否可以展开,true只展示月视图，false仅展示周视图，
 
   //日历显示的最小年份和最大年份
   int minYear;
@@ -42,6 +45,7 @@ class CalendarConfiguration {
    */
   double verticalSpacing; //日历item之间的竖直方向间距，默认10
   BoxDecoration boxDecoration; //整体的背景设置
+  double itemSize; //默认是屏幕宽度/7
 
   //支持自定义绘制
   DayWidgetBuilder dayWidgetBuilder; //创建日历item
@@ -61,7 +65,7 @@ class CalendarConfiguration {
    */
   List<DateModel> monthList = new List(); //月份list
   List<DateModel> weekList = new List(); //星期list
-  PageController pageController; //月份的controller
+  PageController monthController; //月份的controller
   PageController weekController; //星期的controller
 
   CalendarConfiguration(
@@ -83,9 +87,10 @@ class CalendarConfiguration {
       this.extraDataMap,
       this.monthList,
       this.weekList,
-      this.pageController,
+      this.monthController,
       this.weekController,
       this.verticalSpacing,
+      this.itemSize,
       this.enableExpand,
       bool defaultExpandStatus}) {
     this.defaultExpandStatus = defaultExpandStatus;
@@ -93,6 +98,6 @@ class CalendarConfiguration {
 
   @override
   String toString() {
-    return 'CalendarConfiguration{selectMode: $selectMode, expandStatus: $defaultExpandStatus, minYear: $minYear, maxYear: $maxYear, minYearMonth: $minYearMonth, maxYearMonth: $maxYearMonth, nowYear: $nowYear, nowMonth: $nowMonth, minSelectYear: $minSelectYear, minSelectMonth: $minSelectMonth, minSelectDay: $minSelectDay, maxSelectYear: $maxSelectYear, maxSelectMonth: $maxSelectMonth, maxSelectDay: $maxSelectDay, defaultSelectedDateList: $defaultSelectedDateList, maxMultiSelectCount: $maxMultiSelectCount, extraDataMap: $extraDataMap, monthList: $monthList, weekList: $weekList, pageController: $pageController, weekController: $weekController}';
+    return 'CalendarConfiguration{selectMode: $selectMode, expandStatus: $defaultExpandStatus, minYear: $minYear, maxYear: $maxYear, minYearMonth: $minYearMonth, maxYearMonth: $maxYearMonth, nowYear: $nowYear, nowMonth: $nowMonth, minSelectYear: $minSelectYear, minSelectMonth: $minSelectMonth, minSelectDay: $minSelectDay, maxSelectYear: $maxSelectYear, maxSelectMonth: $maxSelectMonth, maxSelectDay: $maxSelectDay, defaultSelectedDateList: $defaultSelectedDateList, maxMultiSelectCount: $maxMultiSelectCount, extraDataMap: $extraDataMap, monthList: $monthList, weekList: $weekList, monthController: $monthController, weekController: $weekController}';
   }
 }
