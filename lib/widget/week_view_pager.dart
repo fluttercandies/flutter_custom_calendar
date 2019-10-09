@@ -49,13 +49,31 @@ class _WeekViewPagerState extends State<WeekViewPager> {
       height: configuration.itemSize ?? MediaQuery.of(context).size.width / 7,
       child: PageView.builder(
         onPageChanged: (position) {
+          if (calendarProvider.expandStatus.value == true) {
+            return;
+          }
+          LogUtil.log(
+              TAG: this.runtimeType,
+              message: "WeekViewPager PageView onPageChanged:${position}");
 //          周视图的变化
           DateModel firstDayOfWeek = configuration.weekList[position];
           int currentMonth = firstDayOfWeek.month;
           if (lastMonth != currentMonth) {
+            LogUtil.log(
+                TAG: this.runtimeType,
+                message:
+                    "WeekViewPager PageView monthChange:currentMonth:${currentMonth}");
             configuration.monthChange(
                 firstDayOfWeek.year, firstDayOfWeek.month);
             lastMonth = currentMonth;
+            if (calendarProvider.lastClickDateModel == null ||
+                calendarProvider.lastClickDateModel.month != currentMonth) {
+              DateModel temp = new DateModel();
+              temp.year = firstDayOfWeek.year;
+              temp.month = firstDayOfWeek.month;
+              temp.day = firstDayOfWeek.day + 14;
+              calendarProvider.lastClickDateModel = temp;
+            }
           }
 //          calendarProvider.lastClickDateModel = configuration.weekList[position]
 //            ..day += 4;
