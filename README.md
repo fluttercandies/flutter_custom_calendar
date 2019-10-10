@@ -1,9 +1,21 @@
-FlutterCalendarWidget
+
+## FlutterCalendarWidget
 
 Flutter上的一个日历控件，可以定制成自己想要的样子。
 
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb76a959b93b3?w=828&h=1792&f=jpeg&s=92910" width="300" height="620"><img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb793e4dbd2f2?w=828&h=1792&f=jpeg&s=102231" width="300" height="620">
-<img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb79f153ab321?w=828&h=1792&f=jpeg&s=1288910" width="300" height="620"><img src="https://user-gold-cdn.xitu.io/2019/5/18/16acb7a35d41361c?w=828&h=1792&f=jpeg&s=10674210" width="300" height="620">
+## 介绍
+之前写了一个Flutter日历的开源库，最近增加了一些功能，并且对代码进行了一下重构。（之前的代码写得真的是****，没搞状态框架，还各种嵌套代码）
+
+## 示例
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db05f93d816799?w=828&h=1792&f=png&s=81540" width="280" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db05fa9949b0af?w=828&h=1792&f=png&s=124266" width="280" height="620">
+
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db060ca77ecad2?w=828&h=1792&f=png&s=126261" width="280" height="620">
+
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db061203661eca?w=828&h=1792&f=png&s=157230" width="280" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db0614e44b6e0d?w=828&h=1792&f=png&s=145423" width="280" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db0619af4c854a?w=828&h=1792&f=png&s=129203" width="280" height="620">
+<img src="https://user-gold-cdn.xitu.io/2019/10/9/16db061ef0ed35dd?w=828&h=1792&f=png&s=81260" width="280" height="620">
 
 
 ## 主要功能
@@ -57,9 +69,9 @@ CalendarViewWidget({@required this.calendarController, this.boxDecoration});
 
 ## 配置CalendarController
 
-下面是CalendarController中一些支持自定义配置的属性。不配置的话，会有对应的默认值。
+下面是CalendarController中一些支持自定义配置的属性。不配置的话，会有对应的默认值。（配置现在都是在controller这里进行配置的，内部会将配置的数据抽成Configuration类）
 
-个人觉得，配置的含义主要包括了3个方面的配置。
+配置的含义主要包括了3个方面的配置。
 * 一个是显示日历所需要的相关数据，
 * 一个是显示日历的自定义UI的相关配置，
 * 一个是对日历的监听事件进行配置。
@@ -308,11 +320,3 @@ extraData|自定义的额外数据|Object|默认为空
 DateTime getDateTime()|将DateModel转化成DateTime
 DateModel fromDateTime(DateTime dateTime)|根据DateTime创建对应的model，并初始化农历和传统节日等信息
 bool operator ==(Object other)|重写==方法，可以判断两个dateModel是否是同一天
-
-
-
-## TODO LIST
-* 优化代码实现
-* 继续写几个不同风格的Demo
-* 支持手势操作
-* 实现高度自适应
