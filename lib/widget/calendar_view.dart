@@ -147,9 +147,14 @@ class CalendarContainerState extends State<CalendarContainer>
 //    });
 
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
+
+    MediaQueryData mediaQueryData =
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+
     itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width /
-            7;
+            mediaQueryData.orientation == Orientation.landscape
+        ? mediaQueryData.size.height / 10
+        : mediaQueryData.size.width / 7;
     if (calendarProvider.totalHeight == null) {
       calendarProvider.totalHeight = itemHeight * 6 +
           calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
@@ -165,8 +170,8 @@ class CalendarContainerState extends State<CalendarContainer>
   Widget build(BuildContext context) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarContainerState build");
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-        MediaQuery.of(context).size.width / 7;
+//    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
+//        MediaQuery.of(context).size.width / 7;
     if (totalHeight == null) {
       totalHeight = itemHeight * 6 +
           calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
