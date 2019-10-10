@@ -7,6 +7,9 @@ Flutter上的一个日历控件，可以定制成自己想要的样子。
 之前写了一个Flutter日历的开源库，最近增加了一些功能，并且对代码进行了一下重构。（之前的代码写得真的是****，没搞状态框架，还各种嵌套代码）
 
 ## 示例
+
+日历支持web预览：[点击此处进入预览](https://lxd312569496.github.io/flutter_custom_calendar/#/)
+
 <img src="https://user-gold-cdn.xitu.io/2019/10/9/16db05f93d816799?w=828&h=1792&f=png&s=81540" width="280" height="620">
 <img src="https://user-gold-cdn.xitu.io/2019/10/9/16db05fa9949b0af?w=828&h=1792&f=png&s=124266" width="280" height="620">
 
