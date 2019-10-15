@@ -22,11 +22,12 @@ class MonthView extends StatefulWidget {
   final CalendarConfiguration configuration;
 
   const MonthView({
+    Key key,
     @required this.year,
     @required this.month,
     this.day,
     this.configuration,
-  });
+  }) : super(key: key);
 
   @override
   _MonthViewState createState() => _MonthViewState();
@@ -34,13 +35,13 @@ class MonthView extends StatefulWidget {
 
 class _MonthViewState extends State<MonthView>
     with AutomaticKeepAliveClientMixin {
-  List<DateModel> items;
+  List<DateModel> items = List();
 
   int lineCount;
 
-  double itemHeight;
-  double totalHeight;
-  double mainSpacing = 10;
+//  double itemHeight;
+//  double totalHeight;
+//  double mainSpacing = 10;
 
   DateModel minSelectDate;
   DateModel maxSelectDate;
@@ -68,38 +69,48 @@ class _MonthViewState extends State<MonthView>
       items = CacheData.getInstance().monthListCache[firstDayOfMonth];
     } else {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中无数据");
-      items = DateUtil.initCalendarForMonthView(
-          widget.year, widget.month, DateTime.now(), DateTime.sunday,
-          minSelectDate: minSelectDate,
-          maxSelectDate: maxSelectDate,
-          extraDataMap: extraDataMap);
+      getItems();
       CacheData.getInstance().monthListCache[firstDayOfMonth] = items;
     }
 
     lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
   }
 
+  getItems() async {
+    items = await compute(initCalendarForMonthView, {
+      'year': widget.year,
+      'month': widget.month,
+      'minSelectDate': minSelectDate,
+      'maxSelectDate': maxSelectDate,
+      'extraDataMap': extraDataMap
+    });
+    setState(() {});
+  }
+
+  static Future<List<DateModel>> initCalendarForMonthView(Map map) async {
+    return DateUtil.initCalendarForMonthView(
+        map['year'], map['month'], DateTime.now(), DateTime.sunday,
+        minSelectDate: map['minSelectDate'],
+        maxSelectDate: map['maxSelectDate'],
+        extraDataMap: map['extraDataMap']);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     LogUtil.log(TAG: this.runtimeType, message: "_MonthViewState build");
-    itemHeight = MediaQuery.of(context).size.width / 7;
-    totalHeight = itemHeight * lineCount + mainSpacing * (lineCount - 1);
 
-    return Container(height: totalHeight, child: getView());
-  }
-
-  Widget getView() {
     CalendarProvider calendarProvider =
         Provider.of<CalendarProvider>(context, listen: false);
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
 
     return new GridView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+        addAutomaticKeepAlives: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7, mainAxisSpacing: 10),
-        itemCount: 7 * lineCount,
+        itemCount: items.isEmpty ? 0 : 7 * lineCount,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
@@ -119,8 +130,6 @@ class _MonthViewState extends State<MonthView>
 
           return ItemContainer(
             dateModel: dateModel,
-//            configuration: configuration,
-//            calendarProvider: calendarProvider,
           );
         });
   }
@@ -134,9 +143,6 @@ class _MonthViewState extends State<MonthView>
  */
 class ItemContainer extends StatefulWidget {
   final DateModel dateModel;
-
-//  CalendarConfiguration configuration;
-//  CalendarProvider calendarProvider;
 
   const ItemContainer({
     Key key,
@@ -161,9 +167,26 @@ class ItemContainerState extends State<ItemContainer> {
     isSelected = ValueNotifier(dateModel.isSelected);
   }
 
+  /**
+   * 提供方法给外部，可以调用这个方法进行刷新item
+   */
+  void refreshItem() {
+    /**
+        Exception caught by gesture
+        The following assertion was thrown while handling a gesture:
+        setState() called after dispose()
+     */
+    if (mounted) {
+      setState(() {
+        dateModel.isSelected = !dateModel.isSelected;
+//        isSelected.value = !isSelected.value;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-//    LogUtil.log(TAG: this.runtimeType,message: "ItemContainerState build");
+    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState build");
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     configuration = calendarProvider.calendarConfiguration;
 
@@ -215,29 +238,26 @@ class ItemContainerState extends State<ItemContainer> {
         refreshItem();
       },
       child: configuration.dayWidgetBuilder(dateModel),
-//        child: ValueListenableBuilder(
-//            valueListenable: isSelected,
-//            builder: (BuildContext context, bool value, Widget child) {
-//              return configuration.dayWidgetBuilder(dateModel);
-//            }),
     );
   }
 
-  /**
-   * 刷新item
-   */
-  void refreshItem() {
-    /**
-     *
-        Exception caught by gesture
-        The following assertion was thrown while handling a gesture:
-        setState() called after dispose()
-     */
-    if (mounted) {
-      setState(() {
-        dateModel.isSelected = !dateModel.isSelected;
-//        isSelected.value = !isSelected.value;
-      });
-    }
+  @override
+  void deactivate() {
+    LogUtil.log(
+        TAG: this.runtimeType, message: "ItemContainerState deactivate");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState dispose");
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(ItemContainer oldWidget) {
+    LogUtil.log(
+        TAG: this.runtimeType, message: "ItemContainerState didUpdateWidget");
+    super.didUpdateWidget(oldWidget);
   }
 }

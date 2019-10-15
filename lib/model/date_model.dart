@@ -124,3 +124,14 @@ class DateModel {
     return this.getDateTime().isBefore(dateModel.getDateTime());
   }
 }
+
+class X {
+  var _y;
+
+  get y => null == _y ? initY() : _y;
+
+  initY() {
+    //do some computation
+    _y = "result";
+  }
+}

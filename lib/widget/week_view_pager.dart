@@ -14,7 +14,7 @@ class WeekViewPager extends StatefulWidget {
   _WeekViewPagerState createState() => _WeekViewPagerState();
 }
 
-class _WeekViewPagerState extends State<WeekViewPager> {
+class _WeekViewPagerState extends State<WeekViewPager> with AutomaticKeepAliveClientMixin{
   int lastMonth; //保存上一个月份，不然不知道月份发生了变化
   CalendarProvider calendarProvider;
 
@@ -37,6 +37,7 @@ class _WeekViewPagerState extends State<WeekViewPager> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     LogUtil.log(TAG: this.runtimeType, message: "WeekViewPager build");
 
     //    获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
@@ -92,4 +93,7 @@ class _WeekViewPagerState extends State<WeekViewPager> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
