@@ -108,8 +108,8 @@ class _MonthViewState extends State<MonthView>
     return new GridView.builder(
         addAutomaticKeepAlives: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7, mainAxisSpacing: 10),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),
         itemCount: items.isEmpty ? 0 : 7 * lineCount,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];

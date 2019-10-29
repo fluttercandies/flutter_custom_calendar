@@ -151,14 +151,17 @@ class CalendarContainerState extends State<CalendarContainer>
     MediaQueryData mediaQueryData =
         MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
-    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-            mediaQueryData.orientation == Orientation.landscape
-        ? mediaQueryData.size.height / 10
-        : mediaQueryData.size.width / 7;
-    if (calendarProvider.totalHeight == null) {
-      calendarProvider.totalHeight = itemHeight * 6 +
-          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
-    }
+    print("mediaQueryData.orientation:${mediaQueryData}");
+    //如果itemSize为空，默认是宽度/7。网页版的话是高度/7
+    itemHeight = calendarProvider.calendarConfiguration.itemSize != null
+        ? calendarProvider.calendarConfiguration.itemSize
+        : mediaQueryData.orientation == Orientation.landscape
+            ? mediaQueryData.size.height / 7
+            : mediaQueryData.size.width / 7;
+
+    calendarProvider.totalHeight = itemHeight * 6 +
+        calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
+    totalHeight = calendarProvider.totalHeight;
   }
 
   @override
@@ -172,10 +175,6 @@ class CalendarContainerState extends State<CalendarContainer>
     //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
 //    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
 //        MediaQuery.of(context).size.width / 7;
-    if (totalHeight == null) {
-      totalHeight = itemHeight * 6 +
-          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
-    }
     return Container(
       width: itemHeight * 7,
       child: new Column(
