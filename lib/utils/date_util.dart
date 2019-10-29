@@ -168,7 +168,11 @@ class DateUtil {
       if (extraDataMap?.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
+        }else{
+          dateModel.extraData=null;
         }
+      }else{
+        dateModel.extraData=null;
       }
 
       result.add(dateModel);

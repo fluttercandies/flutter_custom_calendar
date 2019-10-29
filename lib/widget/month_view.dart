@@ -74,6 +74,16 @@ class _MonthViewState extends State<MonthView>
     }
 
     lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
+
+    //第一帧后
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      Provider.of<CalendarProvider>(context, listen: false)
+          .generation
+          .addListener(() async {
+        extraDataMap={};
+        await getItems();
+      });
+    });
   }
 
   getItems() async {
@@ -130,6 +140,7 @@ class _MonthViewState extends State<MonthView>
 
           return ItemContainer(
             dateModel: dateModel,
+            key: ObjectKey(dateModel),//这里使用objectKey，保证可以刷新。原因1：跟flutter的刷新机制有关。原因2：statefulElement持有state。
           );
         });
   }

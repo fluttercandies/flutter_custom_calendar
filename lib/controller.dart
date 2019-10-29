@@ -214,6 +214,12 @@ class CalendarController {
     });
   }
 
+  //可以动态修改extraDataMap
+  void changeExtraData(Map<DateModel, Object> newMap) {
+    this.calendarConfiguration.extraDataMap = newMap;
+    this.calendarProvider.generation.value++;
+  }
+
   /**
    * 月份或者星期的上一页
    */
