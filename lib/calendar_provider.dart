@@ -110,7 +110,8 @@ class CalendarProvider extends ChangeNotifier {
         ? selectDateModel
         : DateModel.fromDateTime(DateTime.now())
       ..day = 15;
-    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_WEEK) {
+    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_WEEK ||
+        calendarConfiguration.showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
       expandStatus = ValueNotifier(false);
     } else {
       expandStatus = ValueNotifier(true);

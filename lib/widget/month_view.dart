@@ -186,7 +186,7 @@ class ItemContainerState extends State<ItemContainer> {
 
   @override
   Widget build(BuildContext context) {
-    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState build");
+//    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState build");
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     configuration = calendarProvider.calendarConfiguration;
 
@@ -243,21 +243,21 @@ class ItemContainerState extends State<ItemContainer> {
 
   @override
   void deactivate() {
-    LogUtil.log(
-        TAG: this.runtimeType, message: "ItemContainerState deactivate");
+//    LogUtil.log(
+//        TAG: this.runtimeType, message: "ItemContainerState deactivate");
     super.deactivate();
   }
 
   @override
   void dispose() {
-    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState dispose");
+//    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState dispose");
     super.dispose();
   }
 
   @override
   void didUpdateWidget(ItemContainer oldWidget) {
-    LogUtil.log(
-        TAG: this.runtimeType, message: "ItemContainerState didUpdateWidget");
+//    LogUtil.log(
+//        TAG: this.runtimeType, message: "ItemContainerState didUpdateWidget");
     super.didUpdateWidget(oldWidget);
   }
 }

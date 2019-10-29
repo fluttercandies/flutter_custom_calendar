@@ -73,11 +73,9 @@ class CalendarContainerState extends State<CalendarContainer>
   double itemHeight;
   double totalHeight;
 
-  bool expand = true;
+  bool expand;
 
   CalendarProvider calendarProvider;
-
-  var state = CrossFadeState.showFirst;
 
   List<Widget> widgets = [];
 
@@ -95,20 +93,28 @@ class CalendarContainerState extends State<CalendarContainer>
         Constants.MODE_SHOW_WEEK_AND_MONTH) {
       widgets.add(const MonthViewPager());
       widgets.add(const WeekViewPager());
+      index = 1;
+    } else if (calendarProvider.calendarConfiguration.showMode ==
+        Constants.MODE_SHOW_MONTH_AND_WEEK) {
+      widgets.add(const MonthViewPager());
+      widgets.add(const WeekViewPager());
+      index = 0;
     } else {
       //默认是只显示月视图
       widgets.add(const MonthViewPager());
     }
+    expand = calendarProvider.expandStatus.value;
 
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
     if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_WEEK_AND_MONTH) {
+            Constants.MODE_SHOW_WEEK_AND_MONTH ||
+        calendarProvider.calendarConfiguration.showMode ==
+            Constants.MODE_SHOW_MONTH_AND_WEEK) {
       calendarProvider.expandStatus.addListener(() {
         setState(() {
+          print(
+              "calendarProvider.expandStatus.value:${calendarProvider.expandStatus.value}");
           expand = calendarProvider.expandStatus.value;
-          state = (state == CrossFadeState.showSecond
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond);
           if (expand) {
             index = 0;
             //周视图切换到月视图
@@ -122,6 +128,9 @@ class CalendarContainerState extends State<CalendarContainer>
           }
         });
       });
+    }else{
+      index=0;
+
     }
 
 //    widget.calendarController.addMonthChangeListener((year, month) {
@@ -151,7 +160,6 @@ class CalendarContainerState extends State<CalendarContainer>
     MediaQueryData mediaQueryData =
         MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
-    print("mediaQueryData.orientation:${mediaQueryData}");
     //如果itemSize为空，默认是宽度/7。网页版的话是高度/7
     itemHeight = calendarProvider.calendarConfiguration.itemSize != null
         ? calendarProvider.calendarConfiguration.itemSize

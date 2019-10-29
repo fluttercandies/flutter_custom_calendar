@@ -93,8 +93,7 @@ class CalendarController {
           maxYearMonth,
         ))}");
 
-    if (showMode == Constants.MODE_SHOW_ONLY_MONTH ||
-        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (showMode != Constants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
       int initialPage = 0;
       int nowMonthIndex = 0;
@@ -132,8 +131,7 @@ class CalendarController {
               "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
     }
 
-    if (showMode == Constants.MODE_SHOW_ONLY_WEEK ||
-        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (showMode != Constants.MODE_SHOW_ONLY_MONTH) {
       //计算一共多少周
       //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
       int initialWeekPage = 0;
@@ -230,7 +228,8 @@ class CalendarController {
         calendarProvider.calendarConfiguration.monthController
             .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
         calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex-1].year, monthList[currentIndex-1].month);
+            monthList[currentIndex - 1].year,
+            monthList[currentIndex - 1].month);
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
@@ -268,7 +267,8 @@ class CalendarController {
         calendarProvider.calendarConfiguration.monthController
             .nextPage(duration: DEFAULT_DURATION, curve: Curves.ease);
         calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex+1].year, monthList[currentIndex+1].month);
+            monthList[currentIndex + 1].year,
+            monthList[currentIndex + 1].month);
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
