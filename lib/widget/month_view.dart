@@ -125,7 +125,7 @@ class _MonthViewState extends State<MonthView>
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
+          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
             if (calendarProvider.selectedDateList.contains(dateModel)) {
               dateModel.isSelected = true;
             } else {
@@ -213,7 +213,7 @@ class ItemContainerState extends State<ItemContainer> {
         //范围外不可点击
         if (!dateModel.isInRange) {
           //多选回调
-          if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
+          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
             configuration.multiSelectOutOfRange();
           }
           return;
@@ -221,7 +221,7 @@ class ItemContainerState extends State<ItemContainer> {
 
         calendarProvider.lastClickDateModel = dateModel;
 
-        if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
+        if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
           //多选，判断是否超过限制，超过范围
           if (calendarProvider.selectedDateList.length ==
               configuration.maxMultiSelectCount) {

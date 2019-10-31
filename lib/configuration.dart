@@ -41,9 +41,9 @@ class CalendarConfiguration {
   /**
    * UI绘制方面的绘制
    */
+  double itemSize; //默认是屏幕宽度/7
   double verticalSpacing; //日历item之间的竖直方向间距，默认10
   BoxDecoration boxDecoration; //整体的背景设置
-  double itemSize; //默认是屏幕宽度/7
   EdgeInsetsGeometry padding;
   EdgeInsetsGeometry margin;
 

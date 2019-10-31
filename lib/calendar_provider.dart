@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
@@ -110,6 +111,10 @@ class CalendarProvider extends ChangeNotifier {
     CalendarConfiguration calendarConfiguration,
     EdgeInsetsGeometry padding,
     EdgeInsetsGeometry margin,
+    double itemSize,
+    double verticalSpacing,
+    DayWidgetBuilder dayWidgetBuilder,
+    WeekBarItemWidgetBuilder weekBarItemWidgetBuilder,
   }) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
     if (selectedDateList != null) {
@@ -119,14 +124,21 @@ class CalendarProvider extends ChangeNotifier {
     this.calendarConfiguration = calendarConfiguration;
     this.calendarConfiguration.padding = padding;
     this.calendarConfiguration.margin = margin;
+    this.calendarConfiguration.itemSize = itemSize;
+    this.calendarConfiguration.verticalSpacing = verticalSpacing;
+    this.calendarConfiguration.dayWidgetBuilder=dayWidgetBuilder;
+    this.calendarConfiguration.weekBarItemWidgetBuilder=weekBarItemWidgetBuilder;
+
     //lastClickDateModel，默认是选中的item，如果为空的话，默认是当前的时间
     this.lastClickDateModel = selectDateModel != null
         ? selectDateModel
         : DateModel.fromDateTime(DateTime.now())
       ..day = 15;
     //初始化展示状态
-    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_WEEK ||
-        calendarConfiguration.showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_ONLY_WEEK ||
+        calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
       expandStatus = ValueNotifier(false);
     } else {
       expandStatus = ValueNotifier(true);
@@ -151,8 +163,10 @@ class CalendarProvider extends ChangeNotifier {
     }
 
     //如果第一个页面展示的是月视图，需要计算下初始化的高度
-    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_MONTH ||
-        calendarConfiguration.showMode == Constants.MODE_SHOW_MONTH_AND_WEEK) {
+    if (calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_ONLY_MONTH ||
+        calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       int lineCount = DateUtil.getMonthViewLineCount(
           calendarConfiguration.nowYear, calendarConfiguration.nowMonth);
       totalHeight = calendarConfiguration.itemSize * (lineCount) +

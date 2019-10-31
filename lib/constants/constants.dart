@@ -1,4 +1,4 @@
-class Constants {
+class CalendarConstants {
 
   //单选或者多选模式
   static const int MODE_SINGLE_SELECT = 1;

@@ -44,12 +44,7 @@ class _CustomSignPageState extends State<CustomSignPage> {
   @override
   void initState() {
     controller = new CalendarController(
-        weekBarItemWidgetBuilder: () {
-          return CustomStyleWeekBarItem();
-        },
-        dayWidgetBuilder: (dateModel) {
-          return CustomStyleDayWidget(dateModel);
-        },
+
         extraDataMap: customExtraData);
 
     controller.addMonthChangeListener(
@@ -101,6 +96,12 @@ class _CustomSignPageState extends State<CustomSignPage> {
             ),
             CalendarViewWidget(
               calendarController: controller,
+              weekBarItemWidgetBuilder: () {
+                return CustomStyleWeekBarItem();
+              },
+              dayWidgetBuilder: (dateModel) {
+                return CustomStyleDayWidget(dateModel);
+              },
             ),
             ValueListenableBuilder(
                 valueListenable: selectText,

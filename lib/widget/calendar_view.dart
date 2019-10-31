@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
@@ -23,15 +22,28 @@ class CalendarViewWidget extends StatefulWidget {
   EdgeInsetsGeometry padding;
   EdgeInsetsGeometry margin;
 
+  //默认是屏幕宽度/7
+  double itemSize;
+
+  //日历item之间的竖直方向间距，默认10
+  double verticalSpacing;
+
+  DayWidgetBuilder dayWidgetBuilder;
+  WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
+
   //控制器
   final CalendarController calendarController;
 
   CalendarViewWidget(
       {Key key,
+      this.dayWidgetBuilder = defaultCustomDayWidget,
+      this.weekBarItemWidgetBuilder = defaultWeekBarWidget,
       @required this.calendarController,
       this.boxDecoration,
       this.padding = EdgeInsets.zero,
-      this.margin = EdgeInsets.zero})
+      this.margin = EdgeInsets.zero,
+      this.verticalSpacing = 10,
+      this.itemSize})
       : super(key: key);
 
   @override
@@ -45,7 +57,11 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
     widget.calendarController.calendarProvider.initData(
         calendarConfiguration: widget.calendarController.calendarConfiguration,
         padding: widget.padding,
-        margin: widget.margin);
+        margin: widget.margin,
+        itemSize: widget.itemSize,
+        verticalSpacing: widget.verticalSpacing,
+        dayWidgetBuilder: widget.dayWidgetBuilder,
+        weekBarItemWidgetBuilder: widget.weekBarItemWidgetBuilder);
 
     super.initState();
   }
@@ -99,15 +115,15 @@ class CalendarContainerState extends State<CalendarContainer>
     expand = calendarProvider.expandStatus.value;
 
     if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_ONLY_WEEK) {
+        CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       widgets.add(const WeekViewPager());
     } else if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_WEEK_AND_MONTH) {
+        CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
       widgets.add(const MonthViewPager());
       widgets.add(const WeekViewPager());
       index = 1;
     } else if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_MONTH_AND_WEEK) {
+        CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       widgets.add(const MonthViewPager());
       widgets.add(const WeekViewPager());
       index = 0;
@@ -119,9 +135,9 @@ class CalendarContainerState extends State<CalendarContainer>
 
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
     if (calendarProvider.calendarConfiguration.showMode ==
-            Constants.MODE_SHOW_WEEK_AND_MONTH ||
+            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH ||
         calendarProvider.calendarConfiguration.showMode ==
-            Constants.MODE_SHOW_MONTH_AND_WEEK) {
+            CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       calendarProvider.expandStatus.addListener(() {
         setState(() {
           print(
@@ -147,7 +163,7 @@ class CalendarContainerState extends State<CalendarContainer>
     widget.calendarController.addMonthChangeListener((year, month) {
       if (widget.calendarController.calendarProvider.calendarConfiguration
               .showMode !=
-          Constants.MODE_SHOW_ONLY_WEEK) {
+          CalendarConstants.MODE_SHOW_ONLY_WEEK) {
         //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
         int lineCount = DateUtil.getMonthViewLineCount(year, month);
         double newHeight = itemHeight * (lineCount) +

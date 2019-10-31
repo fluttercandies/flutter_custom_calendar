@@ -31,10 +31,8 @@ class CalendarController {
   PageController weekController; //星期的controller
 
   CalendarController(
-      {int selectMode = Constants.MODE_SINGLE_SELECT,
-      int showMode = Constants.MODE_SHOW_ONLY_MONTH,
-      DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
-      WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
+      {int selectMode = CalendarConstants.MODE_SINGLE_SELECT,
+      int showMode = CalendarConstants.MODE_SHOW_ONLY_MONTH,
       int minYear = 1971,
       int maxYear = 2055,
       int minYearMonth = 1,
@@ -50,8 +48,6 @@ class CalendarController {
       Set<DateTime> selectedDateTimeList = EMPTY_SET,
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
-      double verticalSpacing = 10,
-      double itemSize,
       Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     //如果没有指定当前月份和年份，默认是当年时间
@@ -62,26 +58,22 @@ class CalendarController {
       nowMonth = DateTime.now().month;
     }
     calendarConfiguration = CalendarConfiguration(
-        selectMode: selectMode,
-        showMode: showMode,
-        minYear: minYear,
-        maxYear: maxYear,
-        maxYearMonth: maxYearMonth,
-        nowYear: nowYear,
-        nowMonth: nowMonth,
-        minSelectYear: minSelectYear,
-        minSelectMonth: minSelectMonth,
-        minYearMonth: minYearMonth,
-        minSelectDay: minSelectDay,
-        maxSelectYear: maxSelectYear,
-        maxSelectMonth: maxSelectMonth,
-        extraDataMap: extraDataMap,
-        maxSelectDay: maxSelectDay,
-        verticalSpacing: verticalSpacing,
-        itemSize: itemSize);
-
-    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
-    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
+      selectMode: selectMode,
+      showMode: showMode,
+      minYear: minYear,
+      maxYear: maxYear,
+      maxYearMonth: maxYearMonth,
+      nowYear: nowYear,
+      nowMonth: nowMonth,
+      minSelectYear: minSelectYear,
+      minSelectMonth: minSelectMonth,
+      minYearMonth: minYearMonth,
+      minSelectDay: minSelectDay,
+      maxSelectYear: maxSelectYear,
+      maxSelectMonth: maxSelectMonth,
+      extraDataMap: extraDataMap,
+      maxSelectDay: maxSelectDay,
+    );
 
     if (selectedDateTimeList != null && selectedDateTimeList.isNotEmpty) {
       calendarConfiguration.defaultSelectedDateList
@@ -100,7 +92,7 @@ class CalendarController {
           maxYearMonth,
         ))}");
 
-    if (showMode != Constants.MODE_SHOW_ONLY_WEEK) {
+    if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
       int initialPage = 0;
       int nowMonthIndex = 0;
@@ -138,7 +130,7 @@ class CalendarController {
               "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
     }
 
-    if (showMode != Constants.MODE_SHOW_ONLY_MONTH) {
+    if (showMode != CalendarConstants.MODE_SHOW_ONLY_MONTH) {
       //计算一共多少周
       //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
       int initialWeekPage = 0;
@@ -182,8 +174,6 @@ class CalendarController {
     calendarConfiguration.weekList = weekList;
     calendarConfiguration.monthController = monthController;
     calendarConfiguration.weekController = weekController;
-    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
-    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
   }
 
   //月份切换监听

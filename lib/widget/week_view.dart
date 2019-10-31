@@ -72,7 +72,7 @@ class _WeekViewState extends State<WeekView> {
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
+          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
             if (calendarProvider.selectedDateList.contains(dateModel)) {
               dateModel.isSelected = true;
             } else {

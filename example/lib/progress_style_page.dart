@@ -41,13 +41,8 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
     };
 
     controller = new CalendarController(
-        extraDataMap: progressMap,
-        weekBarItemWidgetBuilder: () {
-          return CustomStyleWeekBarItem();
-        },
-        dayWidgetBuilder: (dateModel) {
-          return ProgressStyleDayWidget(dateModel);
-        });
+      extraDataMap: progressMap,
+    );
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -97,8 +92,13 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
               ],
             ),
             CalendarViewWidget(
-              calendarController: controller,
-            ),
+                calendarController: controller,
+                weekBarItemWidgetBuilder: () {
+                  return CustomStyleWeekBarItem();
+                },
+                dayWidgetBuilder: (dateModel) {
+                  return ProgressStyleDayWidget(dateModel);
+                }),
             ValueListenableBuilder(
                 valueListenable: selectText,
                 builder: (context, value, child) {

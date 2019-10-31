@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
-import 'package:flutter_custom_calendar/style/style.dart';
-import 'package:random_pk/random_pk.dart';
 
-
-class BlueStylePage extends StatefulWidget {
-  BlueStylePage({Key key, this.title}) : super(key: key);
+class RedStylePage extends StatefulWidget {
+  RedStylePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _BlueStylePageState createState() => _BlueStylePageState();
+  _RedStylePageState createState() => _RedStylePageState();
 }
 
-class _BlueStylePageState extends State<BlueStylePage> {
+class _RedStylePageState extends State<RedStylePage> {
   ValueNotifier<String> text;
   ValueNotifier<String> selectText;
 
@@ -21,10 +18,11 @@ class _BlueStylePageState extends State<BlueStylePage> {
 
   Map<DateModel, String> customExtraData = {};
 
+  Color pinkColor = Color(0xffFF8291);
+
   @override
   void initState() {
     controller = new CalendarController(
-
         showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
         extraDataMap: customExtraData);
 
@@ -49,79 +47,66 @@ class _BlueStylePageState extends State<BlueStylePage> {
   @override
   Widget build(BuildContext context) {
     var calendarWidget = CalendarViewWidget(
+      calendarController: controller,
+      margin: EdgeInsets.only(top: 20),
       weekBarItemWidgetBuilder: () {
         return CustomStyleWeekBarItem();
       },
       dayWidgetBuilder: (dateModel) {
         return CustomStyleDayWidget(dateModel);
       },
-      calendarController: controller,
-      boxDecoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-      margin: const EdgeInsets.only(
-        left: 15,
-        right: 15,
-      ),
     );
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xff6219EC),
-        ),
-        backgroundColor: Color(0xff6219EC),
+        appBar: AppBar(),
         body: new Container(
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               SizedBox(
                 height: 20,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
+              Stack(
+                alignment: Alignment.center,
                 children: <Widget>[
-                  Container(
-                    height: 100,
-                    margin: const EdgeInsets.only(left: 15, right: 15),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                        color: Colors.white),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "Februaly",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 30),
-                                ),
-                                TextSpan(
-                                  text: " 2019",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 30),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                  ValueListenableBuilder(
+                      valueListenable: text,
+                      builder: (context, value, child) {
+                        return new Text(
+                          "${text.value}",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700),
+                        );
+                      }),
+                  Positioned(
+                    left: 0,
+                    child: Icon(
+                      Icons.notifications,
+                      color: pinkColor,
                     ),
                   ),
-                  calendarWidget
+                  Positioned(
+                    right: 40,
+                    child: Icon(
+                      Icons.search,
+                      color: pinkColor,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: Icon(
+                      Icons.add,
+                      color: pinkColor,
+                    ),
+                  ),
                 ],
               ),
+              calendarWidget,
               ValueListenableBuilder(
                   valueListenable: selectText,
                   builder: (context, value, child) {
@@ -146,7 +131,7 @@ class _BlueStylePageState extends State<BlueStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+  List<String> weekList = ["M", "T", "W", "T", "F", "S", "S"];
 
   //可以直接重写build方法
   @override
@@ -173,7 +158,7 @@ class CustomStyleWeekBarItem extends BaseWeekBar {
         child: new Text(
           weekList[index],
           style:
-              TextStyle(fontWeight: FontWeight.w700, color: Color(0xffC5BCDC)),
+              TextStyle(fontWeight: FontWeight.w700, color: Color(0xffBBC0C6)),
         ),
       ),
     );
@@ -223,10 +208,8 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
     return Container(
 //      margin: EdgeInsets.all(8),
       decoration: new BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-        color: Color(0xffFED32B),
+        shape: BoxShape.circle,
+        color: Color(0xffFF8291),
       ),
       child: new Stack(
         alignment: Alignment.center,
@@ -240,9 +223,7 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
                 child: Center(
                   child: new Text(
                     dateModel.day.toString(),
-                    style: dateModel.isCurrentMonth
-                        ? normalTextStyle
-                        : noIsCurrentMonthTextStyle,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),

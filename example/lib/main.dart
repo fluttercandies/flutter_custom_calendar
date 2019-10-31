@@ -1,4 +1,5 @@
 import 'package:example/only_week_page.dart';
+import 'package:example/red_style_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'blue_style_page.dart';
@@ -40,9 +41,8 @@ class MyApp extends StatelessWidget {
           "/only_week_view": (context) => OnlyWeekPage(
                 title: "仅显示周视图",
               ),
-          "/blue_style_page":(context)=>BlueStylePage(
-            title:"蓝色背景Demo"
-          )
+          "/blue_style_page": (context) => BlueStylePage(title: "蓝色背景Demo"),
+          "/red_style_page": (context) => RedStylePage(title: "蓝色背景Demo"),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -95,9 +95,18 @@ class HomePage extends StatelessWidget {
               },
               child: new Text("仅显示周视图"),
             ),
-            new RaisedButton(onPressed: (){
-              Navigator.pushNamed(context, "/blue_style_page");
-            },child: new Text("蓝色Demo"),)
+            new RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/blue_style_page");
+              },
+              child: new Text("蓝色Demo"),
+            ),
+            new RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/red_style_page");
+              },
+              child: new Text("红色Demo"),
+            )
           ],
         ),
       ),

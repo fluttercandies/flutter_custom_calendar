@@ -27,7 +27,7 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
         minYearMonth: now.month - 5,
         maxYear: now.year,
         maxYearMonth: now.month + 5,
-        showMode: Constants.MODE_SHOW_MONTH_AND_WEEK);
+        showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK);
 
     controller.addMonthChangeListener(
       (year, month) {
