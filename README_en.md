@@ -1,21 +1,18 @@
 
 ## FlutterCalendarWidget
 
-Flutter上的一个日历控件，可以定制成自己想要的样子。
 A calendar widget in flutter,you can design what you want to show!
 
+Language:English|[中文简体](README.md)
 
-### Language:English|[中文简体](https://github.com/fluttercandies/flutter_custom_calendar/blob/master/README.md)
-
-* Overview
-* Online Demo
-* Example
-* Getting Started
-* 2.0 version
-* matters needing attention
-* API Documentation
-
-
+- [FlutterCalendarWidget](#fluttercalendarwidget)
+  - [Overview](#overview)
+  - [Online Demo](#online-demo)
+  - [Example](#example)
+- [Getting Started](#getting-started)
+- [2.0 version](#20-version)
+- [matters needing attention](#matters-needing-attention)
+- [API Documentation](#api-documentation)
 
 ### Overview
 
