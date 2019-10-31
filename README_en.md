@@ -1,7 +1,6 @@
 
 ## FlutterCalendarWidget
 
-Flutter上的一个日历控件，可以定制成自己想要的样子。
 A calendar widget in flutter,you can design what you want to show!
 
 
