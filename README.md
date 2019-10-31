@@ -134,5 +134,5 @@ controller.nextPage();//操作日历切换到下一页
 
 ## 主要API文档
 
-[API Documentation](https://github.com/fluttercandies/flutter_custom_calendar/blob/master/API.md)
+[API Documentation](API.md)
 

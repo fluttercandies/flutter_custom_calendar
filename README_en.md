@@ -135,6 +135,6 @@ Major changes：
 
 ## API Documentation
 
-[API Documentation](https://github.com/fluttercandies/flutter_custom_calendar/blob/master/API.md)
+[API Documentation](API.md)
 
 
