@@ -15,7 +15,8 @@ class MonthViewPager extends StatefulWidget {
   _MonthViewPagerState createState() => _MonthViewPagerState();
 }
 
-class _MonthViewPagerState extends State<MonthViewPager> with AutomaticKeepAliveClientMixin{
+class _MonthViewPagerState extends State<MonthViewPager>
+    with AutomaticKeepAliveClientMixin {
   CalendarProvider calendarProvider;
 
   @override
@@ -71,7 +72,9 @@ class _MonthViewPagerState extends State<MonthViewPager> with AutomaticKeepAlive
         }
         //月份的变化
         DateModel dateModel = configuration.monthList[position];
-        configuration.monthChange(dateModel.year, dateModel.month);
+        configuration.monthChangeListeners.forEach((listener) {
+          listener(dateModel.year, dateModel.month);
+        });
         //用来保存临时变量，用于月视图切换到周视图的时候，默认是显示中间的一周
         if (calendarProvider.lastClickDateModel != null ||
             calendarProvider.lastClickDateModel.month != dateModel.month) {
@@ -80,24 +83,6 @@ class _MonthViewPagerState extends State<MonthViewPager> with AutomaticKeepAlive
           temp.month = configuration.monthList[position].month;
           temp.day = configuration.monthList[position].day + 14;
           calendarProvider.lastClickDateModel = temp;
-        }
-
-        //计算下高度，使PageView自适应高度
-        if (calendarProvider.calendarConfiguration.showMode !=
-            Constants.MODE_SHOW_ONLY_WEEK) {
-          //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-//          int lineCount =
-//              DateUtil.getMonthViewLineCount(dateModel.year, dateModel.month);
-//          double newHeight = (calendarProvider.calendarConfiguration.itemSize ??
-//                      MediaQuery.of(context).size.width / 7) *
-//                  lineCount +
-//              calendarProvider.calendarConfiguration.verticalSpacing *
-//                  (lineCount - 1);
-//          if (calendarProvider.totalHeight.toInt() != newHeight.toInt()) {
-//            LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
-//            calendarProvider.totalHeight = newHeight;
-////          calendarProvider.changeTotalHeight(newHeight);
-//          }
         }
       },
       controller: configuration.monthController,

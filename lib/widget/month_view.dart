@@ -117,6 +117,7 @@ class _MonthViewState extends State<MonthView>
 
     return new GridView.builder(
         addAutomaticKeepAlives: true,
+        padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),

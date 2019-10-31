@@ -24,10 +24,10 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
     DateTime now = DateTime.now();
     controller = new CalendarController(
         minYear: now.year,
-        minYearMonth: now.month - 2,
+        minYearMonth: now.month - 5,
         maxYear: now.year,
-        maxYearMonth: now.month + 1,
-        showMode: Constants.MODE_SHOW_WEEK_AND_MONTH);
+        maxYearMonth: now.month + 5,
+        showMode: Constants.MODE_SHOW_MONTH_AND_WEEK);
 
     controller.addMonthChangeListener(
       (year, month) {

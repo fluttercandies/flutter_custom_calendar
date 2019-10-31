@@ -39,8 +39,8 @@ class CalendarController {
       int maxYear = 2055,
       int minYearMonth = 1,
       int maxYearMonth = 12,
-      int nowYear = -1,
-      int nowMonth = -1,
+      int nowYear,
+      int nowMonth,
       int minSelectYear = 1971,
       int minSelectMonth = 1,
       int minSelectDay = 1,
@@ -54,6 +54,13 @@ class CalendarController {
       double itemSize,
       Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
+    //如果没有指定当前月份和年份，默认是当年时间
+    if (nowYear == null) {
+      nowYear = DateTime.now().year;
+    }
+    if (nowMonth == null) {
+      nowMonth = DateTime.now().month;
+    }
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
         showMode: showMode,
@@ -181,7 +188,8 @@ class CalendarController {
 
   //月份切换监听
   void addMonthChangeListener(OnMonthChange listener) {
-    this.calendarConfiguration.monthChange = listener;
+//    this.calendarConfiguration.monthChange = listener;
+    this.calendarConfiguration.monthChangeListeners.add(listener);
   }
 
   //点击选择监听
@@ -233,9 +241,11 @@ class CalendarController {
       } else {
         calendarProvider.calendarConfiguration.monthController
             .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
-        calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex - 1].year,
-            monthList[currentIndex - 1].month);
+        calendarProvider.calendarConfiguration.monthChangeListeners
+            .forEach((listener) {
+          listener(monthList[currentIndex - 1].year,
+              monthList[currentIndex - 1].month);
+        });
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
@@ -272,9 +282,12 @@ class CalendarController {
       } else {
         calendarProvider.calendarConfiguration.monthController
             .nextPage(duration: DEFAULT_DURATION, curve: Curves.ease);
-        calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex + 1].year,
-            monthList[currentIndex + 1].month);
+        calendarProvider.calendarConfiguration.monthChangeListeners
+            .forEach((listener) {
+          listener(monthList[currentIndex + 1].year,
+              monthList[currentIndex + 1].month);
+        });
+
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;

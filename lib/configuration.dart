@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter/foundation.dart';
 
 /**
  * 配置信息类
@@ -43,6 +44,8 @@ class CalendarConfiguration {
   double verticalSpacing; //日历item之间的竖直方向间距，默认10
   BoxDecoration boxDecoration; //整体的背景设置
   double itemSize; //默认是屏幕宽度/7
+  EdgeInsetsGeometry padding;
+  EdgeInsetsGeometry margin;
 
   //支持自定义绘制
   DayWidgetBuilder dayWidgetBuilder; //创建日历item
@@ -52,10 +55,13 @@ class CalendarConfiguration {
    * 监听变化
    */
   //各种事件回调
-  OnMonthChange monthChange; //月份切换事件
+  OnMonthChange monthChange; //月份切换事件 （已弃用,交给multiMonthChanges来实现）
   OnCalendarSelect calendarSelect; //点击选择事件
   OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
   OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
+
+  ObserverList<OnMonthChange> monthChangeListeners =
+      ObserverList<OnMonthChange>(); //保存多个月份监听的事件
 
   /**
    * 下面的信息不是配置的，是根据配置信息进行计算出来的
@@ -87,7 +93,10 @@ class CalendarConfiguration {
       this.monthController,
       this.weekController,
       this.verticalSpacing,
-      this.itemSize,this.showMode});
+      this.itemSize,
+      this.showMode,
+      this.padding,
+      this.margin});
 
   @override
   String toString() {

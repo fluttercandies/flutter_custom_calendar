@@ -19,11 +19,19 @@ class CalendarViewWidget extends StatefulWidget {
   //整体的背景设置
   BoxDecoration boxDecoration;
 
+  //日历的padding和margin
+  EdgeInsetsGeometry padding;
+  EdgeInsetsGeometry margin;
+
   //控制器
   final CalendarController calendarController;
 
   CalendarViewWidget(
-      {Key key, @required this.calendarController, this.boxDecoration})
+      {Key key,
+      @required this.calendarController,
+      this.boxDecoration,
+      this.padding = EdgeInsets.zero,
+      this.margin = EdgeInsets.zero})
       : super(key: key);
 
   @override
@@ -35,7 +43,9 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
   void initState() {
     //初始化一些数据，一些跟状态有关的要放到provider中
     widget.calendarController.calendarProvider.initData(
-        calendarConfiguration: widget.calendarController.calendarConfiguration);
+        calendarConfiguration: widget.calendarController.calendarConfiguration,
+        padding: widget.padding,
+        margin: widget.margin);
 
     super.initState();
   }
@@ -53,6 +63,8 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
       child: Container(
           //外部可以自定义背景设置
           decoration: widget.boxDecoration,
+          padding: widget.padding,
+          margin: widget.margin,
           //使用const，保证外界的setState不会刷新日历这个widget
           child: CalendarContainer(widget.calendarController)),
     );
@@ -128,47 +140,32 @@ class CalendarContainerState extends State<CalendarContainer>
           }
         });
       });
-    }else{
-      index=0;
-
+    } else {
+      index = 0;
     }
 
-//    widget.calendarController.addMonthChangeListener((year, month) {
-//      if (widget.calendarController.calendarProvider.calendarConfiguration
-//              .showMode !=
-//          Constants.MODE_SHOW_ONLY_WEEK) {
-//        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-//        int lineCount = DateUtil.getMonthViewLineCount(year, month);
-//        double newHeight = itemHeight * lineCount +
-//            calendarProvider.calendarConfiguration.verticalSpacing *
-//                (lineCount - 1);
-//        if (totalHeight.toInt() != newHeight.toInt()) {
-//          LogUtil.log(
-//              TAG: this.runtimeType,
-//              message: "totalHeight:$totalHeight,newHeight:$newHeight");
-//
-//          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
-//          setState(() {
-//            totalHeight = newHeight;
-//          });
-//        }
-//      }
-//    });
+    widget.calendarController.addMonthChangeListener((year, month) {
+      if (widget.calendarController.calendarProvider.calendarConfiguration
+              .showMode !=
+          Constants.MODE_SHOW_ONLY_WEEK) {
+        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
+        int lineCount = DateUtil.getMonthViewLineCount(year, month);
+        double newHeight = itemHeight * (lineCount) +
+            calendarProvider.calendarConfiguration.verticalSpacing *
+                (lineCount - 1);
+        LogUtil.log(
+            TAG: this.runtimeType,
+            message: "totalHeight:$totalHeight,newHeight:$newHeight");
+        if (totalHeight.toInt() != newHeight.toInt()) {
+          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
+          setState(() {
+            totalHeight = newHeight;
+          });
+        }
+      }
+    });
 
-    //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-
-    MediaQueryData mediaQueryData =
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-
-    //如果itemSize为空，默认是宽度/7。网页版的话是高度/7
-    itemHeight = calendarProvider.calendarConfiguration.itemSize != null
-        ? calendarProvider.calendarConfiguration.itemSize
-        : mediaQueryData.orientation == Orientation.landscape
-            ? mediaQueryData.size.height / 7
-            : mediaQueryData.size.width / 7;
-
-    calendarProvider.totalHeight = itemHeight * 6 +
-        calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
+    itemHeight = calendarProvider.calendarConfiguration.itemSize;
     totalHeight = calendarProvider.totalHeight;
   }
 
@@ -180,9 +177,6 @@ class CalendarContainerState extends State<CalendarContainer>
   @override
   Widget build(BuildContext context) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarContainerState build");
-    //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-//    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-//        MediaQuery.of(context).size.width / 7;
     return Container(
       width: itemHeight * 7,
       child: new Column(
