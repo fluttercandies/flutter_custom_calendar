@@ -3,17 +3,16 @@
 
 Flutter上的一个日历控件，可以定制成自己想要的样子。
 
-### Language: [English](https://github.com/fluttercandies/flutter_custom_calendar/blob/master/README_en.md)|中文简体
+Language: [English](README_en.md)|中文简体
 
-* 概述
-* 在线Demo
-* 效果图
-* 快速使用
-* 2.0版本
-* 注意事项
-* 主要Api文档
-
-
+- [FlutterCalendarWidget](#fluttercalendarwidget)
+  - [概述](#%e6%a6%82%e8%bf%b0)
+  - [在线Demo](#%e5%9c%a8%e7%ba%bfdemo)
+  - [效果图](#%e6%95%88%e6%9e%9c%e5%9b%be)
+- [使用](#%e4%bd%bf%e7%94%a8)
+- [2.0版本](#20%e7%89%88%e6%9c%ac)
+- [注意事项](#%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9)
+- [主要API文档](#%e4%b8%bb%e8%a6%81api%e6%96%87%e6%a1%a3)
 
 ### 概述
 
@@ -135,5 +134,5 @@ controller.nextPage();//操作日历切换到下一页
 
 ## 主要API文档
 
-[API Documentation](https://github.com/fluttercandies/flutter_custom_calendar/blob/master/API.md)
+[API Documentation](API.md)
 
