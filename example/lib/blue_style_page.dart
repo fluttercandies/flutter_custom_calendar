@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
-import 'package:flutter_custom_calendar/style/style.dart';
-import 'package:random_pk/random_pk.dart';
 
 
 class BlueStylePage extends StatefulWidget {
@@ -23,6 +21,7 @@ class _BlueStylePageState extends State<BlueStylePage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController(
 
         showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
@@ -81,8 +80,7 @@ class _BlueStylePageState extends State<BlueStylePage> {
                 height: 20,
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Container(
                     height: 100,
@@ -146,7 +144,7 @@ class _BlueStylePageState extends State<BlueStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+  final List<String> weekList = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 
   //可以直接重写build方法
   @override
@@ -183,10 +181,10 @@ class CustomStyleWeekBarItem extends BaseWeekBar {
 class CustomStyleDayWidget extends BaseCombineDayWidget {
   CustomStyleDayWidget(DateModel dateModel) : super(dateModel);
 
-  TextStyle normalTextStyle =
+  final TextStyle normalTextStyle =
       TextStyle(fontWeight: FontWeight.w700, color: Colors.black);
 
-  TextStyle noIsCurrentMonthTextStyle =
+  final TextStyle noIsCurrentMonthTextStyle =
       TextStyle(fontWeight: FontWeight.w700, color: Colors.grey);
 
   @override

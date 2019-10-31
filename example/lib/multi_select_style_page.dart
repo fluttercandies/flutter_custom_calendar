@@ -21,6 +21,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController(
       selectMode: CalendarConstants.MODE_MULTI_SELECT,
       maxMultiSelectCount: 5,
@@ -102,7 +103,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {
@@ -119,7 +120,6 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {
-    bool isWeekend = dateModel.isWeekend;
     bool isInRange = dateModel.isInRange;
 
     //顶部的文字

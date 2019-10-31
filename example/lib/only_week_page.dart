@@ -21,6 +21,7 @@ class _OnlyWeekPageState extends State<OnlyWeekPage> {
 
   @override
   void initState() {
+    super.initState();
     DateTime now = DateTime.now();
     controller = new CalendarController(
         minYear: now.year,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
-import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/widget/week_view.dart';
@@ -23,6 +22,7 @@ class _WeekViewPagerState extends State<WeekViewPager>
 
   @override
   void initState() {
+    super.initState();
     LogUtil.log(TAG: this.runtimeType, message: "WeekViewPager initState");
 
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
@@ -56,7 +56,8 @@ class _WeekViewPagerState extends State<WeekViewPager>
           }
           LogUtil.log(
               TAG: this.runtimeType,
-              message: "WeekViewPager PageView onPageChanged:${position}");
+              message:
+                  "WeekViewPager PageView onPageChanged,position:$position");
 //          周视图的变化
           DateModel firstDayOfWeek = configuration.weekList[position];
           int currentMonth = firstDayOfWeek.month;
@@ -64,7 +65,7 @@ class _WeekViewPagerState extends State<WeekViewPager>
             LogUtil.log(
                 TAG: this.runtimeType,
                 message:
-                    "WeekViewPager PageView monthChange:currentMonth:${currentMonth}");
+                    "WeekViewPager PageView monthChange:currentMonth:$currentMonth");
             configuration.monthChangeListeners.forEach((listener) {
               listener(firstDayOfWeek.year, firstDayOfWeek.month);
             });

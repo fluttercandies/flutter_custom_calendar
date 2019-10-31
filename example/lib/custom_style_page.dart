@@ -21,6 +21,7 @@ class _CustomStylePageState extends State<CustomStylePage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController();
 
     controller.addMonthChangeListener(
@@ -96,7 +97,7 @@ class _CustomStylePageState extends State<CustomStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {

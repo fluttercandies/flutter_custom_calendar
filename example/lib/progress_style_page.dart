@@ -22,6 +22,7 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
 
   @override
   void initState() {
+    super.initState();
     DateTime now = DateTime.now();
     DateTime temp = DateTime(now.year, now.month, now.day);
 
@@ -117,7 +118,7 @@ class _ProgressStylePageState extends State<ProgressStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {

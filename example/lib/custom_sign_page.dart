@@ -43,6 +43,7 @@ class _CustomSignPageState extends State<CustomSignPage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController(
 
         extraDataMap: customExtraData);
@@ -124,7 +125,7 @@ class _CustomSignPageState extends State<CustomSignPage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {

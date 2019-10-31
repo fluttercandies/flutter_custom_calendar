@@ -16,20 +16,20 @@ import 'package:provider/provider.dart';
 //由于旧的代码关系。。所以现在需要抽出一个StatefulWidget放在StatelessWidget里面
 class CalendarViewWidget extends StatefulWidget {
   //整体的背景设置
-  BoxDecoration boxDecoration;
+  final BoxDecoration boxDecoration;
 
   //日历的padding和margin
-  EdgeInsetsGeometry padding;
-  EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
 
   //默认是屏幕宽度/7
-  double itemSize;
+  final double itemSize;
 
   //日历item之间的竖直方向间距，默认10
-  double verticalSpacing;
+  final double verticalSpacing;
 
-  DayWidgetBuilder dayWidgetBuilder;
-  WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
+  final DayWidgetBuilder dayWidgetBuilder;
+  final WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
 
   //控制器
   final CalendarController calendarController;
@@ -111,6 +111,7 @@ class CalendarContainerState extends State<CalendarContainer>
 
   @override
   void initState() {
+    super.initState();
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     expand = calendarProvider.expandStatus.value;
 

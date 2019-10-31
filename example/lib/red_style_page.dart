@@ -22,6 +22,8 @@ class _RedStylePageState extends State<RedStylePage> {
 
   @override
   void initState() {
+    super.initState();
+
     controller = new CalendarController(
         showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
         extraDataMap: customExtraData);
@@ -47,6 +49,7 @@ class _RedStylePageState extends State<RedStylePage> {
   @override
   Widget build(BuildContext context) {
     var calendarWidget = CalendarViewWidget(
+      itemSize: 40,
       calendarController: controller,
       margin: EdgeInsets.only(top: 20),
       weekBarItemWidgetBuilder: () {
@@ -64,7 +67,7 @@ class _RedStylePageState extends State<RedStylePage> {
           color: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment:CrossAxisAlignment.stretch ,
             children: <Widget>[
               SizedBox(
                 height: 20,
@@ -131,7 +134,7 @@ class _RedStylePageState extends State<RedStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["M", "T", "W", "T", "F", "S", "S"];
+  final List<String> weekList = ["M", "T", "W", "T", "F", "S", "S"];
 
   //可以直接重写build方法
   @override
@@ -168,10 +171,10 @@ class CustomStyleWeekBarItem extends BaseWeekBar {
 class CustomStyleDayWidget extends BaseCombineDayWidget {
   CustomStyleDayWidget(DateModel dateModel) : super(dateModel);
 
-  TextStyle normalTextStyle =
+  final TextStyle normalTextStyle =
       TextStyle(fontWeight: FontWeight.w700, color: Colors.black);
 
-  TextStyle noIsCurrentMonthTextStyle =
+  final TextStyle noIsCurrentMonthTextStyle =
       TextStyle(fontWeight: FontWeight.w700, color: Colors.grey);
 
   @override
