@@ -49,7 +49,6 @@ class _RedStylePageState extends State<RedStylePage> {
   @override
   Widget build(BuildContext context) {
     var calendarWidget = CalendarViewWidget(
-      itemSize: 40,
       calendarController: controller,
       margin: EdgeInsets.only(top: 20),
       weekBarItemWidgetBuilder: () {
