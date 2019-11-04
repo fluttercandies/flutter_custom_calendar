@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
@@ -15,7 +17,7 @@ import 'package:flutter_custom_calendar/widget/month_view.dart';
  */
 class CalendarProvider extends ChangeNotifier {
   double _totalHeight; //当前月视图的整体高度
-  Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
+  HashSet<DateModel> selectedDateList = new HashSet<DateModel>(); //被选中的日期,用于多选
   DateModel _selectDateModel; //当前选中的日期，用于单选
   ItemContainerState lastClickItemState;
   DateModel _lastClickDateModel;
@@ -117,17 +119,20 @@ class CalendarProvider extends ChangeNotifier {
     WeekBarItemWidgetBuilder weekBarItemWidgetBuilder,
   }) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
-    if (selectedDateList != null) {
-      this.selectedDateList.addAll(selectedDateList);
-    }
-    this.selectDateModel = selectDateModel;
     this.calendarConfiguration = calendarConfiguration;
+    print(
+        "calendarConfiguration.defaultSelectedDateList:${calendarConfiguration.defaultSelectedDateList}");
+    this
+        .selectedDateList
+        .addAll(this.calendarConfiguration.defaultSelectedDateList);
+    this.selectDateModel = this.calendarConfiguration.selectDateModel;
     this.calendarConfiguration.padding = padding;
     this.calendarConfiguration.margin = margin;
     this.calendarConfiguration.itemSize = itemSize;
     this.calendarConfiguration.verticalSpacing = verticalSpacing;
-    this.calendarConfiguration.dayWidgetBuilder=dayWidgetBuilder;
-    this.calendarConfiguration.weekBarItemWidgetBuilder=weekBarItemWidgetBuilder;
+    this.calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
+    this.calendarConfiguration.weekBarItemWidgetBuilder =
+        weekBarItemWidgetBuilder;
 
     //lastClickDateModel，默认是选中的item，如果为空的话，默认是当前的时间
     this.lastClickDateModel = selectDateModel != null
@@ -149,8 +154,8 @@ class CalendarProvider extends ChangeNotifier {
           MediaQueryData.fromWindow(WidgetsBinding.instance.window);
       if (mediaQueryData.orientation == Orientation.landscape) {
         calendarConfiguration.itemSize = (mediaQueryData.size.height -
-                calendarConfiguration.padding.horizontal -
-                calendarConfiguration.margin.horizontal) /
+                calendarConfiguration.padding.vertical -
+                calendarConfiguration.margin.vertical) /
             7;
       } else {
         calendarConfiguration.itemSize = (mediaQueryData.size.width -
@@ -171,8 +176,6 @@ class CalendarProvider extends ChangeNotifier {
           calendarConfiguration.nowYear, calendarConfiguration.nowMonth);
       totalHeight = calendarConfiguration.itemSize * (lineCount) +
           calendarConfiguration.verticalSpacing * (lineCount - 1);
-      print(
-          "1111111:totalHeight:$totalHeight,lineCount:$lineCount,calendarConfiguration.nowYear:${calendarConfiguration.nowYear},calendarConfiguration.nowMonth:${calendarConfiguration.nowMonth}");
     } else {
       totalHeight = calendarConfiguration.itemSize;
     }

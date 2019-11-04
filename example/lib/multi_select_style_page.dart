@@ -28,6 +28,9 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
       minSelectYear: 2019,
       minSelectMonth: 5,
       minSelectDay: 20,
+      selectedDateTimeList: {
+        DateTime.now(),
+      }
     );
 
     controller.addMonthChangeListener(
@@ -45,7 +48,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
     text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
 
     selectText = new ValueNotifier(
-        "多选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
+        "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().join("\n")}");
   }
 
   @override

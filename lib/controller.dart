@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
@@ -45,8 +47,8 @@ class CalendarController {
       int maxSelectYear = 2055,
       int maxSelectMonth = 12,
       int maxSelectDay = 30,
-      Set<DateTime> selectedDateTimeList = EMPTY_SET,
-      DateModel selectDateModel,
+      Set<DateTime> selectedDateTimeList = EMPTY_SET, //多选模式下，默认选中的item列表
+      DateModel selectDateModel, //单选模式下，默认选中的item
       int maxMultiSelectCount = 9999,
       Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
@@ -58,29 +60,41 @@ class CalendarController {
       nowMonth = DateTime.now().month;
     }
     calendarConfiguration = CalendarConfiguration(
-      selectMode: selectMode,
-      showMode: showMode,
-      minYear: minYear,
-      maxYear: maxYear,
-      maxYearMonth: maxYearMonth,
-      nowYear: nowYear,
-      nowMonth: nowMonth,
-      minSelectYear: minSelectYear,
-      minSelectMonth: minSelectMonth,
-      minYearMonth: minYearMonth,
-      minSelectDay: minSelectDay,
-      maxSelectYear: maxSelectYear,
-      maxSelectMonth: maxSelectMonth,
-      extraDataMap: extraDataMap,
-      maxSelectDay: maxSelectDay,
-    );
+        selectMode: selectMode,
+        showMode: showMode,
+        minYear: minYear,
+        maxYear: maxYear,
+        maxYearMonth: maxYearMonth,
+        nowYear: nowYear,
+        nowMonth: nowMonth,
+        minSelectYear: minSelectYear,
+        minSelectMonth: minSelectMonth,
+        minYearMonth: minYearMonth,
+        minSelectDay: minSelectDay,
+        maxSelectYear: maxSelectYear,
+        maxSelectMonth: maxSelectMonth,
+        extraDataMap: extraDataMap,
+        maxSelectDay: maxSelectDay,
+        maxMultiSelectCount: maxMultiSelectCount,
+        selectDateModel: selectDateModel);
 
-    if (selectedDateTimeList != null && selectedDateTimeList.isNotEmpty) {
-      calendarConfiguration.defaultSelectedDateList
-          .addAll(selectedDateTimeList.map((dateTime) {
-        return DateModel.fromDateTime(dateTime);
-      }).toSet());
-    }
+    calendarConfiguration.defaultSelectedDateList = new HashSet<DateModel>();
+    calendarConfiguration.defaultSelectedDateList
+        .addAll(selectedDateTimeList.map((dateTime) {
+      return DateModel.fromDateTime(dateTime);
+    }).toSet());
+    //将默认选中的数据，放到provider中
+    calendarProvider.selectDateModel = selectDateModel;
+    calendarProvider.selectedDateList =
+        calendarConfiguration.defaultSelectedDateList;
+    calendarConfiguration.minSelectDate = DateModel.fromDateTime(DateTime(
+        calendarConfiguration.minSelectYear,
+        calendarConfiguration.minSelectMonth,
+        calendarConfiguration.minSelectDay));
+    calendarConfiguration.maxSelectDate = DateModel.fromDateTime(DateTime(
+        calendarConfiguration.maxSelectYear,
+        calendarConfiguration.maxSelectMonth,
+        calendarConfiguration.maxSelectDay));
 
     LogUtil.log(
         TAG: this.runtimeType,
@@ -109,11 +123,6 @@ class CalendarController {
           dateModel.year = i;
           dateModel.month = j;
 
-          //如果没有配置当前时间，设置成当前的时间
-          if (nowYear == -1 || nowMonth == -1) {
-            nowYear = DateTime.now().year;
-            nowMonth = DateTime.now().month;
-          }
           if (i == nowYear && j == nowMonth) {
             initialPage = nowMonthIndex;
           }
@@ -127,14 +136,13 @@ class CalendarController {
       LogUtil.log(
           TAG: this.runtimeType,
           message:
-              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
+              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
     }
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_MONTH) {
       //计算一共多少周
       //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
       int initialWeekPage = 0;
-      int nowWeekIndex = 0;
       weekList.clear();
       //如果没有配置当前时间，设置成当前的时间
       if (nowYear == -1 || nowMonth == -1) {
@@ -166,7 +174,7 @@ class CalendarController {
       LogUtil.log(
           TAG: this.runtimeType,
           message:
-              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为${initialWeekPage}");
+              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为$initialWeekPage");
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
 
@@ -215,6 +223,19 @@ class CalendarController {
   //可以动态修改extraDataMap
   void changeExtraData(Map<DateModel, Object> newMap) {
     this.calendarConfiguration.extraDataMap = newMap;
+    this.calendarProvider.generation.value++;
+  }
+
+  //可以动态修改默认选中的item。
+  void changeDefaultSelectedDateList(Set<DateModel> defaultSelectedDateList) {
+    this.calendarConfiguration.defaultSelectedDateList =
+        defaultSelectedDateList;
+    this.calendarProvider.generation.value++;
+  }
+
+  //可以动态修改默认选中的item
+  void changeDefaultSelectedDateModel(DateModel dateModel) {
+    this.calendarProvider.selectDateModel = dateModel;
     this.calendarProvider.generation.value++;
   }
 

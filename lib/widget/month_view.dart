@@ -36,27 +36,11 @@ class _MonthViewState extends State<MonthView>
   List<DateModel> items = List();
 
   int lineCount;
-
-//  double itemHeight;
-//  double totalHeight;
-//  double mainSpacing = 10;
-
-  DateModel minSelectDate;
-  DateModel maxSelectDate;
   Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   @override
   void initState() {
     super.initState();
-
-    minSelectDate = DateModel.fromDateTime(DateTime(
-        widget.configuration.minSelectYear,
-        widget.configuration.minSelectMonth,
-        widget.configuration.minSelectDay));
-    maxSelectDate = DateModel.fromDateTime(DateTime(
-        widget.configuration.maxSelectYear,
-        widget.configuration.maxSelectMonth,
-        widget.configuration.maxSelectDay));
     extraDataMap = widget.configuration.extraDataMap;
 
     DateModel firstDayOfMonth =
@@ -73,12 +57,12 @@ class _MonthViewState extends State<MonthView>
 
     lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
 
-    //第一帧后
+    //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       Provider.of<CalendarProvider>(context, listen: false)
           .generation
           .addListener(() async {
-        extraDataMap={};
+        extraDataMap = widget.configuration.extraDataMap;
         await getItems();
       });
     });
@@ -88,8 +72,8 @@ class _MonthViewState extends State<MonthView>
     items = await compute(initCalendarForMonthView, {
       'year': widget.year,
       'month': widget.month,
-      'minSelectDate': minSelectDate,
-      'maxSelectDate': maxSelectDate,
+      'minSelectDate': widget.configuration.minSelectDate,
+      'maxSelectDate': widget.configuration.maxSelectDate,
       'extraDataMap': extraDataMap
     });
     setState(() {});
@@ -139,7 +123,8 @@ class _MonthViewState extends State<MonthView>
 
           return ItemContainer(
             dateModel: dateModel,
-            key: ObjectKey(dateModel),//这里使用objectKey，保证可以刷新。原因1：跟flutter的刷新机制有关。原因2：statefulElement持有state。
+            key: ObjectKey(
+                dateModel), //这里使用objectKey，保证可以刷新。原因1：跟flutter的刷新机制有关。原因2：statefulElement持有state。
           );
         });
   }
@@ -175,6 +160,13 @@ class ItemContainerState extends State<ItemContainer> {
     super.initState();
     dateModel = widget.dateModel;
     isSelected = ValueNotifier(dateModel.isSelected);
+
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      if (configuration.selectMode == CalendarConstants.MODE_SINGLE_SELECT &&
+          dateModel.isSelected) {
+        calendarProvider.lastClickItemState = this;
+      }
+    });
   }
 
   /**
@@ -220,16 +212,17 @@ class ItemContainerState extends State<ItemContainer> {
         calendarProvider.lastClickDateModel = dateModel;
 
         if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
-          //多选，判断是否超过限制，超过范围
-          if (calendarProvider.selectedDateList.length ==
-              configuration.maxMultiSelectCount) {
-            configuration.multiSelectOutOfSize();
-            return;
-          }
-
           if (calendarProvider.selectedDateList.contains(dateModel)) {
             calendarProvider.selectedDateList.remove(dateModel);
           } else {
+            //多选，判断是否超过限制，超过范围
+            if (calendarProvider.selectedDateList.length ==
+                configuration.maxMultiSelectCount) {
+              if (configuration.multiSelectOutOfSize != null) {
+                configuration.multiSelectOutOfSize();
+              }
+              return;
+            }
             calendarProvider.selectedDateList.add(dateModel);
           }
           configuration.calendarSelect(dateModel);
@@ -241,8 +234,10 @@ class ItemContainerState extends State<ItemContainer> {
           configuration.calendarSelect(dateModel);
 
           //单选需要刷新上一个item
-          calendarProvider.lastClickItemState?.refreshItem();
-          calendarProvider.lastClickItemState = this;
+          if (calendarProvider.lastClickItemState != this) {
+            calendarProvider.lastClickItemState?.refreshItem();
+            calendarProvider.lastClickItemState = this;
+          }
         }
 
         refreshItem();

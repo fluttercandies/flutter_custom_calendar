@@ -28,6 +28,7 @@ class CalendarViewWidget extends StatefulWidget {
   //日历item之间的竖直方向间距，默认10
   final double verticalSpacing;
 
+  //自定义日历item
   final DayWidgetBuilder dayWidgetBuilder;
   final WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
 
