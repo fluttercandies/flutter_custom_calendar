@@ -51,8 +51,9 @@ class _MonthViewState extends State<MonthView>
       items = CacheData.getInstance().monthListCache[firstDayOfMonth];
     } else {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中无数据");
-      getItems();
-      CacheData.getInstance().monthListCache[firstDayOfMonth] = items;
+      getItems().then((_){
+        CacheData.getInstance().monthListCache[firstDayOfMonth] = items;
+      });
     }
 
     lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
@@ -68,7 +69,7 @@ class _MonthViewState extends State<MonthView>
     });
   }
 
-  getItems() async {
+  Future getItems() async {
     items = await compute(initCalendarForMonthView, {
       'year': widget.year,
       'month': widget.month,
