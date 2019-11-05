@@ -1,7 +1,6 @@
-import 'package:example/only_week_page.dart';
-import 'package:example/red_style_page.dart';
+import 'only_week_page.dart';
+import 'red_style_page.dart';
 import 'package:flutter/material.dart';
-
 import 'blue_style_page.dart';
 import 'custom_sign_page.dart';
 import 'custom_style_page.dart';
@@ -113,4 +112,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-

@@ -22,7 +22,8 @@ class _CustomStylePageState extends State<CustomStylePage> {
   @override
   void initState() {
     super.initState();
-    controller = new CalendarController();
+    controller = new CalendarController(
+        selectDateModel: DateModel.fromDateTime(DateTime.now()));
 
     controller.addMonthChangeListener(
       (year, month) {

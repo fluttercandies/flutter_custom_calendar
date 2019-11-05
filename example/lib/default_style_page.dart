@@ -24,9 +24,9 @@ class _DefaultStylePageState extends State<DefaultStylePage> {
     super.initState();
     DateTime now = DateTime.now();
     controller = new CalendarController(
-        minYear: now.year-1,
+        minYear: now.year - 1,
         minYearMonth: 1,
-        maxYear: now.year+1,
+        maxYear: now.year + 1,
         maxYearMonth: 12,
         showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK);
 
