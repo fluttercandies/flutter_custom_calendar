@@ -54,13 +54,17 @@ class _WeekViewPagerState extends State<WeekViewPager>
           if (calendarProvider.expandStatus.value == true) {
             return;
           }
+
           LogUtil.log(
               TAG: this.runtimeType,
               message:
                   "WeekViewPager PageView onPageChanged,position:$position");
-//          周视图的变化
           DateModel firstDayOfWeek = configuration.weekList[position];
           int currentMonth = firstDayOfWeek.month;
+//          周视图的变化
+          configuration.weekChangeListeners.forEach((listener) {
+            listener(firstDayOfWeek.year, firstDayOfWeek.month);
+          });
           if (lastMonth != currentMonth) {
             LogUtil.log(
                 TAG: this.runtimeType,

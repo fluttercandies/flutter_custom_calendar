@@ -65,6 +65,8 @@ class CalendarConfiguration {
 
   ObserverList<OnMonthChange> monthChangeListeners =
       ObserverList<OnMonthChange>(); //保存多个月份监听的事件
+  ObserverList<OnWeekChange> weekChangeListeners =
+      ObserverList<OnWeekChange>(); //周视图切换
 
   /**
    * 下面的信息不是配置的，是根据配置信息进行计算出来的

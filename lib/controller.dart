@@ -184,6 +184,11 @@ class CalendarController {
     calendarConfiguration.weekController = weekController;
   }
 
+  //周视图切换
+  void addWeekChangeListener(OnWeekChange listener){
+    this.calendarConfiguration.weekChangeListeners.add(listener);
+  }
+
   //月份切换监听
   void addMonthChangeListener(OnMonthChange listener) {
 //    this.calendarConfiguration.monthChange = listener;
@@ -531,6 +536,11 @@ Widget defaultCombineDayWidget(DateModel dateModel) {
 bool defaultInRange(DateModel dateModel) {
   return true;
 }
+
+/**
+ * 周视图切换
+ */
+typedef void OnWeekChange(int year, int month);
 
 /**
  * 月份切换事件
