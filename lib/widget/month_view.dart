@@ -162,12 +162,13 @@ class ItemContainerState extends State<ItemContainer> {
     dateModel = widget.dateModel;
     isSelected = ValueNotifier(dateModel.isSelected);
 
-    WidgetsBinding.instance.addPostFrameCallback((callback) {
-      if (configuration.selectMode == CalendarConstants.MODE_SINGLE_SELECT &&
-          dateModel.isSelected) {
-        calendarProvider.lastClickItemState = this;
-      }
-    });
+//    先注释掉这段代码
+//    WidgetsBinding.instance.addPostFrameCallback((callback) {
+//      if (configuration.selectMode == CalendarConstants.MODE_SINGLE_SELECT &&
+//          dateModel.isSelected) {
+//        calendarProvider.lastClickItemState = this;
+//      }
+//    });
   }
 
   /**

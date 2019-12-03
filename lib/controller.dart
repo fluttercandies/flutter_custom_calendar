@@ -502,6 +502,8 @@ class CalendarController {
     monthList.clear();
     weekList.clear();
     calendarProvider.clearData();
+    calendarConfiguration.weekChangeListeners=null;
+    calendarConfiguration.monthChangeListeners=null;
   }
 }
 
