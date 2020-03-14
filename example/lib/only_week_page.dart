@@ -21,13 +21,14 @@ class _OnlyWeekPageState extends State<OnlyWeekPage> {
 
   @override
   void initState() {
+    super.initState();
     DateTime now = DateTime.now();
     controller = new CalendarController(
         minYear: now.year,
         minYearMonth: now.month - 2,
         maxYear: now.year,
         maxYearMonth: now.month + 1,
-        showMode: Constants.MODE_SHOW_ONLY_WEEK);
+        showMode: CalendarConstants.MODE_SHOW_ONLY_WEEK);
 
     controller.addMonthChangeListener(
       (year, month) {

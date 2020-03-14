@@ -43,13 +43,9 @@ class _CustomSignPageState extends State<CustomSignPage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController(
-        weekBarItemWidgetBuilder: () {
-          return CustomStyleWeekBarItem();
-        },
-        dayWidgetBuilder: (dateModel) {
-          return CustomStyleDayWidget(dateModel);
-        },
+
         extraDataMap: customExtraData);
 
     controller.addMonthChangeListener(
@@ -101,6 +97,12 @@ class _CustomSignPageState extends State<CustomSignPage> {
             ),
             CalendarViewWidget(
               calendarController: controller,
+              weekBarItemWidgetBuilder: () {
+                return CustomStyleWeekBarItem();
+              },
+              dayWidgetBuilder: (dateModel) {
+                return CustomStyleDayWidget(dateModel);
+              },
             ),
             ValueListenableBuilder(
                 valueListenable: selectText,
@@ -113,6 +115,7 @@ class _CustomSignPageState extends State<CustomSignPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controller.toggleExpandStatus();
+//        controller.changeExtraData({});
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -122,7 +125,7 @@ class _CustomSignPageState extends State<CustomSignPage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {

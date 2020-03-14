@@ -1,7 +1,10 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
@@ -14,12 +17,21 @@ import 'package:flutter_custom_calendar/widget/month_view.dart';
  */
 class CalendarProvider extends ChangeNotifier {
   double _totalHeight; //当前月视图的整体高度
-  Set<DateModel> selectedDateList = new Set(); //被选中的日期,用于多选
+  HashSet<DateModel> selectedDateList = new HashSet<DateModel>(); //被选中的日期,用于多选
   DateModel _selectDateModel; //当前选中的日期，用于单选
   ItemContainerState lastClickItemState;
   DateModel _lastClickDateModel;
 
   double get totalHeight => _totalHeight;
+
+  ValueNotifier<int> _generation =
+      new ValueNotifier(0); //生成的int值，每次变化，都会刷新整个日历。
+
+  ValueNotifier<int> get generation => _generation;
+
+  set generation(ValueNotifier<int> value) {
+    _generation = value;
+  }
 
   set totalHeight(double value) {
     _totalHeight = value;
@@ -95,25 +107,77 @@ class CalendarProvider extends ChangeNotifier {
   //配置类也放这里吧，这样的话，所有子树，都可以拿到配置的信息
   CalendarConfiguration calendarConfiguration;
 
-  void initData(
-      {Set<DateModel> selectedDateList,
-      DateModel selectDateModel,
-      CalendarConfiguration calendarConfiguration}) {
+  void initData({
+    Set<DateModel> selectedDateList,
+    DateModel selectDateModel,
+    CalendarConfiguration calendarConfiguration,
+    EdgeInsetsGeometry padding,
+    EdgeInsetsGeometry margin,
+    double itemSize,
+    double verticalSpacing,
+    DayWidgetBuilder dayWidgetBuilder,
+    WeekBarItemWidgetBuilder weekBarItemWidgetBuilder,
+  }) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
-    if (selectedDateList != null) {
-      this.selectedDateList.addAll(selectedDateList);
-    }
-    this.selectDateModel = selectDateModel;
     this.calendarConfiguration = calendarConfiguration;
+    print(
+        "calendarConfiguration.defaultSelectedDateList:${calendarConfiguration.defaultSelectedDateList}");
+    this
+        .selectedDateList
+        .addAll(this.calendarConfiguration.defaultSelectedDateList);
+    this.selectDateModel = this.calendarConfiguration.selectDateModel;
+    this.calendarConfiguration.padding = padding;
+    this.calendarConfiguration.margin = margin;
+    this.calendarConfiguration.itemSize = itemSize;
+    this.calendarConfiguration.verticalSpacing = verticalSpacing;
+    this.calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
+    this.calendarConfiguration.weekBarItemWidgetBuilder =
+        weekBarItemWidgetBuilder;
+
     //lastClickDateModel，默认是选中的item，如果为空的话，默认是当前的时间
     this.lastClickDateModel = selectDateModel != null
         ? selectDateModel
         : DateModel.fromDateTime(DateTime.now())
       ..day = 15;
-    if (calendarConfiguration.showMode == Constants.MODE_SHOW_ONLY_WEEK) {
+    //初始化展示状态
+    if (calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_ONLY_WEEK ||
+        calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
       expandStatus = ValueNotifier(false);
     } else {
       expandStatus = ValueNotifier(true);
+    }
+    //初始化item的大小。如果itemSize为空，默认是宽度/7。网页版的话是高度/7。需要减去padding和margin值
+    if (calendarConfiguration.itemSize == null) {
+      MediaQueryData mediaQueryData =
+          MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+      if (mediaQueryData.orientation == Orientation.landscape) {
+        calendarConfiguration.itemSize = (mediaQueryData.size.height -
+                calendarConfiguration.padding.vertical -
+                calendarConfiguration.margin.vertical) /
+            7;
+      } else {
+        calendarConfiguration.itemSize = (mediaQueryData.size.width -
+                calendarConfiguration.padding.horizontal -
+                calendarConfiguration.margin.horizontal) /
+            7;
+      }
+    } else {
+      //如果指定了itemSize的大小，那就按照itemSize的大小去绘制
+    }
+
+    //如果第一个页面展示的是月视图，需要计算下初始化的高度
+    if (calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_ONLY_MONTH ||
+        calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
+      int lineCount = DateUtil.getMonthViewLineCount(
+          calendarConfiguration.nowYear, calendarConfiguration.nowMonth);
+      totalHeight = calendarConfiguration.itemSize * (lineCount) +
+          calendarConfiguration.verticalSpacing * (lineCount - 1);
+    } else {
+      totalHeight = calendarConfiguration.itemSize;
     }
   }
 

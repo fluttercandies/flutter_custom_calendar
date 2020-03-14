@@ -45,7 +45,7 @@ class DateModel {
 
 //传统农历节日
   String get traditionFestival =>
-      LunarUtil.getTraditionFestival(year, month, day);
+      LunarUtil.getTraditionFestival(lunarYear, lunarMonth, lunarDay);
 
   bool isCurrentMonth; //是否是当前月份
 
@@ -122,5 +122,16 @@ class DateModel {
   //是否在某天之前
   bool isBefore(DateModel dateModel) {
     return this.getDateTime().isBefore(dateModel.getDateTime());
+  }
+}
+
+class X {
+  var _y;
+
+  get y => null == _y ? initY() : _y;
+
+  initY() {
+    //do some computation
+    _y = "result";
   }
 }

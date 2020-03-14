@@ -908,7 +908,7 @@ class LunarUtil {
     if (day == 1) {
       return numToChineseMonth(month, leap);
     }
-    return Constants.LUNAR_DAY_TEXT[day - 1];
+    return CalendarConstants.LUNAR_DAY_TEXT[day - 1];
   }
 
   /**
@@ -920,9 +920,9 @@ class LunarUtil {
    */
   static String numToChineseMonth(int month, int leap) {
     if (leap == 1) {
-      return "闰" + Constants.LUNAR_MONTH_TEXT[month - 1];
+      return "闰" + CalendarConstants.LUNAR_MONTH_TEXT[month - 1];
     }
-    return Constants.LUNAR_MONTH_TEXT[month - 1];
+    return CalendarConstants.LUNAR_MONTH_TEXT[month - 1];
   }
 
   static String getString(int month, int day) {

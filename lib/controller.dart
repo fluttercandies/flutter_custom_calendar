@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
@@ -31,29 +33,32 @@ class CalendarController {
   PageController weekController; //星期的controller
 
   CalendarController(
-      {int selectMode = Constants.MODE_SINGLE_SELECT,
-      int showMode = Constants.MODE_SHOW_ONLY_MONTH,
-      DayWidgetBuilder dayWidgetBuilder = defaultCustomDayWidget,
-      WeekBarItemWidgetBuilder weekBarItemWidgetBuilder = defaultWeekBarWidget,
+      {int selectMode = CalendarConstants.MODE_SINGLE_SELECT,
+      int showMode = CalendarConstants.MODE_SHOW_ONLY_MONTH,
       int minYear = 1971,
       int maxYear = 2055,
       int minYearMonth = 1,
       int maxYearMonth = 12,
-      int nowYear = -1,
-      int nowMonth = -1,
+      int nowYear,
+      int nowMonth,
       int minSelectYear = 1971,
       int minSelectMonth = 1,
       int minSelectDay = 1,
       int maxSelectYear = 2055,
       int maxSelectMonth = 12,
       int maxSelectDay = 30,
-      Set<DateTime> selectedDateTimeList = EMPTY_SET,
-      DateModel selectDateModel,
+      Set<DateTime> selectedDateTimeList = EMPTY_SET, //多选模式下，默认选中的item列表
+      DateModel selectDateModel, //单选模式下，默认选中的item
       int maxMultiSelectCount = 9999,
-      double verticalSpacing = 10,
-      double itemSize,
       Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
+    //如果没有指定当前月份和年份，默认是当年时间
+    if (nowYear == null) {
+      nowYear = DateTime.now().year;
+    }
+    if (nowMonth == null) {
+      nowMonth = DateTime.now().month;
+    }
     calendarConfiguration = CalendarConfiguration(
         selectMode: selectMode,
         showMode: showMode,
@@ -70,18 +75,26 @@ class CalendarController {
         maxSelectMonth: maxSelectMonth,
         extraDataMap: extraDataMap,
         maxSelectDay: maxSelectDay,
-        verticalSpacing: verticalSpacing,
-        itemSize: itemSize);
+        maxMultiSelectCount: maxMultiSelectCount,
+        selectDateModel: selectDateModel);
 
-    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
-    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
-
-    if (selectedDateTimeList != null && selectedDateTimeList.isNotEmpty) {
-      calendarConfiguration.defaultSelectedDateList
-          .addAll(selectedDateTimeList.map((dateTime) {
-        return DateModel.fromDateTime(dateTime);
-      }).toSet());
-    }
+    calendarConfiguration.defaultSelectedDateList = new HashSet<DateModel>();
+    calendarConfiguration.defaultSelectedDateList
+        .addAll(selectedDateTimeList.map((dateTime) {
+      return DateModel.fromDateTime(dateTime);
+    }).toSet());
+    //将默认选中的数据，放到provider中
+    calendarProvider.selectDateModel = selectDateModel;
+    calendarProvider.selectedDateList =
+        calendarConfiguration.defaultSelectedDateList;
+    calendarConfiguration.minSelectDate = DateModel.fromDateTime(DateTime(
+        calendarConfiguration.minSelectYear,
+        calendarConfiguration.minSelectMonth,
+        calendarConfiguration.minSelectDay));
+    calendarConfiguration.maxSelectDate = DateModel.fromDateTime(DateTime(
+        calendarConfiguration.maxSelectYear,
+        calendarConfiguration.maxSelectMonth,
+        calendarConfiguration.maxSelectDay));
 
     LogUtil.log(
         TAG: this.runtimeType,
@@ -93,8 +106,7 @@ class CalendarController {
           maxYearMonth,
         ))}");
 
-    if (showMode == Constants.MODE_SHOW_ONLY_MONTH ||
-        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
       int initialPage = 0;
       int nowMonthIndex = 0;
@@ -111,11 +123,6 @@ class CalendarController {
           dateModel.year = i;
           dateModel.month = j;
 
-          //如果没有配置当前时间，设置成当前的时间
-          if (nowYear == -1 || nowMonth == -1) {
-            nowYear = DateTime.now().year;
-            nowMonth = DateTime.now().month;
-          }
           if (i == nowYear && j == nowMonth) {
             initialPage = nowMonthIndex;
           }
@@ -129,15 +136,13 @@ class CalendarController {
       LogUtil.log(
           TAG: this.runtimeType,
           message:
-              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为${nowMonthIndex}");
+              "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
     }
 
-    if (showMode == Constants.MODE_SHOW_ONLY_WEEK ||
-        showMode == Constants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (showMode != CalendarConstants.MODE_SHOW_ONLY_MONTH) {
       //计算一共多少周
       //计算方法：第一天是周几，最后一天是周几，中间的天数/7后加上2就是结果了
       int initialWeekPage = 0;
-      int nowWeekIndex = 0;
       weekList.clear();
       //如果没有配置当前时间，设置成当前的时间
       if (nowYear == -1 || nowMonth == -1) {
@@ -169,7 +174,7 @@ class CalendarController {
       LogUtil.log(
           TAG: this.runtimeType,
           message:
-              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为${initialWeekPage}");
+              "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为$initialWeekPage");
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
 
@@ -177,13 +182,17 @@ class CalendarController {
     calendarConfiguration.weekList = weekList;
     calendarConfiguration.monthController = monthController;
     calendarConfiguration.weekController = weekController;
-    calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
-    calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
+  }
+
+  //周视图切换
+  void addWeekChangeListener(OnWeekChange listener){
+    this.calendarConfiguration.weekChangeListeners.add(listener);
   }
 
   //月份切换监听
   void addMonthChangeListener(OnMonthChange listener) {
-    this.calendarConfiguration.monthChange = listener;
+//    this.calendarConfiguration.monthChange = listener;
+    this.calendarConfiguration.monthChangeListeners.add(listener);
   }
 
   //点击选择监听
@@ -216,6 +225,25 @@ class CalendarController {
     });
   }
 
+  //可以动态修改extraDataMap
+  void changeExtraData(Map<DateModel, Object> newMap) {
+    this.calendarConfiguration.extraDataMap = newMap;
+    this.calendarProvider.generation.value++;
+  }
+
+  //可以动态修改默认选中的item。
+  void changeDefaultSelectedDateList(Set<DateModel> defaultSelectedDateList) {
+    this.calendarConfiguration.defaultSelectedDateList =
+        defaultSelectedDateList;
+    this.calendarProvider.generation.value++;
+  }
+
+  //可以动态修改默认选中的item
+  void changeDefaultSelectedDateModel(DateModel dateModel) {
+    this.calendarProvider.selectDateModel = dateModel;
+    this.calendarProvider.generation.value++;
+  }
+
   /**
    * 月份或者星期的上一页
    */
@@ -229,8 +257,11 @@ class CalendarController {
       } else {
         calendarProvider.calendarConfiguration.monthController
             .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
-        calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex-1].year, monthList[currentIndex-1].month);
+        calendarProvider.calendarConfiguration.monthChangeListeners
+            .forEach((listener) {
+          listener(monthList[currentIndex - 1].year,
+              monthList[currentIndex - 1].month);
+        });
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
@@ -267,8 +298,12 @@ class CalendarController {
       } else {
         calendarProvider.calendarConfiguration.monthController
             .nextPage(duration: DEFAULT_DURATION, curve: Curves.ease);
-        calendarProvider.calendarConfiguration.monthChange(
-            monthList[currentIndex+1].year, monthList[currentIndex+1].month);
+        calendarProvider.calendarConfiguration.monthChangeListeners
+            .forEach((listener) {
+          listener(monthList[currentIndex + 1].year,
+              monthList[currentIndex + 1].month);
+        });
+
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
@@ -467,6 +502,8 @@ class CalendarController {
     monthList.clear();
     weekList.clear();
     calendarProvider.clearData();
+    calendarConfiguration.weekChangeListeners=null;
+    calendarConfiguration.monthChangeListeners=null;
   }
 }
 
@@ -501,6 +538,11 @@ Widget defaultCombineDayWidget(DateModel dateModel) {
 bool defaultInRange(DateModel dateModel) {
   return true;
 }
+
+/**
+ * 周视图切换
+ */
+typedef void OnWeekChange(int year, int month);
 
 /**
  * 月份切换事件

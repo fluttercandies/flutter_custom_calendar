@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
@@ -17,13 +16,35 @@ import 'package:provider/provider.dart';
 //由于旧的代码关系。。所以现在需要抽出一个StatefulWidget放在StatelessWidget里面
 class CalendarViewWidget extends StatefulWidget {
   //整体的背景设置
-  BoxDecoration boxDecoration;
+  final BoxDecoration boxDecoration;
+
+  //日历的padding和margin
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
+
+  //默认是屏幕宽度/7
+  final double itemSize;
+
+  //日历item之间的竖直方向间距，默认10
+  final double verticalSpacing;
+
+  //自定义日历item
+  final DayWidgetBuilder dayWidgetBuilder;
+  final WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
 
   //控制器
   final CalendarController calendarController;
 
   CalendarViewWidget(
-      {Key key, @required this.calendarController, this.boxDecoration})
+      {Key key,
+      this.dayWidgetBuilder = defaultCustomDayWidget,
+      this.weekBarItemWidgetBuilder = defaultWeekBarWidget,
+      @required this.calendarController,
+      this.boxDecoration,
+      this.padding = EdgeInsets.zero,
+      this.margin = EdgeInsets.zero,
+      this.verticalSpacing = 10,
+      this.itemSize})
       : super(key: key);
 
   @override
@@ -35,14 +56,20 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
   void initState() {
     //初始化一些数据，一些跟状态有关的要放到provider中
     widget.calendarController.calendarProvider.initData(
-        calendarConfiguration: widget.calendarController.calendarConfiguration);
+        calendarConfiguration: widget.calendarController.calendarConfiguration,
+        padding: widget.padding,
+        margin: widget.margin,
+        itemSize: widget.itemSize,
+        verticalSpacing: widget.verticalSpacing,
+        dayWidgetBuilder: widget.dayWidgetBuilder,
+        weekBarItemWidgetBuilder: widget.weekBarItemWidgetBuilder);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.calendarController.clearData();
+//    widget.calendarController.clearData();
     super.dispose();
   }
 
@@ -53,6 +80,8 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
       child: Container(
           //外部可以自定义背景设置
           decoration: widget.boxDecoration,
+          padding: widget.padding,
+          margin: widget.margin,
           //使用const，保证外界的setState不会刷新日历这个widget
           child: CalendarContainer(widget.calendarController)),
     );
@@ -73,11 +102,9 @@ class CalendarContainerState extends State<CalendarContainer>
   double itemHeight;
   double totalHeight;
 
-  bool expand = true;
+  bool expand;
 
   CalendarProvider calendarProvider;
-
-  var state = CrossFadeState.showFirst;
 
   List<Widget> widgets = [];
 
@@ -85,30 +112,39 @@ class CalendarContainerState extends State<CalendarContainer>
 
   @override
   void initState() {
+    super.initState();
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     expand = calendarProvider.expandStatus.value;
 
     if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_ONLY_WEEK) {
+        CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       widgets.add(const WeekViewPager());
     } else if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_WEEK_AND_MONTH) {
+        CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
       widgets.add(const MonthViewPager());
       widgets.add(const WeekViewPager());
+      index = 1;
+    } else if (calendarProvider.calendarConfiguration.showMode ==
+        CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
+      widgets.add(const MonthViewPager());
+      widgets.add(const WeekViewPager());
+      index = 0;
     } else {
       //默认是只显示月视图
       widgets.add(const MonthViewPager());
     }
+    expand = calendarProvider.expandStatus.value;
 
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
     if (calendarProvider.calendarConfiguration.showMode ==
-        Constants.MODE_SHOW_WEEK_AND_MONTH) {
+            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH ||
+        calendarProvider.calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       calendarProvider.expandStatus.addListener(() {
         setState(() {
+          print(
+              "calendarProvider.expandStatus.value:${calendarProvider.expandStatus.value}");
           expand = calendarProvider.expandStatus.value;
-          state = (state == CrossFadeState.showSecond
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond);
           if (expand) {
             index = 0;
             //周视图切换到月视图
@@ -122,43 +158,33 @@ class CalendarContainerState extends State<CalendarContainer>
           }
         });
       });
+    } else {
+      index = 0;
     }
 
-//    widget.calendarController.addMonthChangeListener((year, month) {
-//      if (widget.calendarController.calendarProvider.calendarConfiguration
-//              .showMode !=
-//          Constants.MODE_SHOW_ONLY_WEEK) {
-//        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-//        int lineCount = DateUtil.getMonthViewLineCount(year, month);
-//        double newHeight = itemHeight * lineCount +
-//            calendarProvider.calendarConfiguration.verticalSpacing *
-//                (lineCount - 1);
-//        if (totalHeight.toInt() != newHeight.toInt()) {
-//          LogUtil.log(
-//              TAG: this.runtimeType,
-//              message: "totalHeight:$totalHeight,newHeight:$newHeight");
-//
-//          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
-//          setState(() {
-//            totalHeight = newHeight;
-//          });
-//        }
-//      }
-//    });
+    widget.calendarController.addMonthChangeListener((year, month) {
+      if (widget.calendarController.calendarProvider.calendarConfiguration
+              .showMode !=
+          CalendarConstants.MODE_SHOW_ONLY_WEEK) {
+        //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
+        int lineCount = DateUtil.getMonthViewLineCount(year, month);
+        double newHeight = itemHeight * (lineCount) +
+            calendarProvider.calendarConfiguration.verticalSpacing *
+                (lineCount - 1);
+        LogUtil.log(
+            TAG: this.runtimeType,
+            message: "totalHeight:$totalHeight,newHeight:$newHeight");
+        if (totalHeight.toInt() != newHeight.toInt()) {
+          LogUtil.log(TAG: this.runtimeType, message: "月份视图高度发生变化");
+          setState(() {
+            totalHeight = newHeight;
+          });
+        }
+      }
+    });
 
-    //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-
-    MediaQueryData mediaQueryData =
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-
-    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-            mediaQueryData.orientation == Orientation.landscape
-        ? mediaQueryData.size.height / 10
-        : mediaQueryData.size.width / 7;
-    if (calendarProvider.totalHeight == null) {
-      calendarProvider.totalHeight = itemHeight * 6 +
-          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
-    }
+    itemHeight = calendarProvider.calendarConfiguration.itemSize;
+    totalHeight = calendarProvider.totalHeight;
   }
 
   @override
@@ -169,13 +195,6 @@ class CalendarContainerState extends State<CalendarContainer>
   @override
   Widget build(BuildContext context) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarContainerState build");
-    //暂时先这样写死,提前计算布局的高度,不然会出现问题:a horizontal viewport was given an unlimited amount of I/flutter ( 6759): vertical space in which to expand.
-//    itemHeight = calendarProvider.calendarConfiguration.itemSize ??
-//        MediaQuery.of(context).size.width / 7;
-    if (totalHeight == null) {
-      totalHeight = itemHeight * 6 +
-          calendarProvider.calendarConfiguration.verticalSpacing * (6 - 1);
-    }
     return Container(
       width: itemHeight * 7,
       child: new Column(

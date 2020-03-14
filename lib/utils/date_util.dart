@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
@@ -168,7 +165,11 @@ class DateUtil {
       if (extraDataMap?.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
+        }else{
+          dateModel.extraData=null;
         }
+      }else{
+        dateModel.extraData=null;
       }
 
       result.add(dateModel);

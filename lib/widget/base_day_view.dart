@@ -56,7 +56,7 @@ class CustomDayWidgetPainter extends CustomPainter {
  * 通过组合widget创建item，只需实现相关的方法就可以
  */
 abstract class BaseCombineDayWidget extends StatelessWidget {
-  DateModel dateModel;
+  final DateModel dateModel;
 
   BaseCombineDayWidget(this.dateModel);
 

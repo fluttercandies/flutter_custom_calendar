@@ -21,11 +21,9 @@ class _CustomStylePageState extends State<CustomStylePage> {
 
   @override
   void initState() {
-    controller = new CalendarController(weekBarItemWidgetBuilder: () {
-      return CustomStyleWeekBarItem();
-    }, dayWidgetBuilder: (dateModel) {
-      return CustomStyleDayWidget(dateModel);
-    });
+    super.initState();
+    controller = new CalendarController(
+        selectDateModel: DateModel.fromDateTime(DateTime.now()));
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -75,8 +73,13 @@ class _CustomStylePageState extends State<CustomStylePage> {
               ],
             ),
             CalendarViewWidget(
-              calendarController: controller,
-            ),
+                calendarController: controller,
+                weekBarItemWidgetBuilder: () {
+                  return CustomStyleWeekBarItem();
+                },
+                dayWidgetBuilder: (dateModel) {
+                  return CustomStyleDayWidget(dateModel);
+                }),
             ValueListenableBuilder(
                 valueListenable: selectText,
                 builder: (context, value, child) {
@@ -95,7 +98,7 @@ class _CustomStylePageState extends State<CustomStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {

@@ -1,4 +1,4 @@
-class Constants {
+class CalendarConstants {
 
   //单选或者多选模式
   static const int MODE_SINGLE_SELECT = 1;
@@ -7,7 +7,8 @@ class Constants {
   //展示模式
   static const int MODE_SHOW_ONLY_MONTH=1;//仅支持月视图
   static const int MODE_SHOW_ONLY_WEEK=2;//仅支持星期视图
-  static const int MODE_SHOW_WEEK_AND_MONTH=3;//支持月和星期视图切换
+  static const int MODE_SHOW_WEEK_AND_MONTH=3;//支持两种视图，先显示周视图
+  static const int MODE_SHOW_MONTH_AND_WEEK=4;//支持两种视图，先显示月视图
 
 
   /**

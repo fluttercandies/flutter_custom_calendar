@@ -21,18 +21,17 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
 
   @override
   void initState() {
+    super.initState();
     controller = new CalendarController(
-        selectMode: Constants.MODE_MULTI_SELECT,
-        maxMultiSelectCount: 5,
-        minSelectYear: 2019,
-        minSelectMonth: 5,
-        minSelectDay: 20,
-        weekBarItemWidgetBuilder: () {
-          return CustomStyleWeekBarItem();
-        },
-        dayWidgetBuilder: (dateModel) {
-          return CustomStyleDayWidget(dateModel);
-        });
+      selectMode: CalendarConstants.MODE_MULTI_SELECT,
+      maxMultiSelectCount: 5,
+      minSelectYear: 2019,
+      minSelectMonth: 5,
+      minSelectDay: 20,
+      selectedDateTimeList: {
+        DateTime.now(),
+      }
+    );
 
     controller.addMonthChangeListener(
       (year, month) {
@@ -49,7 +48,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
     text = new ValueNotifier("${DateTime.now().year}年${DateTime.now().month}月");
 
     selectText = new ValueNotifier(
-        "多选模式\n选中的时间:\n${controller.getSingleSelectCalendar()}");
+        "多选模式\n选中的时间:\n${controller.getMultiSelectCalendar().join("\n")}");
   }
 
   @override
@@ -82,8 +81,13 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
               ],
             ),
             CalendarViewWidget(
-              calendarController: controller,
-            ),
+                calendarController: controller,
+                weekBarItemWidgetBuilder: () {
+                  return CustomStyleWeekBarItem();
+                },
+                dayWidgetBuilder: (dateModel) {
+                  return CustomStyleDayWidget(dateModel);
+                }),
             ValueListenableBuilder(
                 valueListenable: selectText,
                 builder: (context, value, child) {
@@ -102,7 +106,7 @@ class _MultiSelectStylePageState extends State<MultiSelectStylePage> {
 }
 
 class CustomStyleWeekBarItem extends BaseWeekBar {
-  List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
+  final List<String> weekList = ["一", "二", "三", "四", "五", "六", "日"];
 
   @override
   Widget getWeekBarItem(int index) {
@@ -119,7 +123,6 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {
-    bool isWeekend = dateModel.isWeekend;
     bool isInRange = dateModel.isInRange;
 
     //顶部的文字

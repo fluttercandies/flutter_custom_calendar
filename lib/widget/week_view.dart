@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
@@ -30,29 +29,32 @@ class WeekView extends StatefulWidget {
 class _WeekViewState extends State<WeekView> {
   List<DateModel> items;
 
-  DateModel minSelectDate;
-  DateModel maxSelectDate;
-
   Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   @override
   void initState() {
     super.initState();
-    minSelectDate = DateModel.fromDateTime(DateTime(
-        widget.configuration.minSelectYear,
-        widget.configuration.minSelectMonth,
-        widget.configuration.minSelectDay));
-    maxSelectDate = DateModel.fromDateTime(DateTime(
-        widget.configuration.maxSelectYear,
-        widget.configuration.maxSelectMonth,
-        widget.configuration.maxSelectDay));
     extraDataMap = widget.configuration.extraDataMap;
 
     items = DateUtil.initCalendarForWeekView(
         widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-        minSelectDate: minSelectDate,
-        maxSelectDate: maxSelectDate,
+        minSelectDate: widget.configuration.minSelectDate,
+        maxSelectDate: widget.configuration.maxSelectDate,
         extraDataMap: extraDataMap);
+
+    //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      Provider.of<CalendarProvider>(context, listen: false)
+          .generation
+          .addListener(() async {
+        items = DateUtil.initCalendarForWeekView(
+            widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
+            minSelectDate: widget.configuration.minSelectDate,
+            maxSelectDate: widget.configuration.maxSelectDate,
+            extraDataMap: extraDataMap);
+        setState(() {});
+      });
+    });
   }
 
   @override
@@ -72,7 +74,7 @@ class _WeekViewState extends State<WeekView> {
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          if (configuration.selectMode == Constants.MODE_MULTI_SELECT) {
+          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
             if (calendarProvider.selectedDateList.contains(dateModel)) {
               dateModel.isSelected = true;
             } else {

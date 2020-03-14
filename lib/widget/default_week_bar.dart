@@ -47,7 +47,7 @@ class DefaultWeekBar extends BaseWeekBar {
       height: 40,
       alignment: Alignment.center,
       child: new Text(
-        Constants.WEEK_LIST[index],
+        CalendarConstants.WEEK_LIST[index],
         style: topWeekTextStyle,
       ),
     );
