@@ -212,8 +212,8 @@ class SolarTermUtil {
    * @return 取整数部分
    */
   static double doubleFloor(double v) {
+    v = v.floor().toDouble();
     if (v < 0) return v + 1;
-
     return v;
   }
 
