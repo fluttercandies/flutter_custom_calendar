@@ -51,7 +51,7 @@ class _MonthViewState extends State<MonthView>
       items = CacheData.getInstance().monthListCache[firstDayOfMonth];
     } else {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中无数据");
-      getItems().then((_){
+      getItems().then((_) {
         CacheData.getInstance().monthListCache[firstDayOfMonth] = items;
       });
     }
@@ -227,13 +227,17 @@ class ItemContainerState extends State<ItemContainer> {
             }
             calendarProvider.selectedDateList.add(dateModel);
           }
-          configuration.calendarSelect(dateModel);
+          if (configuration.calendarSelect != null) {
+            configuration.calendarSelect(dateModel);
+          }
 
           //多选也可以弄这些单选的代码
           calendarProvider.selectDateModel = dateModel;
         } else {
           calendarProvider.selectDateModel = dateModel;
-          configuration.calendarSelect(dateModel);
+          if (configuration.calendarSelect != null) {
+            configuration.calendarSelect(dateModel);
+          }
 
           //单选需要刷新上一个item
           if (calendarProvider.lastClickItemState != this) {
