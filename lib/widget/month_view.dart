@@ -174,7 +174,7 @@ class ItemContainerState extends State<ItemContainer> {
   /**
    * 提供方法给外部，可以调用这个方法进行刷新item
    */
-  void refreshItem() {
+  void refreshItem(bool v) {
     /**
         Exception caught by gesture
         The following assertion was thrown while handling a gesture:
@@ -182,7 +182,7 @@ class ItemContainerState extends State<ItemContainer> {
      */
     if (mounted) {
       setState(() {
-        dateModel.isSelected = !dateModel.isSelected;
+        dateModel.isSelected = v;
 //        isSelected.value = !isSelected.value;
       });
     }
@@ -237,12 +237,11 @@ class ItemContainerState extends State<ItemContainer> {
 
           //单选需要刷新上一个item
           if (calendarProvider.lastClickItemState != this) {
-            calendarProvider.lastClickItemState?.refreshItem();
+            calendarProvider.lastClickItemState?.refreshItem(false);
             calendarProvider.lastClickItemState = this;
           }
         }
-
-        refreshItem();
+        refreshItem(!this.dateModel.isSelected);
       },
       child: configuration.dayWidgetBuilder(dateModel),
     );
