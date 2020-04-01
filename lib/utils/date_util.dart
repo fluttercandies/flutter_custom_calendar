@@ -99,10 +99,10 @@ class DateUtil {
    * 本月第一天，是那一周的第几天,从1开始
    * @return 获取日期所在月视图对应的起始偏移量 the start diff with MonthView
    */
-  static int getIndexOfFirstDayInMonth(DateTime dateTime) {
+  static int getIndexOfFirstDayInMonth(DateTime dateTime, {int offset = 0}) {
     DateTime firstDayOfMonth = new DateTime(dateTime.year, dateTime.month, 1);
 
-    int week = firstDayOfMonth.weekday;
+    int week = firstDayOfMonth.weekday + offset;
 
     return week;
   }
@@ -111,11 +111,12 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap,
+      int offset = 0}) {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
     //获取月视图其实偏移量
-    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month));
+    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
     //获取该月的天数
     int monthDayCount = getMonthDaysCount(year, month);
 
@@ -205,10 +206,11 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap,
+      int offset = 0}) {
     List<DateModel> items = List();
 
-    int weekDay = currentDate.weekday;
+    int weekDay = currentDate.weekday + offset;
 
     //计算本周的第一天
     DateTime firstDayOfWeek = currentDate.add(Duration(days: -weekDay));

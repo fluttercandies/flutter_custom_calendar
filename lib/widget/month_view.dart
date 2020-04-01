@@ -75,7 +75,8 @@ class _MonthViewState extends State<MonthView>
       'month': widget.month,
       'minSelectDate': widget.configuration.minSelectDate,
       'maxSelectDate': widget.configuration.maxSelectDate,
-      'extraDataMap': extraDataMap
+      'extraDataMap': extraDataMap,
+      'offset': widget.configuration.offset
     });
     setState(() {});
   }
@@ -85,7 +86,8 @@ class _MonthViewState extends State<MonthView>
         map['year'], map['month'], DateTime.now(), DateTime.sunday,
         minSelectDate: map['minSelectDate'],
         maxSelectDate: map['maxSelectDate'],
-        extraDataMap: map['extraDataMap']);
+        extraDataMap: map['extraDataMap'],
+        offset: map['offset']);
   }
 
   @override

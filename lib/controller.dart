@@ -50,7 +50,9 @@ class CalendarController {
       Set<DateTime> selectedDateTimeList = EMPTY_SET, //多选模式下，默认选中的item列表
       DateModel selectDateModel, //单选模式下，默认选中的item
       int maxMultiSelectCount = 9999,
-      Map<DateModel, Object> extraDataMap = EMPTY_MAP}) {
+      Map<DateModel, Object> extraDataMap = EMPTY_MAP,
+      int offset = 0 // 首日偏移量
+    }) : assert(offset >= 0) {
     LogUtil.log(TAG: this.runtimeType, message: "init CalendarConfiguration");
     //如果没有指定当前月份和年份，默认是当年时间
     if (nowYear == null) {
@@ -76,7 +78,8 @@ class CalendarController {
         extraDataMap: extraDataMap,
         maxSelectDay: maxSelectDay,
         maxMultiSelectCount: maxMultiSelectCount,
-        selectDateModel: selectDateModel);
+        selectDateModel: selectDateModel,
+        offset: offset);
 
     calendarConfiguration.defaultSelectedDateList = new HashSet<DateModel>();
     calendarConfiguration.defaultSelectedDateList
