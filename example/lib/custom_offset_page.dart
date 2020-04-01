@@ -80,7 +80,8 @@ class _CustomOffsetPageState extends State<CustomOffsetPage> {
                 },
                 dayWidgetBuilder: (dateModel) {
                   return CustomStyleDayWidget(dateModel);
-                }),
+                }
+              ),
             ValueListenableBuilder(
                 valueListenable: selectText,
                 builder: (context, value, child) {

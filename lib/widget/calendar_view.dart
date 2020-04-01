@@ -167,7 +167,7 @@ class CalendarContainerState extends State<CalendarContainer>
               .showMode !=
           CalendarConstants.MODE_SHOW_ONLY_WEEK) {
         //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-        int lineCount = DateUtil.getMonthViewLineCount(year, month);
+        int lineCount = DateUtil.getMonthViewLineCount(year, month, widget.calendarController.calendarConfiguration.offset);
         double newHeight = itemHeight * (lineCount) +
             calendarProvider.calendarConfiguration.verticalSpacing *
                 (lineCount - 1);

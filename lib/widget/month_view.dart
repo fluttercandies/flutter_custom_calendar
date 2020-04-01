@@ -56,7 +56,7 @@ class _MonthViewState extends State<MonthView>
       });
     }
 
-    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
+    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month, widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
