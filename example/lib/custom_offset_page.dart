@@ -117,9 +117,6 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
 
   @override
   void drawNormal(DateModel dateModel, Canvas canvas, Size size) {
-    if (!dateModel.isCurrentMonth) {
-      return;
-    }
     bool isWeekend = dateModel.isWeekend;
     bool isInRange = dateModel.isInRange;
 
@@ -156,9 +153,6 @@ class CustomStyleDayWidget extends BaseCustomDayWidget {
 
   @override
   void drawSelected(DateModel dateModel, Canvas canvas, Size size) {
-    if (!dateModel.isCurrentMonth) {
-      return;
-    }
     //绘制背景
     Paint backGroundPaint = new Paint()
       ..color = Colors.blue
