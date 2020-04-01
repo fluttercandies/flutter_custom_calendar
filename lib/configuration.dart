@@ -78,6 +78,10 @@ class CalendarConfiguration {
   DateModel minSelectDate;
   DateModel maxSelectDate;
 
+  /// 首日偏移量 first day offset
+  /// first day = (first day of month or week) + offset
+  final int offset;
+
   CalendarConfiguration(
       {this.selectMode,
       this.minYear,
@@ -104,7 +108,8 @@ class CalendarConfiguration {
       this.itemSize,
       this.showMode,
       this.padding,
-      this.margin});
+      this.margin,
+      this.offset = 0});
 
   @override
   String toString() {

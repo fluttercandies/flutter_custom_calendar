@@ -74,7 +74,8 @@
       Set<DateTime> selectedDateTimeList = EMPTY_SET,
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
-      Map<DateModel, Object> extraDataMap = EMPTY_MAP})
+      Map<DateModel, Object> extraDataMap = EMPTY_MAP,
+      int offset = 0})
 ```
 
 #### 通用参数说明
@@ -94,11 +95,12 @@
 |    minSelectDay     | 可以选择的最小月份的日子  |                                                                                                                                                1                                                                                                                                                |
 |    maxSelectYear    |    可以选择的最大年份     |                                                                                                                                              2055                                                                                                                                               |
 |   maxSelectMonth    | 可以选择的最大年份的月份  |                                                                                                                                               12                                                                                                                                                |
-|    maxSelectDay     | 可以选择的最大月份的日子  |                                                                                                                               30，注意：不能超过对应月份的总天数                                                                                                                                |
+|    maxSelectDay     | 可以选择的最大月份的日子  |                                                                                                                               30，注意：不能超过对应月份的总天数                                                                                                                                      |
 |  selectedDateList   |   被选中的日期,用于多选   |                                                                                                                    默认为空Set, Set<DateModel> selectedDateList = new Set()                                                                                                                     |
 |   selectDateModel   |    当前选择项,用于单选    |                                                                                                                                            默认为空                                                                                                                                             |
 | maxMultiSelectCount |    多选，最多选多少个     |                                                                                                                                               hhh                                                                                                                                               |
 |    extraDataMap     |     自定义额外的数据      |                                                                                                                   默认为空Map，Map<DateTime, Object> extraDataMap = new Map()                                                                                                                   |
+|    offset     |     首日偏移量      |                                                                                                                                                          0                                                                                                                                               |
 
 
 #### 给controller添加事件监听

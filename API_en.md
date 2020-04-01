@@ -73,7 +73,8 @@ One is to use the controller to add event monitoring and use the controller to o
       Set<DateTime> selectedDateTimeList = EMPTY_SET,
       DateModel selectDateModel,
       int maxMultiSelectCount = 9999,
-      Map<DateModel, Object> extraDataMap = EMPTY_MAP})
+      Map<DateModel, Object> extraDataMap = EMPTY_MAP,
+      int offset})
 ```
 
 #### General parameter description
@@ -98,6 +99,7 @@ One is to use the controller to add event monitoring and use the controller to o
 |   selectDateModel   |    Current selection, for radio selection    |                                                                                                                                            默认为空                                                                                                                                             |
 | maxMultiSelectCount |    Multiple choice, how many at most     |                                                                                                                                               hhh                                                                                                                                               |
 |    extraDataMap     |     Customize additional data      |                                                                                                                   默认为空Map，Map<DateTime, Object> extraDataMap = new Map()                                                                                                                   |
+|    offset           |   The offset of first day     |                                                                                                                                                           0                                                                                                                  |
 
 
 #### Add event listening to controller
