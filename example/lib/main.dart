@@ -1,3 +1,5 @@
+import 'package:example1/custom_offset_page.dart';
+
 import 'only_week_page.dart';
 import 'red_style_page.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
               ),
           "/blue_style_page": (context) => BlueStylePage(title: "蓝色背景Demo"),
           "/red_style_page": (context) => RedStylePage(title: "蓝色背景Demo"),
+          "/custom_offset_page": (context) => CustomOffsetPage(title: "自定义偏移量"),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -105,6 +108,12 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, "/red_style_page");
               },
               child: new Text("红色Demo"),
+            ),
+            new RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/custom_offset_page");
+              },
+              child: new Text("自定义偏移量"),
             )
           ],
         ),

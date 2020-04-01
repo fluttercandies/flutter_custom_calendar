@@ -51,7 +51,8 @@ class _WeekViewState extends State<WeekView> {
             widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
             minSelectDate: widget.configuration.minSelectDate,
             maxSelectDate: widget.configuration.maxSelectDate,
-            extraDataMap: extraDataMap);
+            extraDataMap: extraDataMap,
+            offset: widget.configuration.offset);
         setState(() {});
       });
     });
