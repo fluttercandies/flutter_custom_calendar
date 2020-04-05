@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
@@ -99,10 +100,10 @@ class DateUtil {
    * 本月第一天，是那一周的第几天,从1开始
    * @return 获取日期所在月视图对应的起始偏移量 the start diff with MonthView
    */
-  static int getIndexOfFirstDayInMonth(DateTime dateTime) {
+  static int getIndexOfFirstDayInMonth(DateTime dateTime, {int offset = 0}) {
     DateTime firstDayOfMonth = new DateTime(dateTime.year, dateTime.month, 1);
 
-    int week = firstDayOfMonth.weekday;
+    int week = firstDayOfMonth.weekday + offset;
 
     return week;
   }
@@ -111,11 +112,12 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap,
+      int offset = 0}) {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
-    //获取月视图其实偏移量
-    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month));
+    //获取月视图真实偏移量
+    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
     //获取该月的天数
     int monthDayCount = getMonthDaysCount(year, month);
 
@@ -136,6 +138,10 @@ class DateUtil {
       DateTime temp;
       DateModel dateModel;
       if (i < mPreDiff - 1) {
+        if (i < ((mPreDiff / 7).ceil() - 1) * 7) {
+          size++;
+          continue;
+        }
         //这个上一月的几天
         temp = firstDayOfMonth.subtract(Duration(days: mPreDiff - i - 1));
 
@@ -183,19 +189,18 @@ class DateUtil {
   /**
    * 月的行数
    */
-  static int getMonthViewLineCount(int year, int month) {
+  static int getMonthViewLineCount(int year, int month, int offset) {
     DateTime firstDayOfMonth = new DateTime(year, month, 1);
     int monthDayCount = getMonthDaysCount(year, month);
-//    DateTime lastDayOfMonth = new DateTime(year, month, monthDayCount);
 
-    int preIndex = firstDayOfMonth.weekday - 1;
-//    int lastIndex = lastDayOfMonth.weekday;
-
+    int preIndex = (firstDayOfMonth.weekday - 1 + offset) % 7;
+    int lineCount = ((preIndex + monthDayCount) / 7).ceil();
     LogUtil.log(
         TAG: "DateUtil",
         message:
-            "getMonthViewLineCount:$year年$month月:有${((preIndex + monthDayCount) / 7).toInt() + 1}行");
-    return ((preIndex + monthDayCount) / 7).toInt() + 1;
+            "getMonthViewLineCount:$year年$month月:有$lineCount行");
+
+    return lineCount;
   }
 
   /**
@@ -205,10 +210,11 @@ class DateUtil {
       int year, int month, DateTime currentDate, int weekStart,
       {DateModel minSelectDate,
       DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap}) {
+      Map<DateModel, Object> extraDataMap,
+      int offset = 0}) {
     List<DateModel> items = List();
 
-    int weekDay = currentDate.weekday;
+    int weekDay = currentDate.weekday + offset;
 
     //计算本周的第一天
     DateTime firstDayOfWeek = currentDate.add(Duration(days: -weekDay));

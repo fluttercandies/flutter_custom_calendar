@@ -42,7 +42,6 @@ class _MonthViewState extends State<MonthView>
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-
     DateModel firstDayOfMonth =
         DateModel.fromDateTime(DateTime(widget.year, widget.month, 1));
     if (CacheData.getInstance().monthListCache[firstDayOfMonth]?.isNotEmpty ==
@@ -56,7 +55,7 @@ class _MonthViewState extends State<MonthView>
       });
     }
 
-    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month);
+    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month, widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
@@ -75,7 +74,8 @@ class _MonthViewState extends State<MonthView>
       'month': widget.month,
       'minSelectDate': widget.configuration.minSelectDate,
       'maxSelectDate': widget.configuration.maxSelectDate,
-      'extraDataMap': extraDataMap
+      'extraDataMap': extraDataMap,
+      'offset': widget.configuration.offset
     });
     setState(() {});
   }
@@ -85,7 +85,8 @@ class _MonthViewState extends State<MonthView>
         map['year'], map['month'], DateTime.now(), DateTime.sunday,
         minSelectDate: map['minSelectDate'],
         maxSelectDate: map['maxSelectDate'],
-        extraDataMap: map['extraDataMap']);
+        extraDataMap: map['extraDataMap'],
+        offset: map['offset']);
   }
 
   @override
@@ -104,7 +105,7 @@ class _MonthViewState extends State<MonthView>
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),
-        itemCount: items.isEmpty ? 0 : 7 * lineCount,
+        itemCount: items.isEmpty ? 0 : items.length,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择

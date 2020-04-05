@@ -173,7 +173,7 @@ class CalendarProvider extends ChangeNotifier {
         calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       int lineCount = DateUtil.getMonthViewLineCount(
-          calendarConfiguration.nowYear, calendarConfiguration.nowMonth);
+          calendarConfiguration.nowYear, calendarConfiguration.nowMonth, calendarConfiguration.offset);
       totalHeight = calendarConfiguration.itemSize * (lineCount) +
           calendarConfiguration.verticalSpacing * (lineCount - 1);
     } else {
