@@ -63,7 +63,10 @@ class _MonthViewState extends State<MonthView>
           .generation
           .addListener(() async {
         extraDataMap = widget.configuration.extraDataMap;
-        await getItems();
+        if (widget.configuration.nowYear == widget.year
+            && widget.configuration.nowMonth == widget.month) {
+          await getItems();
+        }
       });
     });
   }

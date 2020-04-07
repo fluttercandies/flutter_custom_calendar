@@ -45,12 +45,14 @@ class _CustomSignPageState extends State<CustomSignPage> {
   void initState() {
     super.initState();
     controller = new CalendarController(
-
+        showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
         extraDataMap: customExtraData);
 
     controller.addMonthChangeListener(
       (year, month) {
         text.value = "$year年$month月";
+        customExtraData[DateModel.fromDateTime(DateTime(year, month, 1))] = '假';
+        controller.changeExtraData(customExtraData);
       },
     );
 
@@ -142,9 +144,6 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
 
   @override
   Widget getNormalWidget(DateModel dateModel) {
-    if (!dateModel.isCurrentMonth) {
-      return Container();
-    }
     return Container(
       margin: EdgeInsets.all(8),
       child: new Stack(
@@ -192,9 +191,6 @@ class CustomStyleDayWidget extends BaseCombineDayWidget {
 
   @override
   Widget getSelectedWidget(DateModel dateModel) {
-    if (!dateModel.isCurrentMonth) {
-      return Container();
-    }
     return Container(
       margin: EdgeInsets.all(8),
       foregroundDecoration:

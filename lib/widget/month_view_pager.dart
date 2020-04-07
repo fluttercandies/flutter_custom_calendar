@@ -24,29 +24,6 @@ class _MonthViewPagerState extends State<MonthViewPager>
 
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
 
-//    //计算当前月视图的index
-//    DateModel dateModel = calendarProvider.lastClickDateModel;
-//    List<DateModel> monthList =
-//        calendarProvider.calendarConfiguration.monthList;
-//    int index = 0;
-//    for (int i = 0; i < monthList.length; i++) {
-//      DateModel firstDayOfMonth = monthList[i];
-//      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth
-//          .getDateTime()
-//          .add(Duration(
-//              days: DateUtil.getMonthDaysCount(
-//                  firstDayOfMonth.year, firstDayOfMonth.month))));
-//
-//      if ((dateModel.isAfter(firstDayOfMonth) ||
-//              dateModel.isSameWith(firstDayOfMonth)) &&
-//          dateModel.isBefore(lastDayOfMonth)) {
-//        index = i;
-//        break;
-//      }
-//    }
-//    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-//      calendarProvider.calendarConfiguration.monthController.jumpToPage(index);
-//    });
   }
 
   @override
@@ -72,6 +49,8 @@ class _MonthViewPagerState extends State<MonthViewPager>
         //月份的变化
         DateModel dateModel = configuration.monthList[position];
         configuration.monthChangeListeners.forEach((listener) {
+          calendarProvider.calendarConfiguration.nowYear = dateModel.year;
+          calendarProvider.calendarConfiguration.nowMonth = dateModel.month;
           listener(dateModel.year, dateModel.month);
         });
         //用来保存临时变量，用于月视图切换到周视图的时候，默认是显示中间的一周

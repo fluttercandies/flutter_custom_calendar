@@ -48,13 +48,15 @@ class _WeekViewState extends State<WeekView> {
       Provider.of<CalendarProvider>(context, listen: false)
           .generation
           .addListener(() async {
-        items = DateUtil.initCalendarForWeekView(
-            widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-            minSelectDate: widget.configuration.minSelectDate,
-            maxSelectDate: widget.configuration.maxSelectDate,
-            extraDataMap: extraDataMap,
-            offset: widget.configuration.offset);
-        setState(() {});
+          if (mounted) {
+            items = DateUtil.initCalendarForWeekView(
+                widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
+                minSelectDate: widget.configuration.minSelectDate,
+                maxSelectDate: widget.configuration.maxSelectDate,
+                extraDataMap: extraDataMap,
+                offset: widget.configuration.offset);
+            setState(() {});
+          }
       });
     });
   }
