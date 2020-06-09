@@ -141,22 +141,21 @@ class CalendarContainerState extends State<CalendarContainer>
         calendarProvider.calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       calendarProvider.expandStatus.addListener(() {
-        setState(() {
-          print(
-              "calendarProvider.expandStatus.value:${calendarProvider.expandStatus.value}");
-          expand = calendarProvider.expandStatus.value;
-          if (expand) {
-            index = 0;
-            //周视图切换到月视图
-            calendarProvider.calendarConfiguration.weekController
-                .jumpToPage(calendarProvider.monthPageIndex);
-          } else {
-            index = 1;
-            //月视图切换到周视图
-            calendarProvider.calendarConfiguration.weekController
-                .jumpToPage(calendarProvider.weekPageIndex);
-          }
-        });
+        expand = calendarProvider.expandStatus.value;
+        if (expand) {
+          index = 0;
+          //周视图切换到月视图
+          calendarProvider.calendarConfiguration.weekController
+              .jumpToPage(calendarProvider.monthPageIndex);
+        } else {
+          index = 1;
+          //月视图切换到周视图
+          calendarProvider.calendarConfiguration.weekController
+              .jumpToPage(calendarProvider.weekPageIndex);
+        }
+        if (mounted) {
+          setState(() {});
+        }
       });
     } else {
       index = 0;
@@ -167,7 +166,8 @@ class CalendarContainerState extends State<CalendarContainer>
               .showMode !=
           CalendarConstants.MODE_SHOW_ONLY_WEEK) {
         //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-        int lineCount = DateUtil.getMonthViewLineCount(year, month, widget.calendarController.calendarConfiguration.offset);
+        int lineCount = DateUtil.getMonthViewLineCount(year, month,
+            widget.calendarController.calendarConfiguration.offset);
         double newHeight = itemHeight * (lineCount) +
             calendarProvider.calendarConfiguration.verticalSpacing *
                 (lineCount - 1);

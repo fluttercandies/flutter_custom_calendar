@@ -77,7 +77,10 @@ class _MonthViewState extends State<MonthView>
       'extraDataMap': extraDataMap,
       'offset': widget.configuration.offset
     });
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
+    
   }
 
   static Future<List<DateModel>> initCalendarForMonthView(Map map) async {
