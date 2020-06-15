@@ -55,7 +55,8 @@ class _MonthViewState extends State<MonthView>
       });
     }
 
-    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month, widget.configuration.offset);
+    lineCount = DateUtil.getMonthViewLineCount(
+        widget.year, widget.month, widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
@@ -109,18 +110,35 @@ class _MonthViewState extends State<MonthView>
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
-            if (calendarProvider.selectedDateList.contains(dateModel)) {
-              dateModel.isSelected = true;
-            } else {
-              dateModel.isSelected = false;
-            }
-          } else {
-            if (calendarProvider.selectDateModel == dateModel) {
-              dateModel.isSelected = true;
-            } else {
-              dateModel.isSelected = false;
-            }
+          switch (configuration.selectMode) {
+
+            /// 多选
+            case CalendarConstants.MODE_MULTI_SELECT:
+              if (calendarProvider.selectedDateList.contains(dateModel)) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
+
+            /// 选择开始和结束 中间的自动选择
+
+            case CalendarConstants.MODE_MULTI_SELECT_FROM_TO_END:
+              if (calendarProvider.selectedDateList.contains(dateModel)) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
+
+            /// 单选
+            case CalendarConstants.MODE_SINGLE_SELECT:
+              if (calendarProvider.selectDateModel == dateModel) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
           }
 
           return ItemContainer(
@@ -214,38 +232,75 @@ class ItemContainerState extends State<ItemContainer> {
 
         calendarProvider.lastClickDateModel = dateModel;
 
-        if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
-          if (calendarProvider.selectedDateList.contains(dateModel)) {
-            calendarProvider.selectedDateList.remove(dateModel);
-          } else {
-            //多选，判断是否超过限制，超过范围
-            if (calendarProvider.selectedDateList.length ==
-                configuration.maxMultiSelectCount) {
-              if (configuration.multiSelectOutOfSize != null) {
-                configuration.multiSelectOutOfSize();
+        switch (configuration.selectMode) {
+          //简单多选
+          case CalendarConstants.MODE_MULTI_SELECT:
+            if (calendarProvider.selectedDateList.contains(dateModel)) {
+              calendarProvider.selectedDateList.remove(dateModel);
+            } else {
+              //多选，判断是否超过限制，超过范围
+              if (calendarProvider.selectedDateList.length ==
+                  configuration.maxMultiSelectCount) {
+                if (configuration.multiSelectOutOfSize != null) {
+                  configuration.multiSelectOutOfSize();
+                }
+                return;
               }
-              return;
+              calendarProvider.selectedDateList.add(dateModel);
             }
-            calendarProvider.selectedDateList.add(dateModel);
-          }
-          if (configuration.calendarSelect != null) {
-            configuration.calendarSelect(dateModel);
-          }
+            if (configuration.calendarSelect != null) {
+              configuration.calendarSelect(dateModel);
+            }
 
-          //多选也可以弄这些单选的代码
-          calendarProvider.selectDateModel = dateModel;
-        } else {
-          calendarProvider.selectDateModel = dateModel;
-          if (configuration.calendarSelect != null) {
-            configuration.calendarSelect(dateModel);
-          }
+            //多选也可以弄这些单选的代码
+            calendarProvider.selectDateModel = dateModel;
+            break;
 
-          //单选需要刷新上一个item
-          if (calendarProvider.lastClickItemState != this) {
-            calendarProvider.lastClickItemState?.refreshItem(false);
-            calendarProvider.lastClickItemState = this;
-          }
+          /// 单选
+          case CalendarConstants.MODE_SINGLE_SELECT:
+            calendarProvider.selectDateModel = dateModel;
+            if (configuration.calendarSelect != null) {
+              configuration.calendarSelect(dateModel);
+            }
+
+            //单选需要刷新上一个item
+            if (calendarProvider.lastClickItemState != this) {
+              calendarProvider.lastClickItemState?.refreshItem(false);
+              calendarProvider.lastClickItemState = this;
+            }
+            break;
+
+          /// 选择范围
+          case CalendarConstants.MODE_MULTI_SELECT_FROM_TO_END:
+            if (calendarProvider.selectedDateList.length == 0) {
+              calendarProvider.selectedDateList.add(dateModel);
+            } else if (calendarProvider.selectedDateList.length == 1) {
+              DateModel d2 = calendarProvider.selectedDateList.last;
+              DateTime t1, t2;
+              if (d2.getDateTime().isAfter(dateModel.getDateTime())) {
+                t2 = d2.getDateTime();
+                t1 = dateModel.getDateTime();
+              } else {
+                t1 = d2.getDateTime();
+                t2 = dateModel.getDateTime();
+              }
+              for (; t1.isBefore(t2);) {
+                calendarProvider.selectedDateList
+                    .add(DateModel.fromDateTime(t1));
+                t1 = t1.add(Duration(days: 1));
+              }
+            } else {
+              /// 加入已经选择了多个 则进行取消操作
+              calendarProvider.selectedDateList.clear();
+            }
+            if (configuration.calendarSelect != null) {
+              calendarProvider.selectedDateList.forEach((element) {
+                configuration.calendarSelect(element);
+              });
+            }
+            break;
         }
+
         refreshItem(!this.dateModel.isSelected);
       },
       child: configuration.dayWidgetBuilder(dateModel),
