@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/widget/base_day_view.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/style/style.dart';
+
+import 'base_day_view.dart';
 
 /**
  * 默认的利用组合widget的方式构造item

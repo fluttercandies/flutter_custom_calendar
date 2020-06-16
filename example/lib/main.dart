@@ -1,19 +1,12 @@
-import 'package:example1/custom_offset_page.dart';
+import 'dart:collection';
 
-import 'only_week_page.dart';
-import 'red_style_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'blue_style_page.dart';
-import 'custom_sign_page.dart';
-import 'custom_style_page.dart';
-import 'default_style_page.dart';
-import 'multi_select_style_page.dart';
-import 'progress_style_page.dart';
+import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:flutter_custom_calendar/controller.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 
 void main() {
-//  debugProfileBuildsEnabled=true;
-//  debugProfilePaintsEnabled=true;
-//  debugPrintRebuildDirtyWidgets=true;
   runApp(MyApp());
 }
 
@@ -22,98 +15,162 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-//        checkerboardOffscreenLayers: true, // 使用了saveLayer的图形会显示为棋盘格式并随着页面刷新而闪烁
-        routes: <String, WidgetBuilder>{
-          "/default": (context) => DefaultStylePage(
-                title: "默认风格+单选",
-              ),
-          "/custom": (context) => CustomStylePage(
-                title: "自定义风格+单选",
-              ),
-          "/multi_select": (context) => MultiSelectStylePage(
-                title: "自定义风格+多选",
-              ),
-          "/progress": (context) => ProgressStylePage(
-                title: "进度条风格+单选",
-              ),
-          "/custom_sign": (context) => CustomSignPage(
-                title: "自定义额外数据，实现标记功能",
-              ),
-          "/only_week_view": (context) => OnlyWeekPage(
-                title: "仅显示周视图",
-              ),
-          "/blue_style_page": (context) => BlueStylePage(title: "蓝色背景Demo"),
-          "/red_style_page": (context) => RedStylePage(title: "蓝色背景Demo"),
-          "/custom_offset_page": (context) => CustomOffsetPage(title: "自定义偏移量"),
-        },
-        title: 'Flutter Demo',
-        theme: ThemeData(
+      title: 'Flutter Demo',
+      theme: ThemeData(
           primarySwatch: Colors.blue,
-        ),
-        home: HomePage());
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          focusColor: Colors.teal),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    );
   }
 }
 
-class HomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  CalendarController controller;
+  CalendarViewWidget calendar;
+  HashSet<DateTime> _selectedDate = new HashSet();
+  HashSet<DateModel> _selectedModels = new HashSet();
+  @override
+  void initState() {
+    _selectedDate.add(DateTime.now());
+    controller = new CalendarController(
+        minYear: 2019,
+        minYearMonth: 1,
+        maxYear: 2021,
+        maxYearMonth: 12,
+        showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
+        selectedDateTimeList: _selectedDate,
+        selectMode: CalendarSelectedMode.singleSelect)
+      ..addOnCalendarSelectListener((dateModel) {
+        _selectedModels.add(dateModel);
+        setState(() {
+          _selectDate = _selectedModels.toString();
+        });
+      })
+      ..addOnCalendarUnSelectListener((dateModel) {
+        if (_selectedModels.contains(dateModel)) {
+          _selectedModels.remove(dateModel);
+        }
+        setState(() {
+          _selectDate = '';
+        });
+      });
+    calendar = new CalendarViewWidget(
+      calendarController: controller,
+      dayWidgetBuilder: (DateModel model) {
+        double wd = (MediaQuery.of(context).size.width - 20) / 7;
+        bool _isSelected = model.isSelected;
+        return ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(wd / 2)),
+          child: Container(
+            color: _isSelected ? Theme.of(context).focusColor : Colors.white,
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  model.day.toString(),
+                  style: TextStyle(
+                      color: model.isCurrentMonth
+                          ? (_isSelected == false
+                              ? (model.isWeekend
+                                  ? Colors.black38
+                                  : Colors.black87)
+                              : Colors.white)
+                          : Colors.black38),
+                ),
+//              Text(model.lunarDay.toString()),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    super.initState();
+  }
+
+  String _selectDate = '';
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: SafeArea(
-        child: new Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/default");
-              },
-              child: new Text("默认风格+单选"),
+            Wrap(
+              direction: Axis.vertical,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              children: <Widget>[
+                Text('请选择mode'),
+                FlatButton(
+                  child: Text(
+                    'singleSelect',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      controller.calendarConfiguration.selectMode =
+                          CalendarSelectedMode.singleSelect;
+                    });
+                  },
+                  color: controller.calendarConfiguration.selectMode ==
+                          CalendarSelectedMode.singleSelect
+                      ? Colors.teal
+                      : Colors.black38,
+                ),
+                FlatButton(
+                  child: Text(
+                    'multiSelect',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      controller.calendarConfiguration.selectMode =
+                          CalendarSelectedMode.multiSelect;
+                    });
+                  },
+                  color: controller.calendarConfiguration.selectMode ==
+                          CalendarSelectedMode.multiSelect
+                      ? Colors.teal
+                      : Colors.black38,
+                ),
+                FlatButton(
+                  child: Text(
+                    'mutltiStartToEndSelect',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      controller.calendarConfiguration.selectMode =
+                          CalendarSelectedMode.mutltiStartToEndSelect;
+                    });
+                  },
+                  color: controller.calendarConfiguration.selectMode ==
+                          CalendarSelectedMode.mutltiStartToEndSelect
+                      ? Colors.teal
+                      : Colors.black38,
+                )
+              ],
             ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/custom");
-              },
-              child: new Text("自定义风格+单选"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/multi_select");
-              },
-              child: new Text("自定义风格+多选"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/progress");
-              },
-              child: new Text("进度条风格+单选"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/custom_sign");
-              },
-              child: new Text("自定义额外数据，实现标记功能"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/only_week_view");
-              },
-              child: new Text("仅显示周视图"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/blue_style_page");
-              },
-              child: new Text("蓝色Demo"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/red_style_page");
-              },
-              child: new Text("红色Demo"),
-            ),
-            new RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/custom_offset_page");
-              },
-              child: new Text("自定义偏移量"),
+            calendar,
+            Expanded(
+              child: Text(
+                ' $_selectDate ',
+                style: TextStyle(color: Theme.of(context).focusColor),
+              ),
             )
           ],
         ),

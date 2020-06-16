@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'package:flutter_custom_calendar/utils/LogUtil.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+import 'LogUtil.dart';
 
 /**
  * 工具类
@@ -117,7 +117,8 @@ class DateUtil {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
     //获取月视图真实偏移量
-    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
+    int mPreDiff =
+        getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
     //获取该月的天数
     int monthDayCount = getMonthDaysCount(year, month);
 
@@ -125,7 +126,6 @@ class DateUtil {
         TAG: "DateUtil",
         message:
             "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
-
 
     List<DateModel> result = new List();
 
@@ -171,11 +171,11 @@ class DateUtil {
       if (extraDataMap?.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
-        }else{
-          dateModel.extraData=null;
+        } else {
+          dateModel.extraData = null;
         }
-      }else{
-        dateModel.extraData=null;
+      } else {
+        dateModel.extraData = null;
       }
 
       result.add(dateModel);
@@ -197,8 +197,7 @@ class DateUtil {
     int lineCount = ((preIndex + monthDayCount) / 7).ceil();
     LogUtil.log(
         TAG: "DateUtil",
-        message:
-            "getMonthViewLineCount:$year年$month月:有$lineCount行");
+        message: "getMonthViewLineCount:$year年$month月:有$lineCount行");
 
     return lineCount;
   }

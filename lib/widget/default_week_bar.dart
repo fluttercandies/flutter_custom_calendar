@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/widget/base_week_bar.dart';
 import 'package:flutter_custom_calendar/style/style.dart';
+
+import 'base_week_bar.dart';
 
 ///**
 // * 顶部的固定的周显示

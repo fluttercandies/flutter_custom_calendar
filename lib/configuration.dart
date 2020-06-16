@@ -1,16 +1,19 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter/foundation.dart';
+
+import 'constants/constants.dart';
+import 'flutter_custom_calendar.dart';
+
+import 'model/date_model.dart';
 
 /**
  * 配置信息类
  */
 class CalendarConfiguration {
   //默认是单选,可以配置为MODE_SINGLE_SELECT，MODE_MULTI_SELECT
-  int selectMode;
+  CalendarSelectedMode selectMode;
 
   //仅展示月视图，仅展示周视图，支持月视图和周视图切换
   int showMode;
@@ -60,6 +63,7 @@ class CalendarConfiguration {
   //各种事件回调
   OnMonthChange monthChange; //月份切换事件 （已弃用,交给multiMonthChanges来实现）
   OnCalendarSelect calendarSelect; //点击选择事件
+  OnCalendarSelect unCalendarSelect; //点击选择事件
   OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
   OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
 

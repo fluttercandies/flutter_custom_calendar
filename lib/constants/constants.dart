@@ -1,3 +1,5 @@
+enum CalendarSelectedMode { singleSelect, multiSelect, mutltiStartToEndSelect }
+
 class CalendarConstants {
   //单选或者多选模式
   // 单选
@@ -9,7 +11,7 @@ class CalendarConstants {
 
   /// 选择开始和结束 中间的自动选择
 
-  static const int MODE_MULTI_SELECT_FROM_TO_END = 3;
+  static const int MODE_MULTI_SELECT_START_TO_END = 3;
 
   //展示模式
   static const int MODE_SHOW_ONLY_MONTH = 1; //仅支持月视图

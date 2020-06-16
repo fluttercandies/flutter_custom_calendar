@@ -1,6 +1,6 @@
-# example1
+# example
 
-A new Flutter project.
+flutter_custom_calendar/example
 
 ## Getting Started
 

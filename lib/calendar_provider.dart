@@ -2,13 +2,13 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'package:flutter_custom_calendar/utils/LogUtil.dart';
-import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
+import 'configuration.dart';
+import 'constants/constants.dart';
+import 'flutter_custom_calendar.dart';
+import 'utils/LogUtil.dart';
+import 'utils/date_util.dart';
+import 'model/date_model.dart';
 
 /**
  * 引入provider的状态管理，保存一些临时信息
@@ -173,7 +173,9 @@ class CalendarProvider extends ChangeNotifier {
         calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       int lineCount = DateUtil.getMonthViewLineCount(
-          calendarConfiguration.nowYear, calendarConfiguration.nowMonth, calendarConfiguration.offset);
+          calendarConfiguration.nowYear,
+          calendarConfiguration.nowMonth,
+          calendarConfiguration.offset);
       totalHeight = calendarConfiguration.itemSize * (lineCount) +
           calendarConfiguration.verticalSpacing * (lineCount - 1);
     } else {

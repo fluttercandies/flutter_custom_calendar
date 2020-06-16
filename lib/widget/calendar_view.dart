@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/calendar_provider.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
-import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
 import 'package:flutter_custom_calendar/widget/week_view_pager.dart';
 import 'package:provider/provider.dart';
+
+import '../calendar_provider.dart';
+import '../controller.dart';
+import 'month_view_pager.dart';
 
 /**
  * 暂时默认是周一开始的
@@ -167,7 +170,8 @@ class CalendarContainerState extends State<CalendarContainer>
               .showMode !=
           CalendarConstants.MODE_SHOW_ONLY_WEEK) {
         //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-        int lineCount = DateUtil.getMonthViewLineCount(year, month, widget.calendarController.calendarConfiguration.offset);
+        int lineCount = DateUtil.getMonthViewLineCount(year, month,
+            widget.calendarController.calendarConfiguration.offset);
         double newHeight = itemHeight * (lineCount) +
             calendarProvider.calendarConfiguration.verticalSpacing *
                 (lineCount - 1);
