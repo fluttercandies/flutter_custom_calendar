@@ -69,6 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
       dayWidgetBuilder: (DateModel model) {
         double wd = (MediaQuery.of(context).size.width - 20) / 7;
         bool _isSelected = model.isSelected;
+        if (_isSelected &&
+            CalendarSelectedMode.singleSelect ==
+                controller.calendarConfiguration.selectMode) {
+          _selectDate = model.toString();
+        }
         return ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(wd / 2)),
           child: Container(

@@ -3,14 +3,8 @@ import 'dart:math';
 
 import 'package:flutter_custom_calendar/utils/math_util.dart';
 
-/**
- * http://www.cnblogs.com/moodlxs/archive/2010/12/18/2345392.html
- * 24节气计算公式，参考该博客实现
- */
 class SolarTermUtil {
-  /**
-   * 24节气
-   */
+  /// 24节气
   static List<String> SOLAR_TERMS = [
     "春分",
     "清明",
@@ -38,25 +32,17 @@ class SolarTermUtil {
     "惊蛰",
   ];
 
-  /**
-   * 每弧度的角秒数
-   */
+  /// 每弧度的角秒数
   static final double SECOND_PER_RAD = 180 * 3600 / pi;
 
-  /**
-   * 每弧度的角度数
-   */
+  /// 每弧度的角度数
   static final double ANGLE_PER_RAD = 180 / pi;
 
-  /**
-   * 日历计算
-   * 2000年前儒略日数(2000-1-1)
-   */
+  /// 日历计算
+  ///   * 2000年前儒略日数(2000-1-1)
   static final double J2000 = 2451545;
 
-  /**
-   * 黄赤交角系数表
-   */
+  /// 黄赤交角系数表
   static final List<double> H_C_ANGLE_TABLE = [
     0,
     50287.92262,
@@ -68,9 +54,7 @@ class SolarTermUtil {
     0.00001
   ];
 
-  /**
-   * 世界时与原子时之差计算表
-   */
+  /// 世界时与原子时之差计算表
   static final List<double> DTS = [
     -4000,
     108371.7,

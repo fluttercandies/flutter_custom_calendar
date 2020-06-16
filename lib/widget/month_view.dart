@@ -249,6 +249,7 @@ class ItemContainerState extends State<ItemContainer> {
           case CalendarSelectedMode.multiSelect:
             if (calendarProvider.selectedDateList.contains(dateModel)) {
               calendarProvider.selectedDateList.remove(dateModel);
+              _notifiCationUnCalendarSelect(dateModel);
             } else {
               //多选，判断是否超过限制，超过范围
               if (calendarProvider.selectedDateList.length ==
@@ -258,11 +259,14 @@ class ItemContainerState extends State<ItemContainer> {
                 }
                 return;
               }
+              dateModel.isSelected = !dateModel.isSelected;
               calendarProvider.selectedDateList.add(dateModel);
+//              _notifiCationCalendarSelect(dateModel);
             }
 
             //多选也可以弄这些单选的代码
             calendarProvider.selectDateModel = dateModel;
+            print('多选:${calendarProvider.selectedDateList.toString()}');
             break;
 
           /// 单选
@@ -270,14 +274,9 @@ class ItemContainerState extends State<ItemContainer> {
 
             /// 加入已经选择了多个 则进行取消操作
             calendarProvider.selectedDateList.forEach((element) {
-              if (configuration.unCalendarSelect != null) {
-                configuration.unCalendarSelect(element);
-              }
               element.isSelected = false;
+              _notifiCationUnCalendarSelect(element);
             });
-            if (configuration.calendarSelect != null) {
-              configuration.calendarSelect(dateModel);
-            }
 
             //单选需要刷新上一个item
             if (calendarProvider.lastClickItemState != this) {
@@ -285,9 +284,9 @@ class ItemContainerState extends State<ItemContainer> {
               calendarProvider.lastClickItemState = this;
             }
             _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
-
+            dateModel.isSelected = true;
             calendarProvider.selectDateModel = dateModel;
-
+            _notifiCationCalendarSelect(dateModel);
             setState(() {});
 
             break;
@@ -332,14 +331,15 @@ class ItemContainerState extends State<ItemContainer> {
               setState(() {});
             }
 
-            /// 所有数组操作完了 进行通知分发
-            if (configuration.calendarSelect != null &&
-                calendarProvider.selectedDateList.length > 0) {
-              calendarProvider.selectedDateList.forEach((element) {
-                _notifiCationCalendarSelect(element);
-              });
-            }
             break;
+        }
+
+        /// 所有数组操作完了 进行通知分发
+        if (configuration.calendarSelect != null &&
+            calendarProvider.selectedDateList.length > 0) {
+          calendarProvider.selectedDateList.forEach((element) {
+            _notifiCationCalendarSelect(element);
+          });
         }
 
         refreshItem(!this.dateModel.isSelected);

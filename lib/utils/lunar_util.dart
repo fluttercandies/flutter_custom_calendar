@@ -1,9 +1,9 @@
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/solar_term_util.dart';
 
-/**
- * 农历的工具类
- */
+///**
+///* 农历的工具类
+///*/
 class LunarUtil {
   static List<int> LUNAR_MONTH_DAYS = [
     1887,
@@ -461,14 +461,14 @@ class LunarUtil {
     0x107e48
   ];
 
-  /**
-   * 保存每年24节气
-   */
+  ////**
+  ///* 保存每年24节气
+  ///*/
   static final Map<int, List<String>> SOLAR_TERMS = new Map();
 
-  /**
-   * 公历节日
-   */
+  ////**
+  ///* 公历节日
+  ///*/
   static List<String> SOLAR_CALENDAR = [
     "0101元旦",
     "0214情人节",
