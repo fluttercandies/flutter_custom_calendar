@@ -106,74 +106,83 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Wrap(
-              direction: Axis.vertical,
-              crossAxisAlignment: WrapCrossAlignment.start,
-              children: <Widget>[
-                Text('请选择mode'),
-                FlatButton(
-                  child: Text(
-                    'singleSelect',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      controller.calendarConfiguration.selectMode =
-                          CalendarSelectedMode.singleSelect;
-                    });
-                  },
-                  color: controller.calendarConfiguration.selectMode ==
-                          CalendarSelectedMode.singleSelect
-                      ? Colors.teal
-                      : Colors.black38,
-                ),
-                FlatButton(
-                  child: Text(
-                    'multiSelect',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      controller.calendarConfiguration.selectMode =
-                          CalendarSelectedMode.multiSelect;
-                    });
-                  },
-                  color: controller.calendarConfiguration.selectMode ==
-                          CalendarSelectedMode.multiSelect
-                      ? Colors.teal
-                      : Colors.black38,
-                ),
-                FlatButton(
-                  child: Text(
-                    'mutltiStartToEndSelect',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      controller.calendarConfiguration.selectMode =
-                          CalendarSelectedMode.mutltiStartToEndSelect;
-                    });
-                  },
-                  color: controller.calendarConfiguration.selectMode ==
-                          CalendarSelectedMode.mutltiStartToEndSelect
-                      ? Colors.teal
-                      : Colors.black38,
-                )
-              ],
+      body: CupertinoScrollbar(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            _topButtons(),
+            SliverToBoxAdapter(
+              child: calendar,
             ),
-            calendar,
-            Expanded(
-              child: Text(
-                ' $_selectDate ',
-                style: TextStyle(color: Theme.of(context).focusColor),
+            SliverToBoxAdapter(
+              child: Container(
+                child: Text(
+                  ' $_selectDate ',
+                  style: TextStyle(color: Theme.of(context).focusColor),
+                ),
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _topButtons() {
+    return SliverToBoxAdapter(
+      child: Wrap(
+        direction: Axis.vertical,
+        crossAxisAlignment: WrapCrossAlignment.start,
+        children: <Widget>[
+          Text('请选择mode'),
+          FlatButton(
+            child: Text(
+              'singleSelect',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              setState(() {
+                controller.calendarConfiguration.selectMode =
+                    CalendarSelectedMode.singleSelect;
+              });
+            },
+            color: controller.calendarConfiguration.selectMode ==
+                    CalendarSelectedMode.singleSelect
+                ? Colors.teal
+                : Colors.black38,
+          ),
+          FlatButton(
+            child: Text(
+              'multiSelect',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              setState(() {
+                controller.calendarConfiguration.selectMode =
+                    CalendarSelectedMode.multiSelect;
+              });
+            },
+            color: controller.calendarConfiguration.selectMode ==
+                    CalendarSelectedMode.multiSelect
+                ? Colors.teal
+                : Colors.black38,
+          ),
+          FlatButton(
+            child: Text(
+              'mutltiStartToEndSelect',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              setState(() {
+                controller.calendarConfiguration.selectMode =
+                    CalendarSelectedMode.mutltiStartToEndSelect;
+              });
+            },
+            color: controller.calendarConfiguration.selectMode ==
+                    CalendarSelectedMode.mutltiStartToEndSelect
+                ? Colors.teal
+                : Colors.black38,
+          )
+        ],
       ),
     );
   }

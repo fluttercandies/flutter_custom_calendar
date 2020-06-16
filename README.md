@@ -58,6 +58,9 @@ Now in your Dart code, you can use:
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 ```
 
+
+### 动画演示
+![](./img.gif)
 ### [查看API](https://github.com/ifgyong/flutter_custom_calendar/blob/master/API.md)
 
 ### [查看一个例子 如何使用](https://github.com/ifgyong/flutter_custom_calendar/blob/master/example/lib/main.dart)
