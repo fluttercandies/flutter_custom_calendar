@@ -26,8 +26,38 @@ controller = new CalendarController(
   });
 
 ```
-
-
 `CalendarSelectedMode.mutltiStartToEndSelect`这个选择模式会选择开始和结束中间的 默认选择的。
 
 
+### 安装和使用
+
+Use this package as a library
+1. Depend on it
+Add this to your package's pubspec.yaml file:
+
+```
+dependencies:
+  flutter_custom_calendar: ^1.0.3
+```
+
+2. Install it
+You can install packages from the command line:
+
+with Flutter:
+
+```
+$ flutter pub get
+```
+
+Alternatively, your editor might support flutter pub get. Check the docs for your editor to learn more.
+
+3. Import it
+Now in your Dart code, you can use:
+
+```
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+```
+
+### [查看API](https://github.com/ifgyong/flutter_custom_calendar/blob/master/API.md)
+
+### [查看一个例子 如何使用](https://github.com/ifgyong/flutter_custom_calendar/blob/master/example/lib/main.dart)
