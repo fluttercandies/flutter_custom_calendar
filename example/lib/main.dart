@@ -39,6 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
   CalendarViewWidget calendar;
   HashSet<DateTime> _selectedDate = new HashSet();
   HashSet<DateModel> _selectedModels = new HashSet();
+
+  GlobalKey<CalendarContainerState> _globalKey = new GlobalKey();
   @override
   void initState() {
     _selectedDate.add(DateTime.now());
@@ -47,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         minYearMonth: 1,
         maxYear: 2021,
         maxYearMonth: 12,
-        showMode: CalendarConstants.MODE_SHOW_MONTH_AND_WEEK,
+        showMode: CalendarConstants.MODE_SHOW_WEEK_AND_MONTH,
         selectedDateTimeList: _selectedDate,
         selectMode: CalendarSelectedMode.singleSelect)
       ..addOnCalendarSelectListener((dateModel) {
@@ -65,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       });
     calendar = new CalendarViewWidget(
+      key: _globalKey,
       calendarController: controller,
       dayWidgetBuilder: (DateModel model) {
         double wd = (MediaQuery.of(context).size.width - 20) / 7;
@@ -101,8 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.addExpandChangeListener((value) {
+        /// 添加改变 月视图和 周视图的监听
+        _isMonthSelected = value;
+        setState(() {});
+      });
+    });
+
     super.initState();
   }
+
+  bool _isMonthSelected = false;
 
   String _selectDate = '';
   @override
@@ -115,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: CustomScrollView(
           slivers: <Widget>[
             _topButtons(),
+            _topMonths(),
             SliverToBoxAdapter(
               child: calendar,
             ),
@@ -139,54 +153,104 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: WrapCrossAlignment.start,
         children: <Widget>[
           Text('请选择mode'),
-          FlatButton(
-            child: Text(
-              'singleSelect',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              setState(() {
-                controller.calendarConfiguration.selectMode =
-                    CalendarSelectedMode.singleSelect;
-              });
-            },
-            color: controller.calendarConfiguration.selectMode ==
-                    CalendarSelectedMode.singleSelect
-                ? Colors.teal
-                : Colors.black38,
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: <Widget>[
+              FlatButton(
+                child: Text(
+                  '单选',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.calendarConfiguration.selectMode =
+                        CalendarSelectedMode.singleSelect;
+                  });
+                },
+                color: controller.calendarConfiguration.selectMode ==
+                        CalendarSelectedMode.singleSelect
+                    ? Colors.teal
+                    : Colors.black38,
+              ),
+              FlatButton(
+                child: Text(
+                  '多选',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.calendarConfiguration.selectMode =
+                        CalendarSelectedMode.multiSelect;
+                  });
+                },
+                color: controller.calendarConfiguration.selectMode ==
+                        CalendarSelectedMode.multiSelect
+                    ? Colors.teal
+                    : Colors.black38,
+              ),
+              FlatButton(
+                child: Text(
+                  '多选 选择开始和结束',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.calendarConfiguration.selectMode =
+                        CalendarSelectedMode.mutltiStartToEndSelect;
+                  });
+                },
+                color: controller.calendarConfiguration.selectMode ==
+                        CalendarSelectedMode.mutltiStartToEndSelect
+                    ? Colors.teal
+                    : Colors.black38,
+              ),
+            ],
           ),
-          FlatButton(
-            child: Text(
-              'multiSelect',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              setState(() {
-                controller.calendarConfiguration.selectMode =
-                    CalendarSelectedMode.multiSelect;
-              });
-            },
-            color: controller.calendarConfiguration.selectMode ==
-                    CalendarSelectedMode.multiSelect
-                ? Colors.teal
-                : Colors.black38,
+        ],
+      ),
+    );
+  }
+
+  Widget _topMonths() {
+    return SliverToBoxAdapter(
+      child: Wrap(
+        direction: Axis.vertical,
+        crossAxisAlignment: WrapCrossAlignment.start,
+        children: <Widget>[
+          Text('月视图和周视图'),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: <Widget>[
+              FlatButton(
+                child: Text(
+                  '月视图',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.weekAndMonthViewChange(
+                        CalendarConstants.MODE_SHOW_ONLY_WEEK);
+                  });
+                },
+                color: _isMonthSelected ? Colors.teal : Colors.black38,
+              ),
+              FlatButton(
+                child: Text(
+                  '周视图',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.weekAndMonthViewChange(
+                        CalendarConstants.MODE_SHOW_ONLY_MONTH);
+                  });
+                },
+                color: _isMonthSelected == false ? Colors.teal : Colors.black38,
+              ),
+            ],
           ),
-          FlatButton(
-            child: Text(
-              'mutltiStartToEndSelect',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              setState(() {
-                controller.calendarConfiguration.selectMode =
-                    CalendarSelectedMode.mutltiStartToEndSelect;
-              });
-            },
-            color: controller.calendarConfiguration.selectMode ==
-                    CalendarSelectedMode.mutltiStartToEndSelect
-                ? Colors.teal
-                : Colors.black38,
-          )
         ],
       ),
     );

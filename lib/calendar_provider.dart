@@ -106,6 +106,7 @@ class CalendarProvider extends ChangeNotifier {
 
   //配置类也放这里吧，这样的话，所有子树，都可以拿到配置的信息
   CalendarConfiguration calendarConfiguration;
+  void weekAndMonthViewChange(int mode) {}
 
   void initData({
     Set<DateModel> selectedDateList,

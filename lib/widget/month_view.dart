@@ -200,10 +200,10 @@ class ItemContainerState extends State<ItemContainer> {
       setState(() {
         dateModel.isSelected = v;
       });
-    }
 
-    if (widget.clickCall != null) {
-      widget.clickCall();
+      if (widget.clickCall != null) {
+        widget.clickCall();
+      }
     }
   }
 
@@ -261,7 +261,6 @@ class ItemContainerState extends State<ItemContainer> {
               }
               dateModel.isSelected = !dateModel.isSelected;
               calendarProvider.selectedDateList.add(dateModel);
-//              _notifiCationCalendarSelect(dateModel);
             }
 
             //多选也可以弄这些单选的代码
@@ -277,6 +276,7 @@ class ItemContainerState extends State<ItemContainer> {
               element.isSelected = false;
               _notifiCationUnCalendarSelect(element);
             });
+            calendarProvider.selectedDateList.clear();
 
             //单选需要刷新上一个item
             if (calendarProvider.lastClickItemState != this) {

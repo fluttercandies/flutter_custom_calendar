@@ -72,10 +72,10 @@ packages:
   flutter_custom_calendar:
     dependency: "direct main"
     description:
-      name: flutter_custom_calendar
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.4+0.2"
+      path: ".."
+      relative: true
+    source: path
+    version: "1.0.4+0.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter

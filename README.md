@@ -37,7 +37,7 @@ Add this to your package's pubspec.yaml file:
 
 ```
 dependencies:
-  flutter_custom_calendar: ^1.0.3
+  flutter_custom_calendar: ^1.0.4+0.5
 ```
 
 2. Install it
@@ -57,10 +57,34 @@ Now in your Dart code, you can use:
 ```
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 ```
+### 监听月视图和周视图状态
 
+```dart    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  controller.addExpandChangeListener((value) {
+    /// 添加改变 月视图和 周视图的监听
+    _isMonthSelected = value;
+    setState(() {});
+  });
+});
+```
+### 变更月视图和周视图
+> 前提条件是`showModel`是`CalendarConstants.MODE_SHOW_MONTH_AND_WEEK`或者`CalendarConstants.MODE_SHOW_WEEK_AND_MONTH`.
+
+#### 变更到周视图
+```dart
+ setState(() {
+ controller.weekAndMonthViewChange(CalendarConstants.MODE_SHOW_ONLY_WEEK);
+                  });
+```
+
+#### 变更到月视图
+```dart
+setState(() {controller.weekAndMonthViewChange(CalendarConstants.MODE_SHOW_ONLY_MONTH);
+                  });
+```
 
 ### 动画演示
-![](https://github.com/ifgyong/flutter_custom_calendar/blob/master/img.gif)
+![](img.gif)
 ### [查看API](https://github.com/ifgyong/flutter_custom_calendar/blob/master/API.md)
 
 ### [查看一个例子 如何使用](https://github.com/ifgyong/flutter_custom_calendar/blob/master/example/lib/main.dart)

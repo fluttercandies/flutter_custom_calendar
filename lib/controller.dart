@@ -111,6 +111,17 @@ class CalendarController {
           maxYear,
           maxYearMonth,
         ))}");
+    _weekAndMonthViewChange(showMode);
+  }
+  void _weekAndMonthViewChange(
+    int showMode,
+  ) {
+    int minYear = calendarConfiguration.minYear;
+    int maxYear = calendarConfiguration.maxYear;
+    int minYearMonth = calendarConfiguration.minYearMonth;
+    int maxYearMonth = calendarConfiguration.maxYearMonth;
+    int nowYear = calendarConfiguration.nowYear;
+    int nowMonth = calendarConfiguration.nowMonth;
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
@@ -183,11 +194,18 @@ class CalendarController {
               "初始化星期视图的信息:一共有${weekList.length}个星期，initialPage为$initialWeekPage");
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
-
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
     calendarConfiguration.monthController = monthController;
     calendarConfiguration.weekController = weekController;
+    calendarProvider.weekAndMonthViewChange(showMode);
+  }
+
+  void weekAndMonthViewChange(
+    int showMode,
+  ) {
+    calendarProvider.expandStatus.value =
+        showMode == CalendarConstants.MODE_SHOW_ONLY_WEEK ? true : false;
   }
 
   //周视图切换
