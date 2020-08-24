@@ -295,6 +295,7 @@ class CalendarController {
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
         temp.day = monthList[currentIndex].day + 14;
+        print('298 周视图的变化: $temp');
         calendarProvider.lastClickDateModel = temp;
         return true;
       }
@@ -337,6 +338,7 @@ class CalendarController {
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
         temp.day = monthList[currentIndex].day + 14;
+        print('341 周视图的变化: $temp');
         calendarProvider.lastClickDateModel = temp;
         return true;
       }

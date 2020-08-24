@@ -151,13 +151,17 @@ class CalendarContainerState extends State<CalendarContainer>
           if (expand) {
             index = 0;
             //周视图切换到月视图
-            calendarProvider.calendarConfiguration.weekController
-                .jumpToPage(calendarProvider.monthPageIndex);
+            //如果第一个页面展示的是月视图，需要计算下初始化的高度
+            int lineCount = DateUtil.getMonthViewLineCount(
+                calendarProvider.calendarConfiguration.nowYear,
+                calendarProvider.calendarConfiguration.nowMonth,
+                calendarProvider.calendarConfiguration.offset);
+            totalHeight = calendarProvider.calendarConfiguration.itemSize * (lineCount) + calendarProvider.calendarConfiguration.verticalSpacing * (lineCount - 1);
+            calendarProvider.calendarConfiguration.weekController.jumpToPage(calendarProvider.monthPageIndex);
           } else {
             index = 1;
             //月视图切换到周视图
-            calendarProvider.calendarConfiguration.weekController
-                .jumpToPage(calendarProvider.weekPageIndex);
+            calendarProvider.calendarConfiguration.weekController.jumpToPage(calendarProvider.weekPageIndex);
           }
         });
       });

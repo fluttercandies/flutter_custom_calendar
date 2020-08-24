@@ -82,6 +82,7 @@ class _MonthViewPagerState extends State<MonthViewPager>
           temp.year = configuration.monthList[position].year;
           temp.month = configuration.monthList[position].month;
           temp.day = configuration.monthList[position].day + 14;
+          print('85 周视图的变化: $temp');
           calendarProvider.lastClickDateModel = temp;
         }
       },

@@ -241,7 +241,7 @@ class ItemContainerState extends State<ItemContainer> {
           }
           return;
         }
-
+        print('244 周视图的变化: $dateModel');
         calendarProvider.lastClickDateModel = dateModel;
 
         switch (configuration.selectMode) {

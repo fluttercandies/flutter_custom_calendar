@@ -7,27 +7,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18463f0e-cf10-4ee2-975b-376476396e12" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/flutter_custom_calendar.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flutter_custom_calendar.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/calendar_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/calendar_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widget/calendar_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/calendar_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widget/month_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/month_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/widget/week_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/week_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widget/month_view_pager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/month_view_pager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widget/week_view_pager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/week_view_pager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_XL_API_28" />
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="192.168.65.84:5555" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="1dLYXgUqXFRhtM2vVF7WEPgjPS2" />
   <component name="ProjectViewState">
@@ -36,11 +48,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="flutter.settings" />
+    <property name="settings.editor.selected.configurable" value="dart.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -66,6 +81,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -76,38 +92,53 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1558361160077</updated>
+      <workItem from="1598259712094" duration="3126000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1858" height="156" key="GridCell.Tab.0.bottom" timestamp="1595297133366">
-      <screen x="-310" y="-1417" width="2560" height="1417" />
+    <state width="1878" height="326" key="GridCell.Tab.0.bottom" timestamp="1598261798464">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
+    <state width="1878" height="326" key="GridCell.Tab.0.bottom/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598261798464" />
     <state width="1858" height="156" key="GridCell.Tab.0.bottom/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
-    <state width="1858" height="156" key="GridCell.Tab.0.center" timestamp="1595297133366">
-      <screen x="-310" y="-1417" width="2560" height="1417" />
+    <state width="1878" height="326" key="GridCell.Tab.0.center" timestamp="1598261798463">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
+    <state width="1878" height="326" key="GridCell.Tab.0.center/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598261798463" />
     <state width="1858" height="156" key="GridCell.Tab.0.center/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
-    <state width="1858" height="156" key="GridCell.Tab.0.left" timestamp="1595297133365">
-      <screen x="-310" y="-1417" width="2560" height="1417" />
+    <state width="1878" height="326" key="GridCell.Tab.0.left" timestamp="1598261798463">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
+    <state width="1878" height="326" key="GridCell.Tab.0.left/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598261798463" />
     <state width="1858" height="156" key="GridCell.Tab.0.left/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133365" />
-    <state width="1858" height="156" key="GridCell.Tab.0.right" timestamp="1595297133366">
-      <screen x="-310" y="-1417" width="2560" height="1417" />
+    <state width="1878" height="326" key="GridCell.Tab.0.right" timestamp="1598261798464">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
+    <state width="1878" height="326" key="GridCell.Tab.0.right/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598261798464" />
     <state width="1858" height="156" key="GridCell.Tab.0.right/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
+    <state x="133" y="-890" key="SettingsEditor" timestamp="1598259746117">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="133" y="-890" key="SettingsEditor/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598259746117" />
+    <state x="331" y="-803" width="586" height="548" key="find.popup" timestamp="1598262000117">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="331" y="-803" width="586" height="548" key="find.popup/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598262000117" />
   </component>
 </project>
