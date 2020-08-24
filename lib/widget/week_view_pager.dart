@@ -46,9 +46,6 @@ class _WeekViewPagerState extends State<WeekViewPager>
         Provider.of<CalendarProvider>(context, listen: false);
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
-
-    print('configuration.weekList: ${configuration.weekList}');
-
     return Container(
       height: configuration.itemSize ?? MediaQuery.of(context).size.width / 7,
       child: PageView.builder(
@@ -61,7 +58,6 @@ class _WeekViewPagerState extends State<WeekViewPager>
               TAG: this.runtimeType,
               message:
                   "WeekViewPager PageView onPageChanged,position:$position");
-          print("WeekViewPager PageView onPageChanged,position:$position");
           DateModel firstDayOfWeek = configuration.weekList[position];
           int currentMonth = firstDayOfWeek.month;
 //          周视图的变化

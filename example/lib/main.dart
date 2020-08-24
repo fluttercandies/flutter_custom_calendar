@@ -45,7 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _selectedDate.add(DateTime.now());
-    print('_selectedDate: $_selectedDate');
     controller = new CalendarController(
         minYear: 2019,
         minYearMonth: 1,

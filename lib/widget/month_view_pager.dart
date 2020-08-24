@@ -3,6 +3,7 @@ import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
+import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
 
 import 'package:provider/provider.dart';
@@ -25,29 +26,24 @@ class _MonthViewPagerState extends State<MonthViewPager>
 
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
 
-//    //计算当前月视图的index
-//    DateModel dateModel = calendarProvider.lastClickDateModel;
-//    List<DateModel> monthList =
-//        calendarProvider.calendarConfiguration.monthList;
-//    int index = 0;
-//    for (int i = 0; i < monthList.length; i++) {
-//      DateModel firstDayOfMonth = monthList[i];
-//      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth
-//          .getDateTime()
-//          .add(Duration(
-//              days: DateUtil.getMonthDaysCount(
-//                  firstDayOfMonth.year, firstDayOfMonth.month))));
-//
-//      if ((dateModel.isAfter(firstDayOfMonth) ||
-//              dateModel.isSameWith(firstDayOfMonth)) &&
-//          dateModel.isBefore(lastDayOfMonth)) {
-//        index = i;
-//        break;
-//      }
-//    }
-//    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-//      calendarProvider.calendarConfiguration.monthController.jumpToPage(index);
-//    });
+    //计算当前月视图的index
+    DateModel dateModel = calendarProvider.lastClickDateModel;
+    List<DateModel> monthList = calendarProvider.calendarConfiguration.monthList;
+    int index = 0;
+    for (int i = 0; i < monthList.length; i++) {
+      DateModel firstDayOfMonth = monthList[i];
+      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth.getDateTime().add(Duration(days: DateUtil.getMonthDaysCount(firstDayOfMonth.year, firstDayOfMonth.month))));
+
+      if ((dateModel.isAfter(firstDayOfMonth) ||
+              dateModel.isSameWith(firstDayOfMonth)) &&
+          dateModel.isBefore(lastDayOfMonth)) {
+        index = i;
+        break;
+      }
+    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      calendarProvider.calendarConfiguration.monthController.jumpToPage(index);
+    });
   }
 
   @override
@@ -75,13 +71,17 @@ class _MonthViewPagerState extends State<MonthViewPager>
         configuration.monthChangeListeners.forEach((listener) {
           listener(dateModel.year, dateModel.month);
         });
-        //用来保存临时变量，用于月视图切换到周视图的时候，默认是显示中间的一周
+        //用来保存临时变量，用于月视图切换到周视图的时候，
         if (calendarProvider.lastClickDateModel != null ||
             calendarProvider.lastClickDateModel.month != dateModel.month) {
           DateModel temp = new DateModel();
           temp.year = configuration.monthList[position].year;
           temp.month = configuration.monthList[position].month;
-          temp.day = configuration.monthList[position].day + 14;
+          temp.day = configuration.monthList[position].day + 14; // 默认是显示中间的一周
+
+          if(configuration.monthList[position].month == DateTime.now().month){ //  显示的月份为 当前月份则默认显示当前周
+            temp.day = DateTime.now().day;
+          }
           calendarProvider.lastClickDateModel = temp;
         }
       },

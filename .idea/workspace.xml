@@ -10,21 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18463f0e-cf10-4ee2-975b-376476396e12" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/flutter_custom_calendar.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flutter_custom_calendar.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/calendar_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/calendar_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/configuration.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/configuration.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widget/calendar_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/calendar_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widget/month_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/month_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widget/month_view_pager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/month_view_pager.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widget/week_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/week_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/widget/week_view_pager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/week_view_pager.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +53,7 @@
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="dart.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -97,8 +92,16 @@
       <option name="presentableId" value="Default" />
       <updated>1558361160077</updated>
       <workItem from="1597999459604" duration="3897000" />
-      <workItem from="1598235582437" duration="5377000" />
+      <workItem from="1598235582437" duration="11962000" />
     </task>
+    <task id="LOCAL-00001" summary="fix 修复默认为周视图的时候没有说设置默认选择时间的时候默认为当前周">
+      <created>1598241025490</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1598241025490</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,48 +119,63 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix 修复默认为周视图的时候没有说设置默认选择时间的时候默认为当前周" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix 修复默认为周视图的时候没有说设置默认选择时间的时候默认为当前周" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="180" y="-953" key="CommitChangelistDialog2" timestamp="1598241025268">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="180" y="-953" key="CommitChangelistDialog2/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598241025268" />
     <state width="539" height="466" key="DebuggerActiveHint" timestamp="1598237074300">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
     <state width="539" height="466" key="DebuggerActiveHint/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598237074300" />
-    <state width="1878" height="371" key="GridCell.Tab.0.bottom" timestamp="1598240485543">
+    <state x="112" y="-850" key="DiffContextDialog" timestamp="1598251560851">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1878" height="371" key="GridCell.Tab.0.bottom/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598240485543" />
+    <state x="112" y="-850" key="DiffContextDialog/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251560851" />
+    <state width="1878" height="371" key="GridCell.Tab.0.bottom" timestamp="1598251747586">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state width="1878" height="371" key="GridCell.Tab.0.bottom/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251747586" />
     <state width="1858" height="156" key="GridCell.Tab.0.bottom/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
-    <state width="1878" height="371" key="GridCell.Tab.0.center" timestamp="1598240485542">
+    <state width="1878" height="371" key="GridCell.Tab.0.center" timestamp="1598251747584">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1878" height="371" key="GridCell.Tab.0.center/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598240485542" />
+    <state width="1878" height="371" key="GridCell.Tab.0.center/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251747584" />
     <state width="1858" height="156" key="GridCell.Tab.0.center/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
-    <state width="1878" height="371" key="GridCell.Tab.0.left" timestamp="1598240485541">
+    <state width="1878" height="371" key="GridCell.Tab.0.left" timestamp="1598251747584">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1878" height="371" key="GridCell.Tab.0.left/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598240485541" />
+    <state width="1878" height="371" key="GridCell.Tab.0.left/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251747584" />
     <state width="1858" height="156" key="GridCell.Tab.0.left/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133365" />
-    <state width="1878" height="371" key="GridCell.Tab.0.right" timestamp="1598240485543">
+    <state width="1878" height="371" key="GridCell.Tab.0.right" timestamp="1598251747585">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1878" height="371" key="GridCell.Tab.0.right/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598240485543" />
+    <state width="1878" height="371" key="GridCell.Tab.0.right/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251747585" />
     <state width="1858" height="156" key="GridCell.Tab.0.right/47.23.1393.877/-310.-1417.2560.1417@-310.-1417.2560.1417" timestamp="1595297133366" />
+    <state x="335" y="-819" key="RollbackChangesDialog" timestamp="1598251563789">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="335" y="-819" key="RollbackChangesDialog/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598251563789" />
     <state x="171" y="78" key="SettingsEditor" timestamp="1597999962077">
       <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="171" y="78" key="SettingsEditor/0.23.1280.777/-336.-1057.1920.1057@0.23.1280.777" timestamp="1597999962077" />
-    <state x="331" y="-803" width="586" height="548" key="find.popup" timestamp="1598238501107">
+    <state x="224" y="-789" key="Vcs.Push.Dialog.v2" timestamp="1598241030019">
       <screen x="-336" y="-1057" width="1920" height="1057" />
     </state>
-    <state x="331" y="-803" width="586" height="548" key="find.popup/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598238501107" />
+    <state x="224" y="-789" key="Vcs.Push.Dialog.v2/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598241030019" />
+    <state x="331" y="-803" width="586" height="548" key="find.popup" timestamp="1598253482057">
+      <screen x="-336" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="331" y="-803" width="586" height="548" key="find.popup/0.23.1280.777/-336.-1057.1920.1057@-336.-1057.1920.1057" timestamp="1598253482057" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/widget/month_view.dart</url>
-          <line>334</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/lib/widget/week_view.dart</url>
           <line>36</line>
