@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/calendar_provider.dart';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,6 @@ class _WeekViewState extends State<WeekView> {
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-
     items = DateUtil.initCalendarForWeekView(
         widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
         minSelectDate: widget.configuration.minSelectDate,
@@ -66,8 +65,6 @@ class _WeekViewState extends State<WeekView> {
 
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
-    print(
-        "WeekView Consumer:calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
     return new GridView.builder(
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
@@ -76,25 +73,35 @@ class _WeekViewState extends State<WeekView> {
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
           //判断是否被选择
-          if (configuration.selectMode == CalendarConstants.MODE_MULTI_SELECT) {
-            if (calendarProvider.selectedDateList.contains(dateModel)) {
-              dateModel.isSelected = true;
-            } else {
-              dateModel.isSelected = false;
-            }
-          } else {
-            if (calendarProvider.selectDateModel == dateModel) {
-              dateModel.isSelected = true;
-            } else {
-              dateModel.isSelected = false;
-            }
+          switch (configuration.selectMode) {
+            case CalendarSelectedMode.multiSelect:
+              if (calendarProvider.selectedDateList.contains(dateModel)) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
+            case CalendarSelectedMode.singleSelect:
+              if (calendarProvider.selectDateModel == dateModel) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
+            case CalendarSelectedMode.mutltiStartToEndSelect:
+              if (calendarProvider.selectedDateList.contains(dateModel)) {
+                dateModel.isSelected = true;
+              } else {
+                dateModel.isSelected = false;
+              }
+              break;
           }
 
           return ItemContainer(
-            dateModel: dateModel,
-//            configuration: configuration,
-//            calendarProvider: calendarProvider,
-          );
+              dateModel: dateModel,
+              clickCall: () {
+                setState(() {});
+              });
         });
   }
 }

@@ -2,13 +2,13 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
-import 'package:flutter_custom_calendar/utils/LogUtil.dart';
-import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
+import 'configuration.dart';
+import 'constants/constants.dart';
+import 'flutter_custom_calendar.dart';
+import 'utils/LogUtil.dart';
+import 'utils/date_util.dart';
+import 'model/date_model.dart';
 
 /**
  * 引入provider的状态管理，保存一些临时信息
@@ -47,7 +47,6 @@ class CalendarProvider extends ChangeNotifier {
 
   set lastClickDateModel(DateModel value) {
     _lastClickDateModel = value;
-    print("lastClickDateModel:$lastClickDateModel");
   }
 
   DateModel get selectDateModel => _selectDateModel;
@@ -76,8 +75,6 @@ class CalendarProvider extends ChangeNotifier {
         index++;
       }
     }
-
-    print("lastClickDateModel:$lastClickDateModel,weekPageIndex:$index");
     return index;
   }
 
@@ -98,7 +95,6 @@ class CalendarProvider extends ChangeNotifier {
       }
     }
 
-    print("lastClickDateModel:$lastClickDateModel,monthPageIndex:$index");
     return index + 1;
   }
 
@@ -106,6 +102,7 @@ class CalendarProvider extends ChangeNotifier {
 
   //配置类也放这里吧，这样的话，所有子树，都可以拿到配置的信息
   CalendarConfiguration calendarConfiguration;
+  void weekAndMonthViewChange(int mode) {}
 
   void initData({
     Set<DateModel> selectedDateList,
@@ -120,8 +117,6 @@ class CalendarProvider extends ChangeNotifier {
   }) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
     this.calendarConfiguration = calendarConfiguration;
-    print(
-        "calendarConfiguration.defaultSelectedDateList:${calendarConfiguration.defaultSelectedDateList}");
     this
         .selectedDateList
         .addAll(this.calendarConfiguration.defaultSelectedDateList);
@@ -167,13 +162,15 @@ class CalendarProvider extends ChangeNotifier {
       //如果指定了itemSize的大小，那就按照itemSize的大小去绘制
     }
 
-    //如果第一个页面展示的是月视图，需要计算下初始化的高度
+    ///如果第一个页面展示的是月视图，需要计算下初始化的高度
     if (calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_ONLY_MONTH ||
         calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       int lineCount = DateUtil.getMonthViewLineCount(
-          calendarConfiguration.nowYear, calendarConfiguration.nowMonth, calendarConfiguration.offset);
+          calendarConfiguration.nowYear,
+          calendarConfiguration.nowMonth,
+          calendarConfiguration.offset);
       totalHeight = calendarConfiguration.itemSize * (lineCount) +
           calendarConfiguration.verticalSpacing * (lineCount - 1);
     } else {

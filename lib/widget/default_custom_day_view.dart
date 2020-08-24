@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/widget/base_day_view.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
+import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/style/style.dart';
+
+import 'base_day_view.dart';
 
 /**
  * 这里定义成一个StatelessWidget，状态是外部的父控件传进来参数控制就行，自己不弄state类
