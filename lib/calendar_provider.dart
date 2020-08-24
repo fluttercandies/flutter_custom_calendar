@@ -63,6 +63,7 @@ class CalendarProvider extends ChangeNotifier {
   //根据lastClickDateModel，去计算需要展示的星期视图的初始index
   int get weekPageIndex {
     //计算当前星期视图的index
+    print('计算当前星期视图的index');
     DateModel dateModel = lastClickDateModel;
     DateTime firstWeek = calendarConfiguration.weekList[0].getDateTime();
     int index = 0;
@@ -168,7 +169,7 @@ class CalendarProvider extends ChangeNotifier {
       //如果指定了itemSize的大小，那就按照itemSize的大小去绘制
     }
 
-    //如果第一个页面展示的是月视图，需要计算下初始化的高度
+    ///如果第一个页面展示的是月视图，需要计算下初始化的高度
     if (calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_ONLY_MONTH ||
         calendarConfiguration.showMode ==

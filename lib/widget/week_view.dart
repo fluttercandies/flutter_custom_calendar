@@ -35,13 +35,15 @@ class _WeekViewState extends State<WeekView> {
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-
+    print('widget.firstDayOfWeek: ${widget.firstDayOfWeek}');
     items = DateUtil.initCalendarForWeekView(
         widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
         minSelectDate: widget.configuration.minSelectDate,
         maxSelectDate: widget.configuration.maxSelectDate,
         extraDataMap: extraDataMap,
         offset: widget.configuration.offset);
+
+    print("items: $items");
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {

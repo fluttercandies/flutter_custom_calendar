@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
 import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
+import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _selectedDate.add(DateTime.now());
+    print('_selectedDate: $_selectedDate');
     controller = new CalendarController(
         minYear: 2019,
         minYearMonth: 1,
@@ -59,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       })
       ..addOnCalendarUnSelectListener((dateModel) {
+        LogUtil.log(TAG: '_selectedModels', message: _selectedModels.toString());
+        LogUtil.log(TAG: 'dateModel', message: dateModel.toString());
         if (_selectedModels.contains(dateModel)) {
           _selectedModels.remove(dateModel);
         }

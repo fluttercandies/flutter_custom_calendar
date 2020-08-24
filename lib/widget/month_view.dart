@@ -283,10 +283,21 @@ class ItemContainerState extends State<ItemContainer> {
               calendarProvider.lastClickItemState?.refreshItem(false);
               calendarProvider.lastClickItemState = this;
             }
-            _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
-            dateModel.isSelected = true;
-            calendarProvider.selectDateModel = dateModel;
-            _notifiCationCalendarSelect(dateModel);
+            if(calendarProvider.selectedDateList.contains(dateModel)){
+              // 如果已经选择就执行取消
+              print('如果已经选择就执行取消');
+              _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
+              dateModel.isSelected = false;
+              calendarProvider.selectedDateList.clear();
+              calendarProvider.selectDateModel = null;
+              _notifiCationUnCalendarSelect(dateModel);
+            }else{
+              _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
+              dateModel.isSelected = true;
+              calendarProvider.selectDateModel = dateModel;
+              _notifiCationCalendarSelect(dateModel);
+            }
+
             setState(() {});
 
             break;

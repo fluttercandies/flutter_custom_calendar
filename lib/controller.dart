@@ -122,6 +122,7 @@ class CalendarController {
     int maxYearMonth = calendarConfiguration.maxYearMonth;
     int nowYear = calendarConfiguration.nowYear;
     int nowMonth = calendarConfiguration.nowMonth;
+    int nowDay = calendarConfiguration.selectDateModel?.day ?? -1;
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
@@ -154,6 +155,7 @@ class CalendarController {
           TAG: this.runtimeType,
           message:
               "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
+      print("初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
     }
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_MONTH) {
@@ -166,7 +168,11 @@ class CalendarController {
         nowYear = DateTime.now().year;
         nowMonth = DateTime.now().month;
       }
-      DateTime nowTime = new DateTime(nowYear, nowMonth, 15);
+      // 周视图的时候，如果没有设置 当前选择的日期则 设置为当前天
+      if(nowDay == -1){
+        nowDay = DateTime.now().day;
+      }
+      DateTime nowTime = new DateTime(nowYear, nowMonth, nowDay + 1);
       DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
       //计算第一个星期的第一天的日期
       DateTime firstWeekDate =
