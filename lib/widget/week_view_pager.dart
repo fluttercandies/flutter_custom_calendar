@@ -88,7 +88,6 @@ class _WeekViewPagerState extends State<WeekViewPager>
         },
         controller: calendarProvider.calendarConfiguration.weekController,
         itemBuilder: (context, index) {
-          print('index:$index');
           DateModel dateModel = configuration.weekList[index];
           print('dateModel: $dateModel');
           return new WeekView(
