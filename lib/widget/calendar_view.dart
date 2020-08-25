@@ -157,7 +157,7 @@ class CalendarContainerState extends State<CalendarContainer>
                 calendarProvider.calendarConfiguration.nowMonth,
                 calendarProvider.calendarConfiguration.offset);
             totalHeight = calendarProvider.calendarConfiguration.itemSize * (lineCount) + calendarProvider.calendarConfiguration.verticalSpacing * (lineCount - 1);
-            calendarProvider.calendarConfiguration.weekController.jumpToPage(calendarProvider.monthPageIndex);
+            calendarProvider.calendarConfiguration.monthController.jumpToPage(calendarProvider.monthPageIndex);
           } else {
             index = 1;
             //月视图切换到周视图
