@@ -47,21 +47,21 @@ class CalendarProvider extends ChangeNotifier {
 
   set lastClickDateModel(DateModel value) {
     _lastClickDateModel = value;
+    print("set lastClickDateModel:$lastClickDateModel");
   }
 
   DateModel get selectDateModel => _selectDateModel;
 
   set selectDateModel(DateModel value) {
     _selectDateModel = value;
-    LogUtil.log(
-        TAG: this.runtimeType,
-        message: "selectDateModel change:${selectDateModel}");
+    LogUtil.log(TAG: this.runtimeType, message: "selectDateModel change:$selectDateModel");
 //    notifyListeners();
   }
 
   //根据lastClickDateModel，去计算需要展示的星期视图的初始index
   int get weekPageIndex {
     //计算当前星期视图的index
+    print('计算当前星期视图的index  = > lastClickDateModel$lastClickDateModel');
     DateModel dateModel = lastClickDateModel;
     DateTime firstWeek = calendarConfiguration.weekList[0].getDateTime();
     int index = 0;
@@ -75,6 +75,8 @@ class CalendarProvider extends ChangeNotifier {
         index++;
       }
     }
+
+    print("lastClickDateModel:$lastClickDateModel,weekPageIndex:$index, totalHeight:$totalHeight");
     return index;
   }
 
@@ -95,7 +97,8 @@ class CalendarProvider extends ChangeNotifier {
       }
     }
 
-    return index + 1;
+    print("lastClickDateModel:$lastClickDateModel, monthPageIndex:$index, totalHeight:$totalHeight");
+    return index;
   }
 
   ValueNotifier<bool> expandStatus; //当前展开状态
@@ -126,19 +129,12 @@ class CalendarProvider extends ChangeNotifier {
     this.calendarConfiguration.itemSize = itemSize;
     this.calendarConfiguration.verticalSpacing = verticalSpacing;
     this.calendarConfiguration.dayWidgetBuilder = dayWidgetBuilder;
-    this.calendarConfiguration.weekBarItemWidgetBuilder =
-        weekBarItemWidgetBuilder;
+    this.calendarConfiguration.weekBarItemWidgetBuilder = weekBarItemWidgetBuilder;
 
     //lastClickDateModel，默认是选中的item，如果为空的话，默认是当前的时间
-    this.lastClickDateModel = selectDateModel != null
-        ? selectDateModel
-        : DateModel.fromDateTime(DateTime.now())
-      ..day = 15;
+    this.lastClickDateModel = selectDateModel != null ? selectDateModel : DateModel.fromDateTime(DateTime.now())..isSelected = true;
     //初始化展示状态
-    if (calendarConfiguration.showMode ==
-            CalendarConstants.MODE_SHOW_ONLY_WEEK ||
-        calendarConfiguration.showMode ==
-            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
+    if (calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_ONLY_WEEK || calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_WEEK_AND_MONTH) {
       expandStatus = ValueNotifier(false);
     } else {
       expandStatus = ValueNotifier(true);
@@ -171,11 +167,11 @@ class CalendarProvider extends ChangeNotifier {
           calendarConfiguration.nowYear,
           calendarConfiguration.nowMonth,
           calendarConfiguration.offset);
-      totalHeight = calendarConfiguration.itemSize * (lineCount) +
-          calendarConfiguration.verticalSpacing * (lineCount - 1);
+      totalHeight = calendarConfiguration.itemSize * (lineCount) + calendarConfiguration.verticalSpacing * (lineCount - 1);
     } else {
       totalHeight = calendarConfiguration.itemSize;
     }
+    print('totalHeight: $totalHeight');
   }
 
   //退出的时候，清除数据

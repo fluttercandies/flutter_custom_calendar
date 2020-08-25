@@ -147,7 +147,12 @@ class CalendarContainerState extends State<CalendarContainer>
           expand = calendarProvider.expandStatus.value;
           if (expand) {
             index = 0;
-            //周视图切换到月视图
+            //周视图切换到月视图，需要计算下初始化的高度
+            int lineCount = DateUtil.getMonthViewLineCount(
+                calendarProvider.calendarConfiguration.nowYear,
+                calendarProvider.calendarConfiguration.nowMonth,
+                calendarProvider.calendarConfiguration.offset);
+            totalHeight = calendarProvider.calendarConfiguration.itemSize * (lineCount) + calendarProvider.calendarConfiguration.verticalSpacing * (lineCount - 1);
             calendarProvider.calendarConfiguration.monthController.jumpToPage(calendarProvider.monthPageIndex);
           } else {
             index = 1;

@@ -167,15 +167,16 @@ class CalendarController {
         nowYear = DateTime.now().year;
         nowMonth = DateTime.now().month;
       }
-      // 周视图的时候，如果没有设置 当前选择的日期则 设置为当前天
-      if(nowDay == -1){
-        nowDay = DateTime.now().day;
+      int nowDay = 15; // 默认月中
+      // 如果设置了 默认选择的时间 就取默认选择的时间天数，否则为当前时间
+      DateModel currentModel = calendarProvider.selectDateModel ?? calendarProvider.selectedDateList?.toList()[0] ?? DateModel.fromDateTime(DateTime.now());
+      if(currentModel != null){
+        nowDay = currentModel.day;
       }
-      DateTime nowTime = new DateTime(nowYear, nowMonth, nowDay + 1);
+      DateTime nowTime = new DateTime(nowYear, nowMonth, nowDay);
       DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
       //计算第一个星期的第一天的日期
-      DateTime firstWeekDate =
-          firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
+      DateTime firstWeekDate = firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
 
       DateTime lastDay = DateTime(maxYear, maxYearMonth,
           DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
@@ -296,6 +297,7 @@ class CalendarController {
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
         temp.day = monthList[currentIndex].day + 14;
+        print('298 周视图的变化: $temp');
         calendarProvider.lastClickDateModel = temp;
         return true;
       }
@@ -336,6 +338,7 @@ class CalendarController {
         temp.year = monthList[currentIndex].year;
         temp.month = monthList[currentIndex].month;
         temp.day = monthList[currentIndex].day + 14;
+        print('341 周视图的变化: $temp');
         calendarProvider.lastClickDateModel = temp;
         return true;
       }
