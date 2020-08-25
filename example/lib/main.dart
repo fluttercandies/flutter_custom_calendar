@@ -71,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
       calendarController: controller,
       dayWidgetBuilder: (DateModel model) {
         double wd = (MediaQuery.of(context).size.width - 20) / 7;
-        print('model: $model');
         bool _isSelected = model.isSelected;
         if (_isSelected &&
             CalendarSelectedMode.singleSelect ==

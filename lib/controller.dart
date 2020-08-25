@@ -166,11 +166,16 @@ class CalendarController {
         nowYear = DateTime.now().year;
         nowMonth = DateTime.now().month;
       }
-      DateTime nowTime = new DateTime(nowYear, nowMonth, 15);
+      int nowDay = 15; // 默认月中
+      // 如果设置了 默认选择的时间 就取默认选择的时间天数，否则为当前时间
+      DateModel currentModel = calendarProvider.selectDateModel ?? calendarProvider.selectedDateList?.toList()[0] ?? DateModel.fromDateTime(DateTime.now());
+      if(currentModel != null){
+        nowDay = currentModel.day;
+      }
+      DateTime nowTime = new DateTime(nowYear, nowMonth, nowDay);
       DateTime firstDayOfMonth = DateTime(minYear, minYearMonth, 1);
       //计算第一个星期的第一天的日期
-      DateTime firstWeekDate =
-          firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
+      DateTime firstWeekDate = firstDayOfMonth.add(Duration(days: -(firstDayOfMonth.weekday - 1)));
 
       DateTime lastDay = DateTime(maxYear, maxYearMonth,
           DateUtil.getMonthDaysCount(maxYear, maxYearMonth));
