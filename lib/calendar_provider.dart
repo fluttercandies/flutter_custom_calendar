@@ -84,7 +84,6 @@ class CalendarProvider extends ChangeNotifier {
   int get monthPageIndex {
     //计算当前月视图的index
     DateModel dateModel = lastClickDateModel;
-    print('计算当前月视图的index  = > lastClickDateModel$lastClickDateModel');
     int index = 0;
     for (int i = 0; i < calendarConfiguration.monthList.length - 1; i++) {
       DateTime preMonth = calendarConfiguration.monthList[i].getDateTime();
@@ -121,8 +120,6 @@ class CalendarProvider extends ChangeNotifier {
   }) {
     LogUtil.log(TAG: this.runtimeType, message: "CalendarProvider initData");
     this.calendarConfiguration = calendarConfiguration;
-    print(
-        "calendarConfiguration.defaultSelectedDateList:${calendarConfiguration.defaultSelectedDateList}");
     this
         .selectedDateList
         .addAll(this.calendarConfiguration.defaultSelectedDateList);
@@ -161,8 +158,11 @@ class CalendarProvider extends ChangeNotifier {
       //如果指定了itemSize的大小，那就按照itemSize的大小去绘制
     }
 
-    //如果第一个页面展示的是月视图，需要计算下初始化的高度
-    if (calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_ONLY_MONTH || calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
+    ///如果第一个页面展示的是月视图，需要计算下初始化的高度
+    if (calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_ONLY_MONTH ||
+        calendarConfiguration.showMode ==
+            CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       int lineCount = DateUtil.getMonthViewLineCount(
           calendarConfiguration.nowYear,
           calendarConfiguration.nowMonth,

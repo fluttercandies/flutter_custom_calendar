@@ -35,7 +35,6 @@ class _WeekViewState extends State<WeekView> {
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-
     items = DateUtil.initCalendarForWeekView(
         widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
         minSelectDate: widget.configuration.minSelectDate,
@@ -66,8 +65,6 @@ class _WeekViewState extends State<WeekView> {
 
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
-    print(
-        "WeekView Consumer:calendarProvider.selectDateModel:${calendarProvider.selectDateModel}");
     return new GridView.builder(
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(

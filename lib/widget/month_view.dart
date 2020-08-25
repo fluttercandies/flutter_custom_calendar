@@ -265,7 +265,6 @@ class ItemContainerState extends State<ItemContainer> {
 
             //多选也可以弄这些单选的代码
             calendarProvider.selectDateModel = dateModel;
-            print('多选:${calendarProvider.selectedDateList.toString()}');
             break;
 
           /// 单选
@@ -283,10 +282,20 @@ class ItemContainerState extends State<ItemContainer> {
               calendarProvider.lastClickItemState?.refreshItem(false);
               calendarProvider.lastClickItemState = this;
             }
-            _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
-            dateModel.isSelected = true;
-            calendarProvider.selectDateModel = dateModel;
-            _notifiCationCalendarSelect(dateModel);
+            if(calendarProvider.selectedDateList.contains(dateModel)){
+              // 如果已经选择就执行取消
+              _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
+              dateModel.isSelected = false;
+              calendarProvider.selectedDateList.clear();
+              calendarProvider.selectDateModel = null;
+              _notifiCationUnCalendarSelect(dateModel);
+            }else{
+              _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
+              dateModel.isSelected = true;
+              calendarProvider.selectDateModel = dateModel;
+              _notifiCationCalendarSelect(dateModel);
+            }
+
             setState(() {});
 
             break;
@@ -301,7 +310,6 @@ class ItemContainerState extends State<ItemContainer> {
                 /// 选择同一个第二次则进行取消
                 dateModel.isSelected = false;
                 _notifiCationUnCalendarSelect(dateModel);
-
                 setState(() {});
                 return;
               }

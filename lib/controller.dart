@@ -122,6 +122,7 @@ class CalendarController {
     int maxYearMonth = calendarConfiguration.maxYearMonth;
     int nowYear = calendarConfiguration.nowYear;
     int nowMonth = calendarConfiguration.nowMonth;
+    int nowDay = calendarConfiguration.selectDateModel?.day ?? -1;
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
@@ -284,17 +285,13 @@ class CalendarController {
   Future<bool> previousPage() async {
     if (calendarProvider.expandStatus.value == true) {
       //月视图
-      int currentIndex =
-          calendarProvider.calendarConfiguration.monthController.page.toInt();
+      int currentIndex = calendarProvider.calendarConfiguration.monthController.page.toInt();
       if (currentIndex == 0) {
         return false;
       } else {
-        calendarProvider.calendarConfiguration.monthController
-            .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
-        calendarProvider.calendarConfiguration.monthChangeListeners
-            .forEach((listener) {
-          listener(monthList[currentIndex - 1].year,
-              monthList[currentIndex - 1].month);
+        calendarProvider.calendarConfiguration.monthController.previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
+        calendarProvider.calendarConfiguration.monthChangeListeners.forEach((listener) {
+          listener(monthList[currentIndex - 1].year, monthList[currentIndex - 1].month);
         });
         DateModel temp = new DateModel();
         temp.year = monthList[currentIndex].year;
@@ -306,13 +303,11 @@ class CalendarController {
       }
     } else {
       //周视图
-      int currentIndex =
-          calendarProvider.calendarConfiguration.weekController.page.toInt();
+      int currentIndex = calendarProvider.calendarConfiguration.weekController.page.toInt();
       if (currentIndex == 0) {
         return false;
       } else {
-        calendarProvider.calendarConfiguration.weekController
-            .previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
+        calendarProvider.calendarConfiguration.weekController.previousPage(duration: DEFAULT_DURATION, curve: Curves.ease);
         return true;
       }
     }

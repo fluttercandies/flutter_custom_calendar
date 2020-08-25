@@ -29,6 +29,8 @@ class CalendarConfiguration {
   //日历显示的当前的年份和月份
   int nowYear;
   int nowMonth;
+  // 周视图需要
+  int nowDay;
 
   //可操作的范围设置,比如点击选择
   int minSelectYear;

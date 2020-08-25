@@ -46,7 +46,6 @@ class _WeekViewPagerState extends State<WeekViewPager>
         Provider.of<CalendarProvider>(context, listen: false);
     CalendarConfiguration configuration =
         calendarProvider.calendarConfiguration;
-
     return Container(
       height: configuration.itemSize ?? MediaQuery.of(context).size.width / 7,
       child: PageView.builder(
