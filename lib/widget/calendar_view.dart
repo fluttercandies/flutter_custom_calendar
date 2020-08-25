@@ -1,16 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:flutter_custom_calendar/calendar_provider.dart';
 import 'package:flutter_custom_calendar/constants/constants.dart';
+import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
+import 'package:flutter_custom_calendar/widget/month_view_pager.dart';
 import 'package:flutter_custom_calendar/widget/week_view_pager.dart';
 import 'package:provider/provider.dart';
-
-import '../calendar_provider.dart';
-import '../controller.dart';
-import 'month_view_pager.dart';
 
 /**
  * 暂时默认是周一开始的
@@ -40,14 +37,14 @@ class CalendarViewWidget extends StatefulWidget {
 
   CalendarViewWidget(
       {Key key,
-      this.dayWidgetBuilder = defaultCustomDayWidget,
-      this.weekBarItemWidgetBuilder = defaultWeekBarWidget,
-      @required this.calendarController,
-      this.boxDecoration,
-      this.padding = EdgeInsets.zero,
-      this.margin = EdgeInsets.zero,
-      this.verticalSpacing = 10,
-      this.itemSize})
+        this.dayWidgetBuilder = defaultCustomDayWidget,
+        this.weekBarItemWidgetBuilder = defaultWeekBarWidget,
+        @required this.calendarController,
+        this.boxDecoration,
+        this.padding = EdgeInsets.zero,
+        this.margin = EdgeInsets.zero,
+        this.verticalSpacing = 10,
+        this.itemSize})
       : super(key: key);
 
   @override
@@ -81,7 +78,7 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
     return ChangeNotifierProvider<CalendarProvider>.value(
       value: widget.calendarController.calendarProvider,
       child: Container(
-          //外部可以自定义背景设置
+        //外部可以自定义背景设置
           decoration: widget.boxDecoration,
           padding: widget.padding,
           margin: widget.margin,
@@ -140,7 +137,7 @@ class CalendarContainerState extends State<CalendarContainer>
 
     //如果需要视图切换的话，才需要添加监听，不然不需要监听变化
     if (calendarProvider.calendarConfiguration.showMode ==
-            CalendarConstants.MODE_SHOW_WEEK_AND_MONTH ||
+        CalendarConstants.MODE_SHOW_WEEK_AND_MONTH ||
         calendarProvider.calendarConfiguration.showMode ==
             CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
       calendarProvider.expandStatus.addListener(() {
@@ -150,14 +147,13 @@ class CalendarContainerState extends State<CalendarContainer>
           expand = calendarProvider.expandStatus.value;
           if (expand) {
             index = 0;
-            //周视图切换到月视图
-            //如果第一个页面展示的是月视图，需要计算下初始化的高度
+            //周视图切换到月视图，需要计算下初始化的高度
             int lineCount = DateUtil.getMonthViewLineCount(
                 calendarProvider.calendarConfiguration.nowYear,
                 calendarProvider.calendarConfiguration.nowMonth,
                 calendarProvider.calendarConfiguration.offset);
             totalHeight = calendarProvider.calendarConfiguration.itemSize * (lineCount) + calendarProvider.calendarConfiguration.verticalSpacing * (lineCount - 1);
-            calendarProvider.calendarConfiguration.weekController.jumpToPage(calendarProvider.monthPageIndex);
+            calendarProvider.calendarConfiguration.monthController.jumpToPage(calendarProvider.monthPageIndex);
           } else {
             index = 1;
             //月视图切换到周视图
@@ -171,11 +167,10 @@ class CalendarContainerState extends State<CalendarContainer>
 
     widget.calendarController.addMonthChangeListener((year, month) {
       if (widget.calendarController.calendarProvider.calendarConfiguration
-              .showMode !=
+          .showMode !=
           CalendarConstants.MODE_SHOW_ONLY_WEEK) {
         //月份切换的时候，如果高度发生变化的话，需要setState使高度整体自适应
-        int lineCount = DateUtil.getMonthViewLineCount(year, month,
-            widget.calendarController.calendarConfiguration.offset);
+        int lineCount = DateUtil.getMonthViewLineCount(year, month, widget.calendarController.calendarConfiguration.offset);
         double newHeight = itemHeight * (lineCount) +
             calendarProvider.calendarConfiguration.verticalSpacing *
                 (lineCount - 1);
