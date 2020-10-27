@@ -362,7 +362,7 @@ class CalendarController {
       Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.ease}) {
     if (calendarProvider.expandStatus.value == true) {
-      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, day));
       //计算目标索引
       int targetPage = monthList.indexOf(dateModel);
       if (targetPage == -1) {
@@ -380,7 +380,7 @@ class CalendarController {
             .jumpToPage(targetPage);
       }
     } else {
-      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, 1));
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, month, day));
       //计算目标索引
       int targetPage = 0;
       for (int i = 0; i < weekList.length - 1; i++) {
@@ -388,7 +388,7 @@ class CalendarController {
         DateModel next = weekList[i + 1];
         if (!first.isAfter(dateModel) && next.isAfter(dateModel)) {
           targetPage = i;
-          return;
+          break;
         }
       }
       if (calendarProvider.calendarConfiguration.weekController.hasClients ==
