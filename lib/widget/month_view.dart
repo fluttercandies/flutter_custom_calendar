@@ -1,28 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/cache_data.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:provider/provider.dart';
 
-/**
- * 月视图，显示整个月的日子
- */
+/// 月视图，显示整个月的日子
 class MonthView extends StatefulWidget {
   final int year;
   final int month;
-  final int day;
+  int? day;
 
   final CalendarConfiguration configuration;
 
-  const MonthView({
-    Key key,
-    @required this.year,
-    @required this.month,
+  MonthView({
+    Key? key,
+    required this.year,
+    required this.month,
     this.day,
-    this.configuration,
+    required this.configuration,
   }) : super(key: key);
 
   @override
@@ -31,10 +28,10 @@ class MonthView extends StatefulWidget {
 
 class _MonthViewState extends State<MonthView>
     with AutomaticKeepAliveClientMixin {
-  List<DateModel> items = List();
+  List<DateModel> items = [];
 
-  int lineCount;
-  Map<DateModel, Object> extraDataMap; //自定义额外的数据
+  late int lineCount;
+  late Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   @override
   void initState() {
@@ -45,7 +42,7 @@ class _MonthViewState extends State<MonthView>
     if (CacheData.getInstance().monthListCache[firstDayOfMonth]?.isNotEmpty ==
         true) {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中有数据");
-      items = CacheData.getInstance().monthListCache[firstDayOfMonth];
+      items = CacheData.getInstance().monthListCache[firstDayOfMonth]!;
     } else {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中无数据");
       getItems().then((_) {
@@ -57,7 +54,7 @@ class _MonthViewState extends State<MonthView>
         widget.year, widget.month, widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
-    WidgetsBinding.instance.addPostFrameCallback((callback) {
+    WidgetsBinding.instance?.addPostFrameCallback((callback) {
       Provider.of<CalendarProvider>(context, listen: false)
           .generation
           .addListener(() async {
@@ -103,7 +100,7 @@ class _MonthViewState extends State<MonthView>
         padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),
+            crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing!),
         itemCount: items.isEmpty ? 0 : items.length,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
@@ -137,6 +134,9 @@ class _MonthViewState extends State<MonthView>
                 dateModel.isSelected = false;
               }
               break;
+            case null:
+              print("month view configuration.selectMode is null");
+              break;
           }
 
           return ItemContainer(
@@ -158,14 +158,12 @@ class _MonthViewState extends State<MonthView>
   bool get wantKeepAlive => true;
 }
 
-/**
- * 多选模式，包装item，这样的话，就只需要刷新当前点击的item就行了，不需要刷新整个页面
- */
+/// 多选模式，包装item，这样的话，就只需要刷新当前点击的item就行了，不需要刷新整个页面
 class ItemContainer extends StatefulWidget {
   final DateModel dateModel;
 
   final GestureTapCallback clickCall;
-  const ItemContainer({Key key, this.dateModel, this.clickCall})
+  const ItemContainer({Key? key, required this.dateModel, required this.clickCall})
       : super(key: key);
 
   @override
@@ -173,11 +171,11 @@ class ItemContainer extends StatefulWidget {
 }
 
 class ItemContainerState extends State<ItemContainer> {
-  DateModel dateModel;
-  CalendarConfiguration configuration;
-  CalendarProvider calendarProvider;
+  late DateModel dateModel;
+  late CalendarConfiguration configuration;
+  late CalendarProvider calendarProvider;
 
-  ValueNotifier<bool> isSelected;
+  late ValueNotifier<bool> isSelected;
 
   @override
   void initState() {
@@ -186,9 +184,7 @@ class ItemContainerState extends State<ItemContainer> {
     isSelected = ValueNotifier(dateModel.isSelected);
   }
 
-  /**
-   * 提供方法给外部，可以调用这个方法进行刷新item
-   */
+  /// 提供方法给外部，可以调用这个方法进行刷新item
   void refreshItem(bool v) {
     /**
         Exception caught by gesture
@@ -207,7 +203,7 @@ class ItemContainerState extends State<ItemContainer> {
     }
   }
 
-  void _notifiCationUnCalendarSelect(DateModel element) {
+  void _notifiCationUnCalendarSelect(DateModel? element) {
     if (configuration.unCalendarSelect != null) {
       configuration.unCalendarSelect(element);
     }
@@ -282,14 +278,14 @@ class ItemContainerState extends State<ItemContainer> {
               calendarProvider.lastClickItemState?.refreshItem(false);
               calendarProvider.lastClickItemState = this;
             }
-            if(calendarProvider.selectedDateList.contains(dateModel)){
+            if (calendarProvider.selectedDateList.contains(dateModel)) {
               // 如果已经选择就执行取消
               _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
               dateModel.isSelected = false;
               calendarProvider.selectedDateList.clear();
               calendarProvider.selectDateModel = null;
               _notifiCationUnCalendarSelect(dateModel);
-            }else{
+            } else {
               _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
               dateModel.isSelected = true;
               calendarProvider.selectDateModel = dateModel;

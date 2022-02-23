@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
  * 顶部的固定的周显示
  */
 abstract class BaseWeekBar extends StatelessWidget {
-  const BaseWeekBar({Key key}) : super(key: key);
+  const BaseWeekBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

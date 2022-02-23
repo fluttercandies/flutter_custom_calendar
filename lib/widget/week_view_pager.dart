@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/widget/week_view.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
 class WeekViewPager extends StatefulWidget {
-  const WeekViewPager({Key key}) : super(key: key);
+  const WeekViewPager({Key? key}) : super(key: key);
 
   @override
   _WeekViewPagerState createState() => _WeekViewPagerState();
@@ -15,8 +13,8 @@ class WeekViewPager extends StatefulWidget {
 
 class _WeekViewPagerState extends State<WeekViewPager>
     with AutomaticKeepAliveClientMixin {
-  int lastMonth; //保存上一个月份，不然不知道月份发生了变化
-  CalendarProvider calendarProvider;
+  late int lastMonth; //保存上一个月份，不然不知道月份发生了变化
+  late CalendarProvider calendarProvider;
 
 //  PageController newPageController;
 

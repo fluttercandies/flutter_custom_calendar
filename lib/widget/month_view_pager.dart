@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/calendar_provider.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
@@ -9,7 +7,7 @@ import 'package:flutter_custom_calendar/widget/month_view.dart';
 import 'package:provider/provider.dart';
 
 class MonthViewPager extends StatefulWidget {
-  const MonthViewPager({Key key}) : super(key: key);
+  const MonthViewPager({Key? key}) : super(key: key);
 
   @override
   _MonthViewPagerState createState() => _MonthViewPagerState();
@@ -17,7 +15,7 @@ class MonthViewPager extends StatefulWidget {
 
 class _MonthViewPagerState extends State<MonthViewPager>
     with AutomaticKeepAliveClientMixin {
-  CalendarProvider calendarProvider;
+  late CalendarProvider calendarProvider;
 
   @override
   void initState() {
@@ -28,11 +26,16 @@ class _MonthViewPagerState extends State<MonthViewPager>
 
     //计算当前月视图的index
     DateModel dateModel = calendarProvider.lastClickDateModel;
-    List<DateModel> monthList = calendarProvider.calendarConfiguration.monthList;
+    List<DateModel> monthList =
+        calendarProvider.calendarConfiguration.monthList;
     int index = 0;
     for (int i = 0; i < monthList.length; i++) {
       DateModel firstDayOfMonth = monthList[i];
-      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth.getDateTime().add(Duration(days: DateUtil.getMonthDaysCount(firstDayOfMonth.year, firstDayOfMonth.month))));
+      DateModel lastDayOfMonth = DateModel.fromDateTime(firstDayOfMonth
+          .getDateTime()
+          .add(Duration(
+              days: DateUtil.getMonthDaysCount(
+                  firstDayOfMonth.year, firstDayOfMonth.month))));
 
       if ((dateModel.isAfter(firstDayOfMonth) ||
               dateModel.isSameWith(firstDayOfMonth)) &&
@@ -41,8 +44,8 @@ class _MonthViewPagerState extends State<MonthViewPager>
         break;
       }
     }
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      calendarProvider.calendarConfiguration.monthController.jumpToPage(index);
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      calendarProvider.calendarConfiguration.monthController!.jumpToPage(index);
     });
   }
 
@@ -79,8 +82,9 @@ class _MonthViewPagerState extends State<MonthViewPager>
           temp.month = configuration.monthList[position].month;
           temp.day = configuration.monthList[position].day + 14; // 默认月中
           // 如果设置了 默认选择的时间 就取默认选择的时间天数，否则为当前时间
-          DateModel currentModel = calendarProvider.selectDateModel ?? calendarProvider.selectedDateList?.toList()[0];
-          if(currentModel != null && temp.month == currentModel.month){
+          DateModel? currentModel = calendarProvider.selectDateModel ??
+              calendarProvider.selectedDateList.toList()[0];
+          if (currentModel != null && temp.month == currentModel.month) {
             temp.day = currentModel.day;
           }
           print('85 周视图的变化: $temp');

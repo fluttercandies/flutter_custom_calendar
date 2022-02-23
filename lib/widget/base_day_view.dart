@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/model/date_model.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
-
-import '../controller.dart';
 
 /**
  * 通过canvas自定义item，只需实现相关的方法就可以
@@ -35,13 +32,13 @@ abstract class BaseCustomDayWidget extends StatelessWidget {
 }
 
 class CustomDayWidgetPainter extends CustomPainter {
-  DateModel dateModel;
+  late DateModel dateModel;
 
-  DrawDayWidget drawDayWidget; //普通样式是必须的
+  late DrawDayWidget drawDayWidget; //普通样式是必须的
 
-  CustomDayWidgetPainter(this.dateModel, {this.drawDayWidget});
+  CustomDayWidgetPainter(this.dateModel, {required this.drawDayWidget});
 
-  Paint textPaint;
+  late Paint textPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
