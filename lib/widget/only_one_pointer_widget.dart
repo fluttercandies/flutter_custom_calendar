@@ -35,7 +35,7 @@ class OnlyOnePointerRecognizer extends OneSequenceGestureRecognizer {
 class OnlyOnePointerRecognizerWidget extends StatelessWidget {
   final Widget child;
 
-  OnlyOnePointerRecognizerWidget({this.child});
+  OnlyOnePointerRecognizerWidget({required this.child});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
 import 'package:flutter_custom_calendar/widget/month_view.dart';
@@ -17,19 +15,19 @@ class WeekView extends StatefulWidget {
   final CalendarConfiguration configuration;
 
   const WeekView(
-      {@required this.year,
-      @required this.month,
-      this.firstDayOfWeek,
-      this.configuration});
+      {required this.year,
+      required this.month,
+      required this.firstDayOfWeek,
+      required this.configuration});
 
   @override
   _WeekViewState createState() => _WeekViewState();
 }
 
 class _WeekViewState extends State<WeekView> {
-  List<DateModel> items;
+  late List<DateModel> items;
 
-  Map<DateModel, Object> extraDataMap; //自定义额外的数据
+  late Map<DateModel, Object> extraDataMap; //自定义额外的数据
 
   @override
   void initState() {
@@ -37,20 +35,20 @@ class _WeekViewState extends State<WeekView> {
     extraDataMap = widget.configuration.extraDataMap;
     items = DateUtil.initCalendarForWeekView(
         widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-        minSelectDate: widget.configuration.minSelectDate,
-        maxSelectDate: widget.configuration.maxSelectDate,
+        minSelectDate: widget.configuration.minSelectDate!,
+        maxSelectDate: widget.configuration.maxSelectDate!,
         extraDataMap: extraDataMap,
         offset: widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
-    WidgetsBinding.instance.addPostFrameCallback((callback) {
+    WidgetsBinding.instance?.addPostFrameCallback((callback) {
       Provider.of<CalendarProvider>(context, listen: false)
           .generation
           .addListener(() async {
         items = DateUtil.initCalendarForWeekView(
             widget.year, widget.month, widget.firstDayOfWeek.getDateTime(), 0,
-            minSelectDate: widget.configuration.minSelectDate,
-            maxSelectDate: widget.configuration.maxSelectDate,
+            minSelectDate: widget.configuration.minSelectDate!,
+            maxSelectDate: widget.configuration.maxSelectDate!,
             extraDataMap: extraDataMap,
             offset: widget.configuration.offset);
         setState(() {});

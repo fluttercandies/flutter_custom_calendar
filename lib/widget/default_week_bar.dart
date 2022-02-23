@@ -40,7 +40,7 @@ import 'base_week_bar.dart';
 //}
 
 class DefaultWeekBar extends BaseWeekBar {
-  const DefaultWeekBar({Key key}) : super(key: key);
+  const DefaultWeekBar({Key? key}) : super(key: key);
 
   @override
   Widget getWeekBarItem(int index) {

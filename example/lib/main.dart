@@ -2,8 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_calendar/constants/constants.dart';
-import 'package:flutter_custom_calendar/controller.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -36,8 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  CalendarController controller;
-  CalendarViewWidget calendar;
+  late CalendarController controller;
+  late CalendarViewWidget calendar;
   HashSet<DateTime> _selectedDate = new HashSet();
   HashSet<DateModel> _selectedModels = new HashSet();
 
@@ -54,13 +52,18 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedDateTimeList: _selectedDate,
         selectMode: CalendarSelectedMode.singleSelect)
       ..addOnCalendarSelectListener((dateModel) {
-        _selectedModels.add(dateModel);
-        setState(() {
-          _selectDate = _selectedModels.toString();
-        });
+        //  fixme 这里的if判断我加的
+        if(dateModel != null){
+          _selectedModels.add(dateModel);
+          setState(() {
+            _selectDate = _selectedModels.toString();
+          });
+        }
+
       })
       ..addOnCalendarUnSelectListener((dateModel) {
-        LogUtil.log(TAG: '_selectedModels', message: _selectedModels.toString());
+        LogUtil.log(
+            TAG: '_selectedModels', message: _selectedModels.toString());
         LogUtil.log(TAG: 'dateModel', message: dateModel.toString());
         if (_selectedModels.contains(dateModel)) {
           _selectedModels.remove(dateModel);
@@ -107,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       controller.addExpandChangeListener((value) {
         /// 添加改变 月视图和 周视图的监听
         _isMonthSelected = value;

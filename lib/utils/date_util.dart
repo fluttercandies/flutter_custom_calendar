@@ -1,22 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'LogUtil.dart';
 
-/**
- * 工具类
- */
+/// 工具类
 class DateUtil {
-  /**
-   * 判断一个日期是否是周末，即周六日
-   */
+  // 判断一个日期是否是周末，即周六日
   static bool isWeekend(DateTime dateTime) {
     return dateTime.weekday == DateTime.saturday ||
         dateTime.weekday == DateTime.sunday;
   }
 
-  /**
-   * 获取某年的天数
-   */
+  // 获取某年的天数
+
   static int getYearDaysCount(int year) {
     if (isLeapYear(year)) {
       return 366;
@@ -81,7 +75,8 @@ class DateUtil {
   static int getIndexWeekInMonth(DateTime dateTime) {
     DateTime firstdayInMonth = new DateTime(dateTime.year, dateTime.month, 1);
     Duration duration = dateTime.difference(firstdayInMonth);
-    return (duration.inDays / 7).toInt() + 1;
+    // return (duration.inDays / 7).toInt() + 1;
+    return (duration.inDays ~/ 7) + 1;
   }
 
   /**
@@ -93,7 +88,8 @@ class DateUtil {
       dateTime.month,
     );
     Duration duration = dateTime.difference(firstdayInMonth);
-    return (duration.inDays / 7).toInt() + 1;
+    // return (duration.inDays / 7).toInt() + 1;
+    return (duration.inDays ~/ 7) + 1;
   }
 
   /**
@@ -110,9 +106,9 @@ class DateUtil {
 
   static List<DateModel> initCalendarForMonthView(
       int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
+      {required DateModel minSelectDate,
+      required DateModel maxSelectDate,
+      required Map<DateModel, Object> extraDataMap,
       int offset = 0}) {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
@@ -125,9 +121,9 @@ class DateUtil {
     LogUtil.log(
         TAG: "DateUtil",
         message:
-            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
+            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为$mPreDiff");
 
-    List<DateModel> result = new List();
+    List<DateModel> result = [];
 
     int size = 42;
 
@@ -168,9 +164,9 @@ class DateUtil {
         dateModel.isInRange = false;
       }
       //将自定义额外的数据，存储到相应的model中
-      if (extraDataMap?.isNotEmpty == true) {
+      if (extraDataMap.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
-          dateModel.extraData = extraDataMap[dateModel];
+          dateModel.extraData = extraDataMap[dateModel]!;
         } else {
           dateModel.extraData = null;
         }
@@ -207,11 +203,11 @@ class DateUtil {
    */
   static List<DateModel> initCalendarForWeekView(
       int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
+      {required DateModel minSelectDate,
+      required DateModel maxSelectDate,
+      required Map<DateModel, Object> extraDataMap,
       int offset = 0}) {
-    List<DateModel> items = List();
+    List<DateModel> items = [];
 
     int weekDay = currentDate.weekday + offset;
 
@@ -236,7 +232,7 @@ class DateUtil {
       }
 
       //将自定义额外的数据，存储到相应的model中
-      if (extraDataMap?.isNotEmpty == true) {
+      if (extraDataMap.isNotEmpty == true) {
         if (extraDataMap.containsKey(dateModel)) {
           dateModel.extraData = extraDataMap[dateModel];
         }
