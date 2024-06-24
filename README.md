@@ -1,3 +1,6 @@
+> The code owner of the repo has not been actively building Flutter projects, thus the repo has been archived.
+> 该项目的作者已经长时间未开发 Flutter 项目，故该项目已被归档。
+
 ## flutter_custom_calendar
 > 本插件是基于[flutter_custom_calendar](https://github.com/fluttercandies/flutter_custom_calendar)做了稍微的修改进行上传的。
 
